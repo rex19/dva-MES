@@ -44,6 +44,7 @@ const TableComponents = ({
     return TotalColumn
   }
   const handleModalShow = (modalVisible, record = {}) => {
+    console.log('handleModalShow', record)
     dispatch({
       type: `${tableName}/showModalAndAjax`,
       payload: {

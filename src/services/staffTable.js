@@ -35,9 +35,27 @@ export async function edit(params) {
   })
 }
 
-export async function getModalData(params) {
+export async function getAddModalData(params) {
   return request({
-    url: tableName + '/getModalData',
+    url: tableName + '/getAddModalData',
+    method: 'get',
+    data: params,
+  })
+}
+
+export async function getEditModalData(params) {
+  console.log('getEditModalData', params)
+  return request({
+    url: tableName + '/getEditModalData',
+    method: 'get',
+    data: params,
+  })
+}
+
+export async function getDetailsModalData(params) {
+  console.log('getDetailsModalData', params)
+  return request({
+    url: tableName + '/getDetailsModalData',
     method: 'get',
     data: params,
   })

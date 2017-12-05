@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getModalData, addKey } from 'services/staffTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/staffTable'
 import { pageModel } from 'models/common'
 import queryString from 'query-string'
 
@@ -16,6 +16,18 @@ export default modelExtend(pageModel, {
     modalType: 'create',
     role: [],
     platfrom: [],
+    EditData: {
+      "Id": 0,
+      "Account": "0",
+      "UserName": "0",
+      "Password": "0",
+      "PlatformName": "0",
+      "EmailAddress": "0@admin.com",
+      "Phone": "0",
+      "CreationDateTime": "0",
+      "LastLoginTime": "0",
+      "UserState": "未激活"
+    },
     ModalValueRecord: {
       UserID: 1,
       UserName: '1',
@@ -110,12 +122,34 @@ export default modelExtend(pageModel, {
     * showModalAndAjax({
       payload,
     }, { call, put }) {
-      const data = yield call(getModalData)
-      if (data.success) {
-        yield put({ type: 'showModal', payload: payload })
-        yield put({ type: 'showModalData', payload: data.Data })
-      } else {
-        throw data
+      if (payload.modalType === 'editModalVisible') {
+        console.log('showModalAndAjax==editModalVisible', payload)
+        const data = yield call(getEditModalData, payload.recordId)
+        if (data.success) {
+          yield put({ type: 'showModal', payload: payload })
+          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        } else {
+          throw data
+        }
+      } else if (payload.modalType === 'addModalVisible') {
+
+        const data = yield call(getAddModalData)
+        console.log('showModalAndAjax==addModalVisible', payload, data)
+        if (data.success) {
+          yield put({ type: 'showModal', payload: payload })
+          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        } else {
+          throw data
+        }
+      } else if (payload.modalType === 'detailsModalVisible') {
+        console.log('showModalAndAjax==detailsModalVisible', payload)
+        const data = yield call(getDetailsModalData)
+        if (data.success) {
+          yield put({ type: 'showModal', payload: payload })
+          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        } else {
+          throw data
+        }
       }
     },
   },
@@ -129,7 +163,15 @@ export default modelExtend(pageModel, {
     },
 
     showModalData(state, { payload }) {
-      return { ...state, ...payload, role: eval(payload.Role), platfrom: eval(payload.Plarfrom) }
+      if (payload.modalType === 'editModalVisible') {
+        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Plarfrom), EditData: payload.data.User }
+      } else if (payload.modalType === 'addModalVisible') {
+        console.log('else if (payload.modalType==addModalVisible', payload)
+        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Plarfrom) }
+      } else if (payload.modalType === 'detailsModalVisible') {
+        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Plarfrom) }
+      }
+      // return { ...state, ...payload, role: eval(payload.Role), platfrom: eval(payload.Plarfrom) }
     },
 
     switchIsMotion(state) {

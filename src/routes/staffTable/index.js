@@ -20,15 +20,22 @@ const StaffTableComponents = ({
 }) => {
   let roleArr = []
   const { getFieldDecorator, validateFields, getFieldsValue } = form
-  const { list, mockData, targetKeys, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, role, platfrom } = staffTable
-  const { UserID, UserName, PlatformID, EmailAddress, Phone, UserState, LastLoginTime, CreateTime, Createor, EditTime, Editor } = ModalValueRecord
+  const { list, mockData, targetKeys, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, role, platfrom, EditData } = staffTable
+  // const { UserID, UserName, PlatformID, EmailAddress, Phone, UserState, LastLoginTime, CreateTime, Createor, EditTime, Editor } = ModalValueRecord
+  const { Id, Account, UserName, Password,
+    PlatformName,
+    EmailAddress,
+    Phone,
+    CreationDateTime,
+    LastLoginTime,
+    UserState } = EditData
   const formItemLayout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
   }
 
 
-  console.log('StaffTableComponents-staffTable role,platfrom ', role, platfrom, staffTable, UserID, UserName, PlatformID, EmailAddress, Phone, UserState, LastLoginTime, CreateTime, Createor, EditTime, Editor)
+  console.log('StaffTableComponents-staffTable role,platfrom ', role, platfrom, staffTable)
   /**
  * onChange  单选变更Function
  */
@@ -250,7 +257,7 @@ const StaffTableComponents = ({
             label="ID"
           >
             {getFieldDecorator('EditId', {
-              initialValue: UserID,
+              initialValue: EditData.Id,
             })(<Input disabled />)}
           </FormItem>
           <FormItem
@@ -258,7 +265,7 @@ const StaffTableComponents = ({
             label="账号"
           >
             {getFieldDecorator('EditAccount', {
-              initialValue: UserName,
+              initialValue: EditData.Account,
               rules: [
                 {
                   required: true, message: '请输入账号',
@@ -271,7 +278,7 @@ const StaffTableComponents = ({
             label="员工姓名"
           >
             {getFieldDecorator('EditUserName', {
-              initialValue: UserName,
+              initialValue: EditData.UserName,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -279,7 +286,7 @@ const StaffTableComponents = ({
             label="密码"
           >
             {getFieldDecorator('EditPassword', {
-              initialValue: UserName,
+              initialValue: EditData.Password,
               rules: [
                 {
                   required: true, message: '请输入密码',
@@ -292,7 +299,7 @@ const StaffTableComponents = ({
             label="邮箱"
           >
             {getFieldDecorator('EditEmailAddress', {
-              initialValue: EmailAddress,
+              initialValue: EditData.EmailAddress,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -300,7 +307,7 @@ const StaffTableComponents = ({
             label="电话"
           >
             {getFieldDecorator('EditPhone', {
-              initialValue: Phone,
+              initialValue: EditData.Phone,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -311,9 +318,9 @@ const StaffTableComponents = ({
               initialValue: '1',
             })(
               <Select>
-                <Option value="1">Option 1</Option>
-                <Option value="2">Option 2</Option>
-                <Option value="3">Option 3</Option>
+                {platfrom.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
               </Select>)}
           </FormItem>
           <FormItem
@@ -322,17 +329,14 @@ const StaffTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditUserState', {
-                initialValue: UserState,
+                initialValue: EditData.UserState,
                 rules: [
                   {
                     required: true, message: '请选择状态',
                   },
                 ],
               })(
-                <Radio.Group>
-                  <Radio value={1}>正常</Radio>
-                  <Radio value={2}>失效</Radio>
-                </Radio.Group>
+                <Input />
                 )}
             </div>
           </FormItem>
@@ -360,89 +364,27 @@ const StaffTableComponents = ({
       </div>
     )
   }
+  //   <Radio.Group>
+  //   <Radio value={1}>正常</Radio>
+  //   <Radio value={2}>失效</Radio>
+  // </Radio.Group>
   const detailsModalValue = () => {
     return (
       <div>
-        <FormItem
-          {...formItemLayout}
-          label="ID"
-        >
-          <Input disabled value={UserID} />
-
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="账号"
-        >
-          <Input disabled value={UserName} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="模块"
-        >
-
-          <Radio.Group value={PlatformID} disabled>
-            <Radio value={1}>嘉定工厂</Radio>
-            <Radio value={2}>奉贤工厂</Radio>
-          </Radio.Group>
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="邮箱"
-        >
-          <Input disabled value={EmailAddress} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="电话"
-        >
-          <Input disabled value={Phone} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="状态"
-        >
-          <Radio.Group value={UserState} disabled>
-            <Radio value={1}>正常</Radio>
-            <Radio value={2}>失效</Radio>
-          </Radio.Group>
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最近登录时间"
-        >
-          <Input disabled value={LastLoginTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="创建时间"
-        >
-          <Input disabled value={CreateTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="创建人"
-        >
-          <Input disabled value={Createor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑时间"
-        >
-          <Input disabled value={EditTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑人"
-        >
-          <Input disabled value={Editor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="所属人员角色"
-        >
-          <Input disabled value="管理员组 ,用户组" />
-        </FormItem>
+        <Form>
+          <FormItem
+            {...formItemLayout}
+            label="ID"
+          >
+            <Input disabled value='1' />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="账号"
+          >
+            <Input disabled value='1' />
+          </FormItem>
+        </Form>
       </div>
     )
   }
