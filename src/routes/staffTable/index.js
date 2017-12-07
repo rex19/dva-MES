@@ -22,20 +22,14 @@ const StaffTableComponents = ({
   const { getFieldDecorator, validateFields, getFieldsValue } = form
   const { list, mockData, targetKeys, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, role, platfrom, EditData } = staffTable
   // const { UserID, UserName, PlatformID, EmailAddress, Phone, UserState, LastLoginTime, CreateTime, Createor, EditTime, Editor } = ModalValueRecord
-  const { Id, Account, UserName, Password,
-    PlatformName,
-    EmailAddress,
-    Phone,
-    CreationDateTime,
-    LastLoginTime,
-    UserState } = EditData
+  const { Id, Account, UserName, Password, PlatformName, EmailAddress, Phone, CreationDateTime, LastLoginTime, UserState } = EditData
   const formItemLayout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
   }
 
 
-  console.log('StaffTableComponents-staffTable role,platfrom ', role, platfrom, staffTable)
+  console.log('StaffTableComponents-staffTable role,platfrom ', EditData.PlatfromArray, role, platfrom, staffTable, eval(EditData.RoleArray))
   /**
  * onChange  单选变更Function
  */
@@ -58,7 +52,7 @@ const StaffTableComponents = ({
     'AddAccount', 'AddUserName', 'AddPassword', 'AddPlatformID', 'AddEmailAddress', 'AddPhone', 'AddUserState', 'AddRole'
   ]
   const editValidateFieldsParam = [
-    'EditId', 'EditAccount', 'EditUserName', 'EditPassword', 'EditPlatformID', 'EditEmailAddress', 'EditPhone', 'EditUserState', 'EditRole'
+    'EditId', 'EditAccount', 'EditUserName', 'EditPassword', 'EditPlatformId', 'EditEmailAddress', 'EditPhone', 'EditUserState', 'EditRole'
   ]
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
@@ -77,10 +71,10 @@ const StaffTableComponents = ({
     } else if (modalType === 'edit') {
       let ValidateFieldsParam = editValidateFieldsParam
       validateFields(ValidateFieldsParam, (err, payload) => {
-        const editParam = { Account: payload.EditAccount, UserName: payload.EditUserName, Password: payload.EditPassword, EmailAddress: payload.EditEmailAddress, Phone: payload.EditPhone, PlatformID: payload.EditPlatformID, UserState: payload.EditUserState, Role: payload.EditRole }
-        console.log('payloadeditParam', payload, editParam)
+        const editParam = { Id: payload.EditId, Account: payload.EditAccount, UserName: payload.EditUserName, Password: payload.EditPassword, EmailAddress: payload.EditEmailAddress, Phone: payload.EditPhone, PlatformID: payload.EditPlatformId, UserState: parseInt(payload.EditUserState), Role: payload.EditRole.map(item => parseInt(item.key)) }
+        console.log('payloadeditParam', payload, editParam, modalType)
         if (!err) {
-          console.log('validateFields', modalType, values)
+          console.log('validateFields', modalType)
           dispatch({
             type: 'staffTable/' + modalType,
             payload: editParam,
@@ -131,6 +125,7 @@ const StaffTableComponents = ({
     )
   }
   const addModalValue = () => {
+    console.log('addModalValue', platfrom, role)
     return (
       <div>
         <Form >
@@ -238,7 +233,7 @@ const StaffTableComponents = ({
                   placeholder="请选择"
                 >
                   {role.map(function (item, index) {
-                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                    return <Option key={index} value={item.key}>{item.label}</Option>
                   })}
                 </Select>
                 )}
@@ -315,8 +310,9 @@ const StaffTableComponents = ({
             label="模块"
           >
             {getFieldDecorator('EditPlatformId', {
-              initialValue: '1',
+              initialValue: EditData.PlatfromArray === undefined ? '2' : eval(EditData.PlatfromArray)[0].key.toString(),
             })(
+
               <Select>
                 {platfrom.map(function (item, index) {
                   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
@@ -329,14 +325,18 @@ const StaffTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditUserState', {
-                initialValue: EditData.UserState,
+                initialValue: EditData.UserState.toString(),
                 rules: [
                   {
                     required: true, message: '请选择状态',
                   },
                 ],
               })(
-                <Input />
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
                 )}
             </div>
           </FormItem>
@@ -346,7 +346,8 @@ const StaffTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditRole', {
-                initialValue: [{ key: "lucy", label: 'Lucy (101)' }, { key: "jack", label: 'Jack (100)' }],
+                // initialValue: [{ key: '2', label: "testRole" }, { key: '5', label: "testRole2" }],
+                initialValue: eval(EditData.RoleArray),
               })(
                 <Select
                   mode="multiple"
@@ -354,8 +355,9 @@ const StaffTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
-                  <Option value="jack">Jack (100)</Option>
-                  <Option value="lucy">Lucy (101)</Option>
+                  {role.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -364,10 +366,7 @@ const StaffTableComponents = ({
       </div>
     )
   }
-  //   <Radio.Group>
-  //   <Radio value={1}>正常</Radio>
-  //   <Radio value={2}>失效</Radio>
-  // </Radio.Group>
+
   const detailsModalValue = () => {
     return (
       <div>
@@ -425,7 +424,19 @@ StaffTableComponents.defaultProps = {
     Createor: '115',
     EditTime: '114',
     Editor: 9,
-  }
+  },
+  EditData: {
+    "Id": 0,
+    "Account": "0",
+    "UserName": "0",
+    "Password": "0",
+    "PlatformName": "[{key:1,label:\"adm管理\"}]",
+    "EmailAddress": "0@admin.com",
+    "Phone": "0",
+    "CreationDateTime": "0",
+    "LastLoginTime": "0",
+    "UserState": 1
+  },
 };
 
 export default connect(({ staffTable, loading }) => ({ staffTable, loading }))(Form.create()(StaffTableComponents))
