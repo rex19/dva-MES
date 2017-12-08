@@ -30,6 +30,7 @@ export default modelExtend(pageModel, {
       "LastLoginTime": "0",
       "UserState": 1
     },
+    DetailsData: {},
     ModalValueRecord: {
       UserID: 1,
       UserName: '1',
@@ -102,8 +103,10 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       console.log('  * delete', payload)
-      const data = yield call(deleted, payload)
-      if (data.Status === 200) {
+      const data = yield call(deleted, payload.Id)
+      if (data.Status !== 200) {
+        return messageComponents.errorMessage(data.ErrorMessage)
+      } else if (data.Status === 200) {
         yield put({ type: 'hideModal', payload: 'deleteModalVisible' })
         yield put({ type: 'query' })
       } else {
@@ -113,11 +116,8 @@ export default modelExtend(pageModel, {
     * edit({
       payload,
     }, { call, put }) {
-      console.log('edit-models', payload)
       const data = yield call(edit, payload)
-      if (data.Status != 200) {
-        // alert(data.ErrorMessage)
-        console.log('edit if (data.Status != 200) {')
+      if (data.Status !== 200) {
         return messageComponents.errorMessage(data.ErrorMessage)
       } else if (data.Status === 200) {
         yield put({ type: 'hideModal', payload: 'editModalVisible' })
@@ -130,8 +130,8 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
-        console.log('showModalAndAjax==editModalVisible', payload.recordId)
-        const data = yield call(getEditModalData, payload.recordId)
+        console.log('payload.modalType ===editModalVisible,', payload)
+        const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
@@ -150,7 +150,7 @@ export default modelExtend(pageModel, {
         }
       } else if (payload.modalType === 'detailsModalVisible') {
         console.log('showModalAndAjax==detailsModalVisible', payload)
-        const data = yield call(getDetailsModalData, payload.record)
+        const data = yield call(getDetailsModalData, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
@@ -175,9 +175,10 @@ export default modelExtend(pageModel, {
         return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Platfrom), EditData: payload.data.UserInitilizeDTO }
       } else if (payload.modalType === 'addModalVisible') {
         console.log('else if (payload.modalType==addModalVisible', payload)
-        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.platfrom) }
-      } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Platfrom) }
+      } else if (payload.modalType === 'detailsModalVisible') {
+        console.log('else if (payload.modalType === detailsModalVisible) {', payload)
+        return { ...state, ...payload, DetailsData: payload.data }
       }
     },
 

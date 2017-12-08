@@ -52,13 +52,6 @@ const TableComponents = ({
         record: record
       },
     })
-    // dispatch({
-    //   type: `${tableName}/showModal`,
-    //   payload: {
-    //     modalType: modalVisible,
-    //     record: record
-    //   },
-    // })
   }
   const handleModalClose = (modalVisible) => {
     dispatch({
