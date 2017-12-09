@@ -37,6 +37,10 @@ const Routers = function ({ history, app }) {
       models: () => [import('./models/staffTable')],
       component: () => import('./routes/staffTable/'),
     }, {
+      path: '/masterdata/RoleTable',
+      models: () => [import('./models/roleTable')],
+      component: () => import('./routes/roleTable/'),
+    }, {
       path: '/permissionManagement',
       // models: () => [import('./models/user')],
       component: () => import('./routes/permissionManagement/'),

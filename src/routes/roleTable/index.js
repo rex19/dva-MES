@@ -27,7 +27,7 @@ const StaffTableComponents = ({
   }
 
 
-  console.log('StaffTableComponents-staffTable', TableModelsData, eval(EditData.RoleArray))
+  // console.log('StaffTableComponents-staffTable role,platfrom ', EditData.PlatfromArray, role, platfrom, staffTable, eval(EditData.RoleArray))
   /**
    * onChange  单选变更Function
    */

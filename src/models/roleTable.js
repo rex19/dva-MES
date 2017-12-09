@@ -6,8 +6,10 @@ import queryString from 'query-string'
 
 export default modelExtend(pageModel, {
 
-  namespace: 'staffTable',
+  namespace: 'roleTable',
   state: {
+    mockData: [],
+    targetKeys: [],
     addModalVisible: false,
     editModalVisible: false,
     detailsModalVisible: false,
@@ -28,6 +30,19 @@ export default modelExtend(pageModel, {
       "UserState": 1
     },
     DetailsData: {},
+    ModalValueRecord: {
+      UserID: 1,
+      UserName: '1',
+      PlatformID: '1',
+      EmailAddress: '111',
+      Phone: '112',
+      UserState: 1,
+      LastLoginTime: '123',
+      CreateTime: '123',
+      Createor: '115',
+      EditTime: '114',
+      Editor: 9,
+    }
   },
   subscriptions: {
     setup({ dispatch, history }) {

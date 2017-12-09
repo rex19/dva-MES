@@ -140,32 +140,29 @@ const lineTableColumns = [{
 
 const roleTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '角色',
-  dataIndex: 'userName',
+  dataIndex: 'RoleName',
 }, {
   title: '模块',
-  dataIndex: 'platform',
+  dataIndex: 'PlatfromName',
 }, {
   title: '状态',
-  dataIndex: 'status',
-}, {
-  title: '工厂',
-  dataIndex: 'plant',
+  dataIndex: 'IsEnable',
 }, {
   title: '创建时间',
-  dataIndex: 'createTimeAt',
+  dataIndex: 'CreationDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 const menuTableColumns = [{
   title: 'ID',
