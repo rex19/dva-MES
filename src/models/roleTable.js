@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/staffTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/roleTable'
 import { pageModel } from 'models/common'
 import { errorMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -8,46 +8,32 @@ export default modelExtend(pageModel, {
 
   namespace: 'roleTable',
   state: {
-    mockData: [],
-    targetKeys: [],
     addModalVisible: false,
     editModalVisible: false,
     detailsModalVisible: false,
     deleteModalVisible: false,
     modalType: 'create',
-    role: [],
+    TotalMultiselectData: [],
+    AllocatedMultiselectData: [],
     platfrom: [],
     EditData: {
-      "Id": 0,
-      "Account": "0",
-      "UserName": "0",
-      "Password": "0",
-      "PlatformName": "1",
-      "EmailAddress": "0@admin.com",
-      "Phone": "0",
-      "CreationDateTime": "0",
-      "LastLoginTime": "0",
-      "UserState": 1
+      "Id": 2,
+      "RoleName": "testRole",
+      "State": 1,
+      PlatfromId: "1",
+      "PlatfromName": "adm管理",
+      "CreationDateTime": "2017-11-01T15:36:38",
+      "Creator": "admin",
+      "EditDateTime": "2017-12-09T13:29:12.6622339",
+      "Editor": "",
+      "User": "1"
     },
-    DetailsData: {},
-    ModalValueRecord: {
-      UserID: 1,
-      UserName: '1',
-      PlatformID: '1',
-      EmailAddress: '111',
-      Phone: '112',
-      UserState: 1,
-      LastLoginTime: '123',
-      CreateTime: '123',
-      Createor: '115',
-      EditTime: '114',
-      Editor: 9,
-    }
+    DetailsData: {}
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === '/masterdata/staffTable') {
+        if (location.pathname === '/masterdata/roleTable') {
           dispatch({
             type: 'query',
             payload: {
@@ -71,7 +57,7 @@ export default modelExtend(pageModel, {
     }, { call, put }) {
       const data = yield call(query, payload)
       if (data.Status === 200) {
-        const result = yield call(addKey, data.Data.Userdto)
+        const result = yield call(addKey, data.Data.Roledto) //+1
         yield put({
           type: 'querySuccess',
           payload: {
@@ -171,10 +157,10 @@ export default modelExtend(pageModel, {
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
         console.log('else if (payload.modalType==editModalVisible', payload)
-        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Platfrom), EditData: payload.data.UserInitilizeDTO }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platfrom: eval(payload.data.TotalPlatfrom), EditData: payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
         console.log('else if (payload.modalType==addModalVisible', payload)
-        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Platfrom) }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platfrom: eval(payload.data.TotalPlatfrom) }
       } else if (payload.modalType === 'detailsModalVisible') {
         console.log('else if (payload.modalType === detailsModalVisible) {', payload)
         return { ...state, ...payload, DetailsData: payload.data }

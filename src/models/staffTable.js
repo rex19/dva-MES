@@ -14,18 +14,19 @@ export default modelExtend(pageModel, {
     deleteModalVisible: false,
     modalType: 'create',
     role: [],
+    allocatedRole: [],
     platfrom: [],
     EditData: {
-      "Id": 0,
-      "Account": "0",
-      "UserName": "0",
-      "Password": "0",
-      "PlatformName": "1",
-      "EmailAddress": "0@admin.com",
-      "Phone": "0",
-      "CreationDateTime": "0",
-      "LastLoginTime": "0",
-      "UserState": 1
+      "Id": 1,
+      "Account": "sample string 2",
+      "UserName": "sample string 3",
+      "Password": "sample string 4",
+      "PlatfromId": 0,
+      "EmailAddress": "sample string 6",
+      "Phone": "sample string 7",
+      "CreationDateTime": "2017-12-11T18:37:26.6857026+08:00",
+      "LastLoginTime": "2017-12-11T18:37:26.6857026+08:00",
+      "State": 0
     },
     DetailsData: {},
   },
@@ -56,7 +57,7 @@ export default modelExtend(pageModel, {
     }, { call, put }) {
       const data = yield call(query, payload)
       if (data.Status === 200) {
-        const result = yield call(addKey, data.Data.Userdto)
+        const result = yield call(addKey, data.Data.Tdto)
         yield put({
           type: 'querySuccess',
           payload: {
@@ -156,10 +157,10 @@ export default modelExtend(pageModel, {
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
         console.log('else if (payload.modalType==editModalVisible', payload)
-        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Platfrom), EditData: payload.data.UserInitilizeDTO }
+        return { ...state, ...payload, role: eval(payload.data.TotalRole), platfrom: eval(payload.data.TotalPlatfrom), allocatedRole: eval(payload.data.AllcatedRole), EditData: payload.data.UserInitilizeDTO }
       } else if (payload.modalType === 'addModalVisible') {
         console.log('else if (payload.modalType==addModalVisible', payload)
-        return { ...state, ...payload, role: eval(payload.data.Role), platfrom: eval(payload.data.Platfrom) }
+        return { ...state, ...payload, role: eval(payload.data.TotalRole), platfrom: eval(payload.data.TotalPlatfrom) }
       } else if (payload.modalType === 'detailsModalVisible') {
         console.log('else if (payload.modalType === detailsModalVisible) {', payload)
         return { ...state, ...payload, DetailsData: payload.data }

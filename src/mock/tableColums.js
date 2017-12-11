@@ -149,7 +149,7 @@ const roleTableColumns = [{
   dataIndex: 'PlatfromName',
 }, {
   title: '状态',
-  dataIndex: 'IsEnable',
+  dataIndex: 'State',
 }, {
   title: '创建时间',
   dataIndex: 'CreationDateTime',
@@ -162,7 +162,7 @@ const roleTableColumns = [{
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Editor',
+  dataIndex: 'EditorId',
 }]
 const menuTableColumns = [{
   title: 'ID',

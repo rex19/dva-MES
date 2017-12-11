@@ -1,8 +1,8 @@
 import { request, config } from 'utils'
 
 const { api } = config
-const { staffTable } = api
-const tableName = staffTable
+const { roleTable } = api
+const tableName = roleTable
 
 export async function query(params) {
   return request({

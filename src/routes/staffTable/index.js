@@ -20,7 +20,7 @@ const StaffTableComponents = ({
 }) => {
   const TableModelsData = staffTable
   const { getFieldDecorator, validateFields, getFieldsValue } = form
-  const { list, mockData, targetKeys, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, role, platfrom, EditData, DetailsData } = TableModelsData
+  const { list, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, role, allocatedRole, platfrom, EditData, DetailsData } = TableModelsData
   const formItemLayout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
@@ -28,20 +28,7 @@ const StaffTableComponents = ({
 
 
   console.log('StaffTableComponents-staffTable', TableModelsData, eval(EditData.RoleArray))
-  /**
-   * onChange  单选变更Function
-   */
-  const onChange = (e) => {
-    this.setState({
-      value: e.target.value,
-    })
-  }
 
-  const handleAddInput = (e) => {
-    this.setState({
-      addInputValue: e.target.value,
-    })
-  }
   /**
    * crud modal
    */
@@ -303,7 +290,8 @@ const StaffTableComponents = ({
             label="模块"
           >
             {getFieldDecorator('EditPlatformId', {
-              initialValue: EditData.PlatfromArray === undefined ? '2' : eval(EditData.PlatfromArray)[0].key.toString(),
+              initialValue: EditData.PlatfromId.toString(),
+              // initialValue: EditData.PlatfromId === undefined ? '2' : eval(EditData.PlatfromId)[0].key.toString(),
             })(
 
               <Select>
@@ -318,7 +306,7 @@ const StaffTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditUserState', {
-                initialValue: EditData.UserState.toString(),
+                initialValue: EditData.State.toString(),
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -340,7 +328,7 @@ const StaffTableComponents = ({
             <div>
               {getFieldDecorator('EditRole', {
                 // initialValue: [{ key: '2', label: "testRole" }, { key: '5', label: "testRole2" }],
-                initialValue: eval(EditData.RoleArray),
+                initialValue: allocatedRole,
               })(
                 <Select
                   mode="multiple"
@@ -397,7 +385,7 @@ const StaffTableComponents = ({
           {...formItemLayout}
           label="状态"
         >
-          <Input disabled value={DetailsData.UserState} />
+          <Input disabled value={DetailsData.State} />
         </FormItem>
         <FormItem
           {...formItemLayout}

@@ -24,6 +24,7 @@ module.exports = {
     posts: `${APIV1}/posts`,
     stationTable: `${APIV1}/stationTable`,
     staffTable: `${APIV1}/staffTable`,
+    roleTable: `${APIV1}/roleTable`,
     user: `${APIV1}/user/:id`,
     dashboard: `${APIV1}/dashboard`,
     menus: `${APIV1}/menus`,

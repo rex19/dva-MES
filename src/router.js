@@ -33,11 +33,11 @@ const Routers = function ({ history, app }) {
       // models: () => [import('./models/user')],
       component: () => import('./routes/lineTable/'),
     }, {
-      path: '/masterdata/StaffTable',
+      path: '/masterdata/staffTable',
       models: () => [import('./models/staffTable')],
       component: () => import('./routes/staffTable/'),
     }, {
-      path: '/masterdata/RoleTable',
+      path: '/masterdata/roleTable',
       models: () => [import('./models/roleTable')],
       component: () => import('./routes/roleTable/'),
     }, {
