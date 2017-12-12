@@ -4,9 +4,11 @@ import { pageModel } from 'models/common'
 import { errorMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
 
+const TableName = 'roleTable'
+
 export default modelExtend(pageModel, {
 
-  namespace: 'roleTable',
+  namespace: TableName,
   state: {
     addModalVisible: false,
     editModalVisible: false,
@@ -20,7 +22,7 @@ export default modelExtend(pageModel, {
       "Id": 2,
       "RoleName": "testRole",
       "State": 1,
-      PlatfromId: "1",
+      "PlatfromId": "1",
       "PlatfromName": "adm管理",
       "CreationDateTime": "2017-11-01T15:36:38",
       "Creator": "admin",
@@ -33,17 +35,13 @@ export default modelExtend(pageModel, {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === '/masterdata/roleTable') {
+        if (location.pathname === `/masterdata/${TableName}`) {
           dispatch({
             type: 'query',
             payload: {
-              pageindex: 1,  //第几页
-              rowcount: 20,  //行数 作废
-              pagesize: 1,  //页数
-              IsAsc: true,  //排序
-              UserQueryEntity: [], //多条件查询参数
-              UserOrderbyEntity: [], //多条件查询排序参数
-              // ...queryString.parse(location.search),
+              PageIndex: 1,  //第几页
+              PageSize: 20,  //多少行
+              TDto: null
             }
           })
         }
@@ -62,11 +60,11 @@ export default modelExtend(pageModel, {
           type: 'querySuccess',
           payload: {
             list: result,
-            // pagination: {
-            //   current: Number(payload.page) || 1,
-            //   pageSize: Number(payload.pageSize) || 10,
-            //   total: data.total,
-            // },
+            pagination: {
+              current: Number(payload.pageSize) || 1,
+              pageSize: Number(payload.PageIndex) || 10,
+              total: data.Data.RowCount,
+            },
           },
         })
       } else {
@@ -87,7 +85,6 @@ export default modelExtend(pageModel, {
     * delete({
       payload,
     }, { call, put }) {
-      console.log('  * delete', payload)
       const data = yield call(deleted, payload.Id)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage)
@@ -115,7 +112,6 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
-        console.log('payload.modalType ===editModalVisible,', payload)
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
@@ -126,7 +122,6 @@ export default modelExtend(pageModel, {
       } else if (payload.modalType === 'addModalVisible') {
 
         const data = yield call(getAddModalData)
-        console.log('showModalAndAjax==addModalVisible', payload, data)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
@@ -134,7 +129,6 @@ export default modelExtend(pageModel, {
           throw data
         }
       } else if (payload.modalType === 'detailsModalVisible') {
-        console.log('showModalAndAjax==detailsModalVisible', payload)
         const data = yield call(getDetailsModalData, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
@@ -165,11 +159,6 @@ export default modelExtend(pageModel, {
         console.log('else if (payload.modalType === detailsModalVisible) {', payload)
         return { ...state, ...payload, DetailsData: payload.data }
       }
-    },
-
-    switchIsMotion(state) {
-      window.localStorage.setItem(`${prefix}userIsMotion`, !state.isMotion)
-      return { ...state, isMotion: !state.isMotion }
     },
   },
 })

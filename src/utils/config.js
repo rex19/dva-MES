@@ -25,6 +25,7 @@ module.exports = {
     stationTable: `${APIV1}/stationTable`,
     staffTable: `${APIV1}/staffTable`,
     roleTable: `${APIV1}/roleTable`,
+    lineTable: `${APIV1}/lineTable`,
     user: `${APIV1}/user/:id`,
     dashboard: `${APIV1}/dashboard`,
     menus: `${APIV1}/menus`,

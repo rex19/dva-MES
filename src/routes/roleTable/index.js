@@ -20,7 +20,7 @@ const RoleTableComponents = ({
 }) => {
   const TableModelsData = roleTable
   const { getFieldDecorator, validateFields, getFieldsValue } = form
-  const { list, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, TotalMultiselectData, AllocatedMultiselectData, platfrom, EditData, DetailsData } = TableModelsData
+  const { list, pagination, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, TotalMultiselectData, AllocatedMultiselectData, platfrom, EditData, DetailsData } = TableModelsData
   const formItemLayout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
@@ -329,6 +329,7 @@ const RoleTableComponents = ({
         <TableComponents
           tableName={TableName}
           data={list}
+          pagination={pagination}
           columns={TableColumns}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}

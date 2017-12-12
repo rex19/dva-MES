@@ -30,7 +30,7 @@ const Routers = function ({ history, app }) {
       component: () => import('./routes/stationGroupTable/'),
     }, {
       path: '/masterdata/lineTable',
-      // models: () => [import('./models/user')],
+      models: () => [import('./models/lineTable')],
       component: () => import('./routes/lineTable/'),
     }, {
       path: '/masterdata/staffTable',

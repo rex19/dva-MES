@@ -109,32 +109,29 @@ const staffTableColumns = [{
 
 const lineTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '线体编号',
-  dataIndex: 'lineNo',
+  dataIndex: 'CellNumber',
 }, {
   title: '名称',
-  dataIndex: 'name',
+  dataIndex: 'Description',
 }, {
   title: '状态',
-  dataIndex: 'status',
-}, {
-  title: '工厂',
-  dataIndex: 'plant',
+  dataIndex: 'State',
 }, {
   title: '创建时间',
-  dataIndex: 'createTimeAt',
+  dataIndex: 'CreationDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '修改人',
-  dataIndex: 'Modifier',
+  dataIndex: 'EditorId',
 }]
 
 

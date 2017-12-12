@@ -20,7 +20,7 @@ const StaffTableComponents = ({
 }) => {
   const TableModelsData = staffTable
   const { getFieldDecorator, validateFields, getFieldsValue } = form
-  const { list, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, role, allocatedRole, platfrom, EditData, DetailsData } = TableModelsData
+  const { list, pagination, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, role, allocatedRole, platfrom, EditData, DetailsData } = TableModelsData
   const formItemLayout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 15 },
@@ -438,6 +438,7 @@ const StaffTableComponents = ({
         <TableComponents
           tableName={TableName}
           data={list}
+          pagination={pagination}
           columns={TableColumns}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}

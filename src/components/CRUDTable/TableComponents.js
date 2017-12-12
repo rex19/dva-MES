@@ -12,6 +12,7 @@ const TableComponents = ({
   dispatch,
   columns,
   data,
+  pagination,
   addModalValue,
   editModalValue,
   detailsModalValue,
@@ -62,8 +63,16 @@ const TableComponents = ({
   const onChange = () => {
 
   }
-  const onShowSizeChange = (current, pageSize) => {
-    console.log(current, pageSize);
+  const onShowSizeChange = (PageIndex = 1, pageSize = 20) => {
+    console.log(PageIndex, pageSize);
+    dispatch({
+      type: `${tableName}/query`,
+      payload: {
+        PageIndex: PageIndex,  //第几页
+        PageSize: pageSize,  //多少行
+        TDto: null,
+      }
+    })
   }
   const deleteHandler = (id) => {
     console.log('deleteHandler', id)
@@ -95,7 +104,7 @@ const TableComponents = ({
             showSizeChanger
             onShowSizeChange={onShowSizeChange}
             defaultCurrent={1}
-            total={1}
+            total={pagination.total}
           />
         </Col>
       </Row>

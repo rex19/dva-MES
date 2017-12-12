@@ -1,45 +1,49 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/staffTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/lineTable'
 import { pageModel } from 'models/common'
 import { errorMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
 
+const TableName = 'lineTable'
+
 export default modelExtend(pageModel, {
 
-  namespace: 'staffTable',
+  namespace: TableName,
   state: {
     addModalVisible: false,
     editModalVisible: false,
     detailsModalVisible: false,
     deleteModalVisible: false,
     modalType: 'create',
-    role: [],
-    allocatedRole: [],
+    TotalMultiselectData: [],
+    AllocatedMultiselectData: [],
     platfrom: [],
     EditData: {
       "Id": 1,
-      "Account": "sample string 2",
-      "UserName": "sample string 3",
-      "Password": "sample string 4",
-      "PlatfromId": 0,
-      "EmailAddress": "sample string 6",
-      "Phone": "sample string 7",
-      "CreationDateTime": "2017-12-11T18:37:26.6857026+08:00",
-      "LastLoginTime": "2017-12-11T18:37:26.6857026+08:00",
-      "State": 0
+      "CellNumber": "sample string 2",
+      "Description": "sample string 3",
+      "State": 1,
+      "Creator": 5,
+      "CreationDateTime": "2017-12-12T16:46:58.5435939+08:00",
+      "EditDateTime": "2017-12-12T16:46:58.5435939+08:00",
+      "EditorId": 8
     },
-    DetailsData: {},
+    DetailsData: {}
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === '/masterdata/staffTable') {
+        if (location.pathname === '/masterdata/lineTable') {
           dispatch({
             type: 'query',
             payload: {
               PageIndex: 1,  //第几页
               PageSize: 20,  //多少行
               TDto: null,
+              // IsAsc: true,  //排序
+              // UserQueryEntity: [], //多条件查询参数
+              // UserOrderbyEntity: [], //多条件查询排序参数
+              // ...queryString.parse(location.search),
             }
           })
         }
@@ -53,7 +57,7 @@ export default modelExtend(pageModel, {
     }, { call, put }) {
       const data = yield call(query, payload)
       if (data.Status === 200) {
-        const result = yield call(addKey, data.Data.Tdto)
+        const result = yield call(addKey, data.Data.Tdto) //+1
         yield put({
           type: 'querySuccess',
           payload: {
@@ -153,10 +157,10 @@ export default modelExtend(pageModel, {
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
         console.log('else if (payload.modalType==editModalVisible', payload)
-        return { ...state, ...payload, role: eval(payload.data.TotalRole), platfrom: eval(payload.data.TotalPlatfrom), allocatedRole: eval(payload.data.AllcatedRole), EditData: payload.data.UserInitilizeDTO }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platfrom: eval(payload.data.TotalPlatfrom), EditData: payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
         console.log('else if (payload.modalType==addModalVisible', payload)
-        return { ...state, ...payload, role: eval(payload.data.TotalRole), platfrom: eval(payload.data.TotalPlatfrom) }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platfrom: eval(payload.data.TotalPlatfrom) }
       } else if (payload.modalType === 'detailsModalVisible') {
         console.log('else if (payload.modalType === detailsModalVisible) {', payload)
         return { ...state, ...payload, DetailsData: payload.data }
