@@ -6,6 +6,9 @@ const svgSpriteDirs = [
   require.resolve('antd').replace(/index\.js$/, '')
 ]
 
+const NodeUrl = 'http://localhost:3009'
+const url = 'http://localhost:3009'
+// const url = 'http://192.168.1.252/SFMES'
 export default {
   entry: 'src/index.js',
   svgSpriteLoaderDirs: svgSpriteDirs,
@@ -14,31 +17,47 @@ export default {
   outputPath: `./dist/${version}`,
   // 接口代理示例
   proxy: {
-    "/api/v1/weather": {
-      "target": "https://api.seniverse.com/",
+    "/api/weather": {
+      "target": NodeUrl,
       "changeOrigin": true,
-      "pathRewrite": { "^/api/v1/weather": "/v3/weather" }
+      "pathRewrite": { "^/api/weather": "/v3/weather" }
     },
-    "/api/v1/user": {
-      "target": "http://localhost:3009",
+    "/api/user": {
+      "target": NodeUrl,
       "changeOrigin": true,
-      "pathRewrite": { "^/api/v1/user": "/api/v1/user" }
+      "pathRewrite": { "^/api/user": "/api/user" }
     },
-    "/api/v1/menus": {
-      "target": "http://localhost:3009",
+    "/api/menus": {
+      "target": NodeUrl,
       "changeOrigin": true,
-      "pathRewrite": { "^/api/v1/menus": "/api/v1/menus" }
+      "pathRewrite": { "^/api/menus": "/api/menus" }
     },
-    "/api/v1/stationTable": {
-      "target": "http://localhost:3009",
+    "/api/Station": {
+      "target": url,
       "changeOrigin": true,
-      "pathRewrite": { "^/api/v1/stationTable": "/api/v1/stationTable" }
+      "pathRewrite": { "^/api/Station": "/api/Station" }
     },
-    "/api/v1/staffTable": {
-      "target": "http://localhost:3009",
+    "/api/StationGroup": {
+      "target": url,
       "changeOrigin": true,
-      "pathRewrite": { "^/api/v1/staffTable": "/api/v1/staffTable" }
+      "pathRewrite": { "^/api/StationGroup": "/api/StationGroup" }
     },
+    "/api/staffTable": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/staffTable": "/api/staffTable" }
+    },
+    "/api/Role": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Role": "/api/Role" }
+    },
+    "/api/Cell": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Cell": "/api/Cell" }
+    },
+
   },
   env: {
     development: {
