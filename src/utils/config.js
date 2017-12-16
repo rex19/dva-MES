@@ -26,7 +26,7 @@ module.exports = {
     posts: `${APIV1}/posts`,
     stationTable: `${APIV1}/Station`,
     stationGroupTable: `${APIV1}/StationGroup`,
-    staffTable: `${APIV1}/staffTable`,
+    staffTable: `${APIV1}/Staff`,
     roleTable: `${APIV1}/Role`,
     lineTable: `${APIV1}/Cell`,
     user: `${APIV1}/user/:id`,
@@ -45,5 +45,18 @@ module.exports = {
     getEditModalInitData: 'GetEditinitialize', //编辑Modals初始化数据api
     getDetailsModalInitData: 'GetTById', //详细信息Modals初始化数据api
     getTableInitData: 'GetTByCondition',//表格初始化数据api
+  },
+  table: {
+    paginationConfig: {
+      PageIndex: 1, //当前页数
+      PageSize: 10, // 表格每页显示多少条数据
+      Total: 0,
+      ShowSizeChanger: true, // 是否可以修改每页显示多少条数据
+      PageSizeOptions: ['10', '20', '50', '100'], // 指定每页可以显示多少条
+    },
+    formItemLayout: {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 15 },
+    }
   }
 }

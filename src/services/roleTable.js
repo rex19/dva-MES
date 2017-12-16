@@ -1,14 +1,12 @@
-import { request, config } from 'utils'
-
-const { api, crudApi } = config
-const { roleTable } = api
-const { postAddData, postEditData, postDeleteData, getAddModalInitData, getEditModalInitData, getDetailsModalInitData, getTableInitData } = crudApi
-const tableName = roleTable
+import { request } from 'utils'
+import globalConfig from 'utils/config'
+//每个table可能不同的变量字段
+const tableName = globalConfig.api.roleTable
 
 //查询整表
 export async function query(params) {
   return request({
-    url: `${tableName}/${getTableInitData}`,
+    url: `${tableName}/${globalConfig.crudApi.getTableInitData}`,
     method: 'post',
     data: params,
   })
@@ -16,7 +14,7 @@ export async function query(params) {
 //新增数据保存
 export async function create(params) {
   return request({
-    url: `${tableName}/${postAddData}`,
+    url: `${tableName}/${globalConfig.crudApi.postAddData}`,
     method: 'post',
     data: params,
   })
@@ -24,7 +22,7 @@ export async function create(params) {
 //删除数据
 export async function deleted(params) {
   return request({
-    url: `${tableName}/${postDeleteData}/1`,
+    url: `${tableName}/${globalConfig.crudApi.postDeleteData}/${params}`,
     method: 'delete',
     data: params,
   })
@@ -32,7 +30,7 @@ export async function deleted(params) {
 //修改数据
 export async function edit(params) {
   return request({
-    url: `${tableName}/${postEditData}`,
+    url: `${tableName}/${globalConfig.crudApi.postEditData}`,
     method: 'put',
     data: params,
   })
@@ -40,7 +38,7 @@ export async function edit(params) {
 //获取新增Modal初始化数据
 export async function getAddModalData(params) {
   return request({
-    url: `${tableName}/${getAddModalInitData}`,
+    url: `${tableName}/${globalConfig.crudApi.getAddModalInitData}`,
     method: 'get',
     data: params,
   })
@@ -48,7 +46,7 @@ export async function getAddModalData(params) {
 //获取修改Modal初始化数据
 export async function getEditModalData(params) {
   return request({
-    url: `${tableName}/${getEditModalInitData}/1`,
+    url: `${tableName}/${globalConfig.crudApi.getEditModalInitData}/${params}`,
     method: 'get',
     data: params,
   })
@@ -56,7 +54,7 @@ export async function getEditModalData(params) {
 //获取详情Modal初始化数据
 export async function getDetailsModalData(params) {
   return request({
-    url: `${tableName}/${getDetailsModalInitData}/1`,
+    url: `${tableName}/${globalConfig.crudApi.getDetailsModalInitData}/${params}`,
     method: 'get',
     data: params,
   })

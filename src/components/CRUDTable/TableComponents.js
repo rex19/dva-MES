@@ -3,6 +3,11 @@ import { Row, Col, Button, Icon, Table, Pagination, Popconfirm } from 'antd'
 import { connect } from 'dva'
 import { ModalComponents } from './ModalComponents'
 import './index.less'
+// import {  config } from 'utils'
+// import globalConfig from 'utils/config.js';
+
+// const { table } = config
+// const { paginationConfig } = table
 
 let column = []
 
@@ -17,10 +22,11 @@ const TableComponents = ({
   editModalValue,
   detailsModalValue,
   handleAdd,
+  tableLoading
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
-    title: 'Action',
+    title: '操作',
     key: (new Date()).valueOf(),
     fixed: 'right',
     width: 140,
@@ -64,7 +70,19 @@ const TableComponents = ({
 
   }
   const onShowSizeChange = (PageIndex = 1, pageSize = 20) => {
-    console.log(PageIndex, pageSize);
+    console.log('onShowSizeChange', PageIndex, pageSize);
+    dispatch({
+      type: `${tableName}/query`,
+      payload: {
+        PageIndex: PageIndex,  //第几页
+        PageSize: pageSize,  //多少行
+        TDto: null,
+      }
+    })
+  }
+
+  const onPaginationChange = (PageIndex, pageSize) => {
+    console.log('onPaginationChange', PageIndex, pageSize);
     dispatch({
       type: `${tableName}/query`,
       payload: {
@@ -96,15 +114,21 @@ const TableComponents = ({
           scroll={{ x: 1300 }}
           pagination={false}
           onChange={onChange}
+          loading={tableLoading}
         />
       </Row>
       <Row >
         <Col span={24} style={{ textAlign: 'center', marginTop: '10px' }}>
           <Pagination
-            showSizeChanger
-            onShowSizeChange={onShowSizeChange}
-            defaultCurrent={1}
-            total={pagination.total}
+            showQuickJumper//是否可以快速跳转至某页
+            // current={pagination.current}
+            onChange={onPaginationChange}//页码改变的回调，参数是改变后的页码及每页条数
+            // showSizeChanger={this.props.showSizeChanger}//是否可以改变 pageSize
+            onShowSizeChange={onShowSizeChange}//pageSize 变化的回调
+            defaultCurrent={1}//默认的当前页数
+            total={pagination.total}//数据总数
+            showTotal={(total, range) => `每页${range[1]}条,共${total}条`}
+          // current={this.props.currentPage}  //当前页数
           />
         </Col>
       </Row>

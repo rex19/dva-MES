@@ -2,55 +2,49 @@ import React from 'react'
 import { Form, Input, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
-import './index.less'
+import globalConfig from 'utils/config'
 import { roleTableColumns } from '../../mock/tableColums'
+import './index.less'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
+//每个table可能不同的变量字段(1)
 const TableName = 'roleTable'
 const TableColumns = roleTableColumns
 
 const RoleTableComponents = ({
   roleTable,
   dispatch,
-  loading,
   location,
   form
 }) => {
+  //每个table可能不同的变量字段(2)
   const TableModelsData = roleTable
-  const { getFieldDecorator, validateFields, getFieldsValue } = form
-  const { list, pagination, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, ModalValueRecord, TotalMultiselectData, AllocatedMultiselectData, platfrom, EditData, DetailsData } = TableModelsData
-  const formItemLayout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 15 },
-  }
-
+  const { getFieldDecorator, validateFields, resetFields } = form
+  const formItemLayout = globalConfig.table.formItemLayout
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platfrom } = TableModelsData
 
   console.log('RoleTableComponents-roleTable ', TableModelsData)
-
   /**
    * crud modal
    */
-  // 定义表单域 =>发出Action
-  const addValidateFieldsParam = ['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser']
-  const editValidateFieldsParam = ['EditRoleName', 'EditPlatformID', 'EditState', 'EditUser']
+  // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      let ValidateFieldsParam = addValidateFieldsParam
-      validateFields(ValidateFieldsParam, (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformID: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
+        const createParam = { RoleName: payload.AddRoleName, PlatfromId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
+          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
         }
       })
     } else if (modalType === 'edit') {
-      let ValidateFieldsParam = editValidateFieldsParam
-      validateFields(ValidateFieldsParam, (err, payload) => {
-        const editParam = { RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
+        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -72,6 +66,7 @@ const RoleTableComponents = ({
       },
     })
   }
+  //每个table可能不同的变量字段(4)
   const formComponentsValue = () => {
     return (
       <Form>
@@ -125,7 +120,7 @@ const RoleTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('AddPlatformID', {
-              initialValue: '',
+              initialValue: '1',
             })(
               <Select>
                 {platfrom.map(function (item, index) {
@@ -183,6 +178,20 @@ const RoleTableComponents = ({
     return (
       <div>
         <Form >
+          <FormItem
+            {...formItemLayout}
+            label="Id"
+            hasFeedback
+          >
+            {getFieldDecorator('EditId', {
+              initialValue: EditData.Id,
+              rules: [
+                {
+                  required: true, message: '请输入角色',
+                },
+              ],
+            })(<Input disabled />)}
+          </FormItem>
           <FormItem
             {...formItemLayout}
             label="角色"
@@ -329,6 +338,7 @@ const RoleTableComponents = ({
         <TableComponents
           tableName={TableName}
           data={list}
+          tableLoading={tableLoading}
           pagination={pagination}
           columns={TableColumns}
           addModalValue={addModalValue()}
@@ -343,6 +353,6 @@ const RoleTableComponents = ({
 }
 
 
-export default connect(({ roleTable, loading }) => ({ roleTable, loading }))(Form.create()(RoleTableComponents))
+export default connect(({ roleTable }) => ({ roleTable }))(Form.create()(RoleTableComponents))
 
 
