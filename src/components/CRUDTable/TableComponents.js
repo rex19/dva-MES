@@ -127,7 +127,7 @@ const TableComponents = ({
             onShowSizeChange={onShowSizeChange}//pageSize 变化的回调
             defaultCurrent={1}//默认的当前页数
             total={pagination.total}//数据总数
-            showTotal={(total, range) => `每页${range[1]}条,共${total}条`}
+            showTotal={(total, range) => `每页${range[0]}条,共${total}条`}
           // current={this.props.currentPage}  //当前页数
           />
         </Col>

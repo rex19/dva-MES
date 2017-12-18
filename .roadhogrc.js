@@ -7,8 +7,8 @@ const svgSpriteDirs = [
 ]
 
 const NodeUrl = 'http://localhost:3009'
-const url = 'http://localhost:3009'
-// const url = 'http://192.168.1.252/SFMES'
+// const url = 'http://localhost:3009'
+const url = 'http://192.168.1.252/SFMES'
 export default {
   entry: 'src/index.js',
   svgSpriteLoaderDirs: svgSpriteDirs,
@@ -32,20 +32,21 @@ export default {
       "changeOrigin": true,
       "pathRewrite": { "^/api/menus": "/api/menus" }
     },
+    "/api/StationGroup": {
+      "target": NodeUrl,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/StationGroup": "/api/StationGroup" }
+    },
     "/api/Station": {
       "target": url,
       "changeOrigin": true,
       "pathRewrite": { "^/api/Station": "/api/Station" }
     },
-    "/api/StationGroup": {
+
+    "/api/Staff": {
       "target": url,
       "changeOrigin": true,
-      "pathRewrite": { "^/api/StationGroup": "/api/StationGroup" }
-    },
-    "/api/staffTable": {
-      "target": url,
-      "changeOrigin": true,
-      "pathRewrite": { "^/api/staffTable": "/api/staffTable" }
+      "pathRewrite": { "^/api/Staff": "/api/Staff" }
     },
     "/api/Role": {
       "target": url,

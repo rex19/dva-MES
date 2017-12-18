@@ -23,7 +23,7 @@ const RoleTableComponents = ({
   const TableModelsData = roleTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platfrom } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
 
   console.log('RoleTableComponents-roleTable ', TableModelsData)
   /**
@@ -33,7 +33,7 @@ const RoleTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatfromId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -123,7 +123,7 @@ const RoleTableComponents = ({
               initialValue: '1',
             })(
               <Select>
-                {platfrom.map(function (item, index) {
+                {platform.map(function (item, index) {
                   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                 })}
               </Select>)}
@@ -187,7 +187,7 @@ const RoleTableComponents = ({
               initialValue: EditData.Id,
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入Id',
                 },
               ],
             })(<Input disabled />)}
@@ -212,10 +212,10 @@ const RoleTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditPlatformID', {
-              initialValue: EditData.PlatfromId.toString(),
+              initialValue: EditData.PlatformId.toString(),
             })(
               <Select>
-                {platfrom.map(function (item, index) {
+                {platform.map(function (item, index) {
                   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                 })}
               </Select>)}
@@ -226,7 +226,7 @@ const RoleTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditState', {
-                initialValue: EditData.State,
+                initialValue: EditData.State.toString(),
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -285,7 +285,7 @@ const RoleTableComponents = ({
           {...formItemLayout}
           label="模块"
         >
-          <Input disabled value={DetailsData.PlatfromName} />
+          <Input disabled value={DetailsData.PlatformName} />
         </FormItem>
         <FormItem
           {...formItemLayout}

@@ -17,8 +17,8 @@ const EditData = {
   "Id": 2,
   "RoleName": "testRole",
   "State": 1,
-  "PlatfromId": "1",
-  "PlatfromName": "adm管理",
+  "PlatformId": "1",
+  "PlatformName": "adm管理",
   "CreationDateTime": "2017-11-01T15:36:38",
   "Creator": "admin",
   "EditDateTime": "2017-12-09T13:29:12.6622339",
@@ -46,7 +46,7 @@ export default modelExtend(pageModel, {
     //每个table可能不同的变量字段
     TotalMultiselectData: [],
     AllocatedMultiselectData: [],
-    platfrom: [],
+    platform: [],
 
   },
   subscriptions: {
@@ -90,7 +90,6 @@ export default modelExtend(pageModel, {
           },
         })
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
-        // return successMessage(data.ErrorMessage || '查询成功')
       } else {
         throw data
       }
@@ -103,12 +102,11 @@ export default modelExtend(pageModel, {
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '创建失败')
       } else if (data.Status === 200) {
-        // return errorMessage(data.ErrorMessage || '成功创建')
         yield put({ type: 'hideModal', payload: 'addModalVisible' })
         yield put({
           type: 'query', payload: {
-            PageIndex: Number(pagination.PageIndex),  //第几页
-            PageSize: Number(pagination.PageSize),  //多少行
+            PageIndex: Number(pagination.PageIndex),
+            PageSize: Number(pagination.PageSize),
             [QueryRequestDTO]: null
           }
         })
@@ -128,8 +126,8 @@ export default modelExtend(pageModel, {
         yield put({ type: 'hideModal', payload: 'deleteModalVisible' })
         yield put({
           type: 'query', payload: {
-            PageIndex: Number(pagination.PageIndex),  //第几页
-            PageSize: Number(pagination.PageSize),  //多少行
+            PageIndex: Number(pagination.PageIndex),
+            PageSize: Number(pagination.PageSize),
             [QueryRequestDTO]: null
           }
         })
@@ -149,8 +147,8 @@ export default modelExtend(pageModel, {
         yield put({ type: 'hideModal', payload: 'editModalVisible' })
         yield put({
           type: 'query', payload: {
-            PageIndex: Number(pagination.PageIndex),  //第几页
-            PageSize: Number(pagination.PageSize),  //多少行
+            PageIndex: Number(pagination.PageIndex),
+            PageSize: Number(pagination.PageSize),
             [QueryRequestDTO]: null
           }
         })
@@ -165,6 +163,7 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
+          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -192,7 +191,8 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      return { ...state, ...payload, ModalValueRecord: payload.record, [payload.modalType]: true }
+      console.log('showModal', payload)
+      return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
       return { ...state, ...payload, [payload]: false }
@@ -200,9 +200,10 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platfrom: eval(payload.data.TotalPlatfrom), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platfrom: eval(payload.data.TotalPlatfrom) }
+        console.log('else if (payload.modalType === addModalVisible)', payload)
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platform: eval(payload.data.TotalPlatform) }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

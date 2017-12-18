@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/staffTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/stationGroupTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -10,7 +10,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'staffTable'
+const TableName = 'stationGroupTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -164,7 +164,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
-          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -192,7 +191,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {

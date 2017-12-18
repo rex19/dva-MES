@@ -17,64 +17,67 @@ import moment from 'moment'
  */
 const stationTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '工站编号',
-  dataIndex: 'stationNo',
+  dataIndex: 'StationNumber',
 }, {
   title: '名称',
-  dataIndex: 'name',
+  dataIndex: 'Name',
 }, {
   title: '类型',
-  dataIndex: 'type',
+  dataIndex: 'StationType',
 }, {
   title: '状态',
-  dataIndex: 'status',
+  dataIndex: 'State',
 }, {
   title: '工厂',
-  dataIndex: 'plant',
+  dataIndex: 'FactoryId',
 }, {
   title: '创建时间',
-  dataIndex: 'createTimeAt',
-  sorter: true,
-  render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-}, {
-  title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'CreationDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '修改人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Creator',
+}, {
+  title: '最后修改时间',
+  dataIndex: 'EditDateTime',
+  sorter: true,
+  render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+}, {
+  title: '修改人',
+  dataIndex: 'Editor',
 }]
 const stationGroupTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '工站组编号',
-  dataIndex: 'stationGroupNo',
+  dataIndex: 'GroupNumber',
 }, {
   title: '名称',
-  dataIndex: 'name',
+  dataIndex: 'Description',
 }, {
   title: '状态',
-  dataIndex: 'status',
+  dataIndex: 'State',
 }, {
   title: '工厂',
-  dataIndex: 'plant',
+  dataIndex: 'FactoryId',
 }, {
   title: '创建时间',
-  dataIndex: 'createTimeAt',
+  dataIndex: 'CreateDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '修改人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 
 const staffTableColumns = [{
@@ -94,7 +97,7 @@ const staffTableColumns = [{
   dataIndex: 'Phone',
 }, {
   title: '状态',
-  dataIndex: 'UserState',
+  dataIndex: 'State',
 }, {
   title: '创建时间',
   dataIndex: 'CreateTime',
@@ -143,7 +146,7 @@ const roleTableColumns = [{
   dataIndex: 'RoleName',
 }, {
   title: '模块',
-  dataIndex: 'PlatfromName',
+  dataIndex: 'PlatformName',
 }, {
   title: '状态',
   dataIndex: 'State',
@@ -161,172 +164,147 @@ const roleTableColumns = [{
   title: '最后编辑人',
   dataIndex: 'EditorId',
 }]
-const menuTableColumns = [{
-  title: 'ID',
-  dataIndex: 'id',
-}, {
-  title: '菜单名',
-  dataIndex: 'userName',
-}, {
-  title: '父菜单名',
-  dataIndex: 'platform',
-}, {
-  title: '状态',
-  dataIndex: 'status',
-}, {
-  title: 'URL',
-  dataIndex: 'plant',
-}, {
-  title: '创建时间',
-  dataIndex: 'createTimeAt',
-  sorter: true,
-  render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-}, {
-  title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
-  sorter: true,
-  render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-}, {
-  title: '最后编辑人',
-  dataIndex: 'Modifier',
-}]
+
 const materielTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '料号',
-  dataIndex: 'userName',
+  dataIndex: 'MaterieNumber',
 }, {
   title: '版本',
-  dataIndex: 'platform',
+  dataIndex: 'Version',
 }, {
   title: '描述',
-  dataIndex: 'status',
+  dataIndex: 'Description',
 }, {
   title: '规格',
-  dataIndex: 'plant',
+  dataIndex: 'Specification',
 }, {
   title: '客户侧料号',
-  dataIndex: 'userName',
+  dataIndex: 'CustomerMaterialNumber',
 }, {
   title: '供应商侧料号',
-  dataIndex: 'platform',
+  dataIndex: 'SupplierMaterialNumber',
 }, {
   title: '物料类别',
-  dataIndex: 'status',
+  dataIndex: 'MaterialGroupType',
 }, {
   title: '是否是产品',
-  dataIndex: 'plant',
+  dataIndex: 'IsProduct',
 }, {
   title: '是否连板',
-  dataIndex: 'userName',
+  dataIndex: 'IsMultiPanel',
 }, {
   title: '是否反冲',
-  dataIndex: 'platform',
+  dataIndex: 'RequireBackflush',
 }, {
   title: '小板数量',
-  dataIndex: 'status',
+  dataIndex: 'NumberOfPanels',
 }, {
   title: '单位',
-  dataIndex: 'plant',
+  dataIndex: 'Unit',
 }, {
   title: '是否安装检测',
-  dataIndex: 'platform',
+  dataIndex: 'SetupFlag',
 }, {
   title: '采购类型',
-  dataIndex: 'status',
+  dataIndex: 'ProcurementType',
 }, {
   title: '最小包装量',
-  dataIndex: 'plant',
+  dataIndex: 'MinimumPackageQuantity',
 }, {
   title: '过期时间',
-  dataIndex: 'status',
+  dataIndex: 'ExpirationTime',
 }, {
   title: '安全库存',
-  dataIndex: 'plant',
+  dataIndex: 'SafetyStock',
 }, {
   title: '默认存储库位号',
-  dataIndex: 'platform',
+  dataIndex: 'DefaultStorageLocation',
 }, {
   title: '包装大小(长*宽*高)',
-  dataIndex: 'status',
+  dataIndex: 'ContainerSize',
 }, {
   title: '湿敏等级MSL',
-  dataIndex: 'plant',
+  dataIndex: 'MSL',
 }, {
   title: '状态',
-  dataIndex: 'plant',
+  dataIndex: 'StateValue',
 }, {
   title: '默认设备组',
-  dataIndex: 'platform',
+  dataIndex: 'DefaultStationGroup',
 }, {
   title: '公司编号',
-  dataIndex: 'status',
+  dataIndex: 'CompanyNumber',
 }, {
   title: '工厂编号',
-  dataIndex: 'plant',
+  dataIndex: 'FactoryNumber',
 }, {
   title: '生效日期',
-  dataIndex: 'platform',
+  dataIndex: 'ValidBegin',
 }, {
   title: '失效日期',
-  dataIndex: 'status',
-}, {
-  title: '创建人',
-  dataIndex: 'plant',
+  dataIndex: 'ValidEnd',
 }, {
   title: '创建时间',
-  dataIndex: 'createTimeAt',
+  dataIndex: 'CreationDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
+  title: '创建人',
+  dataIndex: 'Creator',
+}, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 
 const processTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '工艺编号',
-  dataIndex: 'userName',
+  dataIndex: 'ProcessNumber',
 }, {
   title: '成品/半成品料号',
-  dataIndex: 'platform',
+  dataIndex: 'MaterialNumber',
 }, {
   title: '版本',
-  dataIndex: 'status',
+  dataIndex: 'Version',
 }, {
   title: '状态',
-  dataIndex: 'plant',
+  dataIndex: 'State',
 }, {
   title: '生效时间',
-  dataIndex: 'createTimeAt',
+  dataIndex: 'ValidBegin',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '失效时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'ValidEnd',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '创建时间',
-  dataIndex: 'createTimeAt',
+  dataIndex: 'CreationDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
+  title: '创建人',
+  dataIndex: 'Creator',
+}, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 
 const failureTypeTableColumns = [{
@@ -348,6 +326,14 @@ const failureTypeTableColumns = [{
   title: '状态',
   dataIndex: 'plant',
 }, {
+  title: '创建时间',
+  dataIndex: 'CreationDateTime',
+  sorter: true,
+  render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+}, {
+  title: '创建人',
+  dataIndex: 'Creator',
+}, {
   title: '最后修改时间',
   dataIndex: 'lastModifyAt',
   sorter: true,
@@ -359,30 +345,30 @@ const failureTypeTableColumns = [{
 
 const regionTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '区域编号',
-  dataIndex: 'userName',
+  dataIndex: 'AreaNumber',
 }, {
   title: '名称',
-  dataIndex: 'platform',
+  dataIndex: 'Name',
 }, {
   title: '描述',
-  dataIndex: 'status',
+  dataIndex: 'Description',
 }, {
   title: '工厂',
-  dataIndex: 'plant',
+  dataIndex: 'Factory',
 }, {
   title: '状态',
-  dataIndex: 'plant',
+  dataIndex: 'State',
 }, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 
 const locationTableColumns = [{
@@ -546,7 +532,7 @@ export {
   staffTableColumns,
   lineTableColumns,
   roleTableColumns,
-  menuTableColumns,
+  // menuTableColumns,
   materielTableColumns,
   processTableColumns,
   failureTypeTableColumns,
@@ -556,3 +542,35 @@ export {
   customerTableColumns,
   supplierTableColumns
 }
+
+
+
+// const menuTableColumns = [{
+//   title: 'ID',
+//   dataIndex: 'id',
+// }, {
+//   title: '菜单名',
+//   dataIndex: 'userName',
+// }, {
+//   title: '父菜单名',
+//   dataIndex: 'platform',
+// }, {
+//   title: '状态',
+//   dataIndex: 'status',
+// }, {
+//   title: 'URL',
+//   dataIndex: 'plant',
+// }, {
+//   title: '创建时间',
+//   dataIndex: 'createTimeAt',
+//   sorter: true,
+//   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+// }, {
+//   title: '最后修改时间',
+//   dataIndex: 'lastModifyAt',
+//   sorter: true,
+//   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+// }, {
+//   title: '最后编辑人',
+//   dataIndex: 'Modifier',
+// }]

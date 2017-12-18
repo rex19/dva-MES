@@ -1,7 +1,7 @@
 import { request } from 'utils'
 import globalConfig from 'utils/config'
 //每个table可能不同的变量字段
-const tableName = globalConfig.api.stationTable
+const tableName = globalConfig.api.stationGroupTable
 
 //查询整表
 export async function query(params) {
