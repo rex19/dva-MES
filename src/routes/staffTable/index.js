@@ -102,14 +102,37 @@ const StaffTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="角色"
+            label="账号"
             hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddAccount', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入账号',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="员工姓名"
+            hasFeedback
+          >
+            {getFieldDecorator('AddUserName', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="密码"
+            hasFeedback
+          >
+            {getFieldDecorator('AddPassword', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入密码',
                 },
               ],
             })(<Input />)}
@@ -123,38 +146,52 @@ const StaffTableComponents = ({
               initialValue: '1',
             })(
               <Select>
-                {platform.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
+                <Option key={0} value='1'>模块1</Option>
               </Select>)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮箱"
+            hasFeedback
+          >
+            {getFieldDecorator('AddEmailAddress', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="电话"
+            hasFeedback
+          >
+            {getFieldDecorator('AddPhone', {
+              initialValue: '',
+            })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="状态"
           >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
+            {getFieldDecorator('AddState', {
+              initialValue: 1,
+              rules: [
+                {
+                  required: true, message: '请选择状态',
+                },
+              ],
+            })(
+              <RadioGroup>
+                <Radio value={1}>正常</Radio>
+                <Radio value={2}>失效</Radio>
+              </RadioGroup>
+              )}
+
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="已分配人员"
+            label="角色"
           >
             <div>
-              {getFieldDecorator('AddUser', {
+              {getFieldDecorator('AddRole', {
                 initialValue: [],
               })(
                 <Select
@@ -163,9 +200,8 @@ const StaffTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
-                  {TotalMultiselectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
+                  <Option key={0} value={0}>角色1</Option>
+                  <Option key={1} value={1}>角色2</Option>
                 </Select>
                 )}
             </div>
@@ -215,9 +251,7 @@ const StaffTableComponents = ({
               initialValue: EditData.PlatformId.toString(),
             })(
               <Select>
-                {platform.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
+                <Option key={0} value='1'>模块1</Option>
               </Select>)}
           </FormItem>
           <FormItem
@@ -247,7 +281,7 @@ const StaffTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditUser', {
-                initialValue: AllocatedMultiselectData,
+                initialValue: [],
               })(
                 <Select
                   mode="multiple"
@@ -255,9 +289,8 @@ const StaffTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
-                  {TotalMultiselectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
+                  <Option key={0} value={0}>角色1</Option>
+                  <Option key={1} value={1}>角色2</Option>
                 </Select>
                 )}
             </div>
@@ -277,9 +310,27 @@ const StaffTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="账号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.Account} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="用户名"
+        >
+          <Input disabled value={DetailsData.UserName} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="邮箱"
+        >
+          <Input disabled value={DetailsData.EmailAddress} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="电话"
+        >
+          <Input disabled value={DetailsData.Phone} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -321,7 +372,7 @@ const StaffTableComponents = ({
           {...formItemLayout}
           label="拥有此角色人员"
         >
-          <Input disabled value={DetailsData.User} />
+          <Input disabled value={DetailsData.Role} />
         </FormItem>
       </div>
     )

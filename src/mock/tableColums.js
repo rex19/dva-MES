@@ -64,7 +64,7 @@ const stationGroupTableColumns = [{
   dataIndex: 'State',
 }, {
   title: '工厂',
-  dataIndex: 'FactoryId',
+  dataIndex: 'Factory',
 }, {
   title: '创建时间',
   dataIndex: 'CreateDateTime',

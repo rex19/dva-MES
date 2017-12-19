@@ -33,7 +33,7 @@ export default {
       "pathRewrite": { "^/api/menus": "/api/menus" }
     },
     "/api/StationGroup": {
-      "target": NodeUrl,
+      "target": url,
       "changeOrigin": true,
       "pathRewrite": { "^/api/StationGroup": "/api/StationGroup" }
     },
@@ -42,7 +42,6 @@ export default {
       "changeOrigin": true,
       "pathRewrite": { "^/api/Station": "/api/Station" }
     },
-
     "/api/Staff": {
       "target": url,
       "changeOrigin": true,
@@ -58,7 +57,21 @@ export default {
       "changeOrigin": true,
       "pathRewrite": { "^/api/Cell": "/api/Cell" }
     },
-
+    "/api/Material": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Material": "/api/Material" }
+    },
+    "/api/Process": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Process": "/api/Process" }
+    },
+    "/api/Area": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Area": "/api/Area" }
+    },
   },
   env: {
     development: {

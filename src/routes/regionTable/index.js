@@ -3,29 +3,29 @@ import { Form, Input, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
-import { lineTableColumns } from '../../mock/tableColums'
+import { regionTableColumns } from '../../mock/tableColums'
 import './index.less'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'lineTable'
-const TableColumns = lineTableColumns
+const TableName = 'regionTable'
+const TableColumns = regionTableColumns
 
-const LineTableComponents = ({
-  lineTable,
+const RegionTableComponents = ({
+  regionTable,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = lineTable
+  const TableModelsData = regionTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
 
-  console.log('TableComponents-lineTable ', TableModelsData)
+  console.log('RegionTableComponents-regionTable ', TableModelsData)
   /**
    * crud modal
    */
@@ -102,10 +102,10 @@ const LineTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="线体编号"
+            label="角色"
             hasFeedback
           >
-            {getFieldDecorator('AddCellNumber', {
+            {getFieldDecorator('AddRoleName', {
               initialValue: '',
               rules: [
                 {
@@ -116,17 +116,17 @@ const LineTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="名称"
+            label="模块"
             hasFeedback
           >
-            {getFieldDecorator('AddDescription', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入名称',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('AddPlatformID', {
+              initialValue: '1',
+            })(
+              <Select>
+                {platform.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
+              </Select>)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -145,6 +145,27 @@ const LineTableComponents = ({
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
                   <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="已分配人员"
+          >
+            <div>
+              {getFieldDecorator('AddUser', {
+                initialValue: [],
+              })(
+                <Select
+                  mode="multiple"
+                  labelInValue
+                  style={{ width: '100%' }}
+                  placeholder="请选择"
+                >
+                  {TotalMultiselectData.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -171,7 +192,76 @@ const LineTableComponents = ({
               ],
             })(<Input disabled />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="角色"
+            hasFeedback
+          >
+            {getFieldDecorator('EditRoleName', {
+              initialValue: EditData.RoleName,
+              rules: [
+                {
+                  required: true, message: '请输入角色',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="模块"
+            hasFeedback
+          >
+            {getFieldDecorator('EditPlatformID', {
+              initialValue: EditData.PlatformId.toString(),
+            })(
+              <Select>
+                {platform.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
+              </Select>)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('EditState', {
+                initialValue: EditData.State.toString(),
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="已分配人员"
+          >
+            <div>
+              {getFieldDecorator('EditUser', {
+                initialValue: AllocatedMultiselectData,
+              })(
+                <Select
+                  mode="multiple"
+                  labelInValue
+                  style={{ width: '100%' }}
+                  placeholder="请选择"
+                >
+                  {TotalMultiselectData.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
         </Form>
       </div>
     )
@@ -189,13 +279,13 @@ const LineTableComponents = ({
           {...formItemLayout}
           label="角色"
         >
-          <Input disabled value={DetailsData.CellNumber} />
+          <Input disabled value={DetailsData.RoleName} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="名称"
+          label="模块"
         >
-          <Input disabled value={DetailsData.Description} />
+          <Input disabled value={DetailsData.PlatformName} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -227,6 +317,12 @@ const LineTableComponents = ({
         >
           <Input disabled value={DetailsData.Editor} />
         </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="拥有此角色人员"
+        >
+          <Input disabled value={DetailsData.User} />
+        </FormItem>
       </div>
     )
   }
@@ -257,6 +353,6 @@ const LineTableComponents = ({
 }
 
 
-export default connect(({ lineTable }) => ({ lineTable }))(Form.create()(LineTableComponents))
+export default connect(({ regionTable }) => ({ regionTable }))(Form.create()(RegionTableComponents))
 
 

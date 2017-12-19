@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/staffTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/materielTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -10,7 +10,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'staffTable'
+const TableName = 'materielTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -44,9 +44,14 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    TotalMultiselectData: [],
-    AllocatedMultiselectData: [],
-    platform: [],
+    MaterialType: [],
+    Unit: [],
+    ProcurementType: [],
+    Location: [],
+    MSL: [],
+    StationGroup: [],
+    Company: [],
+    Factory: [],
 
   },
   subscriptions: {
@@ -73,7 +78,6 @@ export default modelExtend(pageModel, {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
       const data = yield call(query, payload)
-      console.log('effects-query', data)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
@@ -201,10 +205,19 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalRole), AllocatedMultiselectData: eval(payload.data.AllocatedRole), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
-        console.log('else if (payload.modalType === addModalVisible)', payload)
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalRole), platform: eval(payload.data.TotalPlatform) }
+        return {
+          ...state, ...payload,
+          MaterialType: eval(payload.data.MaterialType),
+          Unit: eval(payload.data.Unit),
+          ProcurementType: eval(payload.data.ProcurementType),
+          Location: eval(payload.data.Location),
+          MSL: eval(payload.data.MSL),
+          StationGroup: eval(payload.data.StationGroup),
+          Company: eval(payload.data.Company),
+          Factory: eval(payload.data.Factory),
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

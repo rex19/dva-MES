@@ -44,9 +44,8 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    TotalMultiselectData: [],
-    AllocatedMultiselectData: [],
-    platform: [],
+    TotalStation: [],
+    SelectedStation: []
 
   },
   subscriptions: {
@@ -199,10 +198,9 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, TotalStation: eval(payload.data.TotalStation), SelectedStation: eval(payload.data.SelectedStation), EditData: payload.data.StationGroup == null ? state.EditData : payload.data.StationGroup }
       } else if (payload.modalType === 'addModalVisible') {
-        console.log('else if (payload.modalType === addModalVisible)', payload)
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platform: eval(payload.data.TotalPlatform) }
+        return { ...state, ...payload, TotalStation: eval(payload.data.TotalStation), SelectedStation: eval(payload.data.SelectedStation) }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

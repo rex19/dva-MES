@@ -3,29 +3,29 @@ import { Form, Input, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
-import { lineTableColumns } from '../../mock/tableColums'
+import { processTableColumns } from '../../mock/tableColums'
 import './index.less'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'lineTable'
-const TableColumns = lineTableColumns
+const TableName = 'processTable'
+const TableColumns = processTableColumns
 
-const LineTableComponents = ({
-  lineTable,
+const ProcessTableComponents = ({
+  processTable,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = lineTable
+  const TableModelsData = processTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
 
-  console.log('TableComponents-lineTable ', TableModelsData)
+  console.log('ProcessTableComponents-processTable ', TableModelsData)
   /**
    * crud modal
    */
@@ -102,10 +102,10 @@ const LineTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="线体编号"
+            label="工艺编号"
             hasFeedback
           >
-            {getFieldDecorator('AddCellNumber', {
+            {getFieldDecorator('AddRoleName', {
               initialValue: '',
               rules: [
                 {
@@ -116,17 +116,24 @@ const LineTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="名称"
-            hasFeedback
+            label="成品/半成品料号"
           >
-            {getFieldDecorator('AddDescription', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入名称',
-                },
-              ],
-            })(<Input />)}
+            <div>
+              {getFieldDecorator('AddState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -149,6 +156,70 @@ const LineTableComponents = ({
                 )}
             </div>
           </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="模版工艺编号"
+          >
+            <div>
+              {getFieldDecorator('AddState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="生效时间"
+            hasFeedback
+          >
+            {getFieldDecorator('AddRoleName', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入角色',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="失效时间"
+            hasFeedback
+          >
+            {getFieldDecorator('AddRoleName', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入角色',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工艺步骤"
+          >
+            <div>
+              {getFieldDecorator('AddRoleName', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请输入角色',
+                  },
+                ],
+              })(<Input />)}
+            </div>
+          </FormItem>
         </Form>
       </div>
     )
@@ -163,7 +234,7 @@ const LineTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: EditData.Id,
+              initialValue: '1',
               rules: [
                 {
                   required: true, message: '请输入Id',
@@ -189,13 +260,13 @@ const LineTableComponents = ({
           {...formItemLayout}
           label="角色"
         >
-          <Input disabled value={DetailsData.CellNumber} />
+          <Input disabled value={DetailsData.RoleName} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="名称"
+          label="模块"
         >
-          <Input disabled value={DetailsData.Description} />
+          <Input disabled value={DetailsData.PlatformName} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -227,6 +298,12 @@ const LineTableComponents = ({
         >
           <Input disabled value={DetailsData.Editor} />
         </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="拥有此角色人员"
+        >
+          <Input disabled value={DetailsData.User} />
+        </FormItem>
       </div>
     )
   }
@@ -257,6 +334,6 @@ const LineTableComponents = ({
 }
 
 
-export default connect(({ lineTable }) => ({ lineTable }))(Form.create()(LineTableComponents))
+export default connect(({ processTable }) => ({ processTable }))(Form.create()(ProcessTableComponents))
 
 

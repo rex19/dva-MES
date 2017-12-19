@@ -23,7 +23,7 @@ const StationTableComponents = ({
   const TableModelsData = stationTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalStationGroup, SelectedStationGroup } = TableModelsData
 
   console.log('TableComponents-stationTable ', TableModelsData)
   /**
@@ -102,10 +102,10 @@ const StationTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="角色"
+            label="工站编号"
             hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddStationNumber', {
               initialValue: '',
               rules: [
                 {
@@ -116,16 +116,28 @@ const StationTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="模块"
+            label="名称"
             hasFeedback
           >
-            {getFieldDecorator('AddPlatformID', {
+            {getFieldDecorator('AddName', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入名称',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工站类型"
+            hasFeedback
+          >
+            {getFieldDecorator('AddStationType', {
               initialValue: '1',
             })(
               <Select>
-                {platform.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
+                <Option key={0} value='1'>模块1</Option>
               </Select>)}
           </FormItem>
           <FormItem
@@ -145,27 +157,6 @@ const StationTableComponents = ({
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
                   <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="已分配人员"
-          >
-            <div>
-              {getFieldDecorator('AddUser', {
-                initialValue: [],
-              })(
-                <Select
-                  mode="multiple"
-                  labelInValue
-                  style={{ width: '100%' }}
-                  placeholder="请选择"
-                >
-                  {TotalMultiselectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
                 </Select>
                 )}
             </div>
@@ -194,28 +185,42 @@ const StationTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="角色"
+            label="工作站名"
             hasFeedback
           >
-            {getFieldDecorator('EditRoleName', {
-              initialValue: EditData.RoleName,
+            {getFieldDecorator('EditStationNumber', {
+              initialValue: EditData.StationNumber,
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入工作站',
                 },
               ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="模块"
+            label="名称"
             hasFeedback
           >
-            {getFieldDecorator('EditPlatformID', {
-              initialValue: EditData.PlatformId.toString(),
+            {getFieldDecorator('EditName', {
+              initialValue: EditData.Name,
+              rules: [
+                {
+                  required: true, message: '请输入名称',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工站类型"
+            hasFeedback
+          >
+            {getFieldDecorator('EditStationType', {
+              initialValue: EditData.StationType.toString(),
             })(
               <Select>
-                {platform.map(function (item, index) {
+                {SelectedStationGroup.map(function (item, index) {
                   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                 })}
               </Select>)}
@@ -243,11 +248,11 @@ const StationTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="已分配人员"
+            label="已分配工作组"
           >
             <div>
-              {getFieldDecorator('EditUser', {
-                initialValue: AllocatedMultiselectData,
+              {getFieldDecorator('EditStationGroup', {
+                initialValue: SelectedStationGroup,
               })(
                 <Select
                   mode="multiple"
@@ -255,13 +260,14 @@ const StationTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
-                  {TotalMultiselectData.map(function (item, index) {
+                  {TotalStationGroup.map(function (item, index) {
                     return <Option key={index} value={item.key}>{item.label}</Option>
                   })}
                 </Select>
                 )}
             </div>
           </FormItem>
+
         </Form>
       </div>
     )
@@ -277,15 +283,27 @@ const StationTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="工站编号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.StationNumber} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="模块"
+          label="名称"
         >
-          <Input disabled value={DetailsData.PlatformName} />
+          <Input disabled value={DetailsData.Name} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="工站类型"
+        >
+          <Input disabled value={DetailsData.StationType} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="工站组"
+        >
+          <Input disabled value={DetailsData.StationGroupIdArray} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -316,12 +334,6 @@ const StationTableComponents = ({
           label="最后编辑人"
         >
           <Input disabled value={DetailsData.Editor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="拥有此角色人员"
-        >
-          <Input disabled value={DetailsData.User} />
         </FormItem>
       </div>
     )

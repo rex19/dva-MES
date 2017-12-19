@@ -41,6 +41,18 @@ const Routers = function ({ history, app }) {
       models: () => [import('./models/roleTable')],
       component: () => import('./routes/roleTable/'),
     }, {
+      path: '/masterdata/materielTable',
+      models: () => [import('./models/materielTable')],
+      component: () => import('./routes/materielTable/'),
+    }, {
+      path: '/masterdata/processTable',
+      models: () => [import('./models/processTable')],
+      component: () => import('./routes/processTable/'),
+    }, {
+      path: '/masterdata/regionTable',
+      models: () => [import('./models/regionTable')],
+      component: () => import('./routes/regionTable/'),
+    }, {
       path: '/permissionManagement',
       // models: () => [import('./models/user')],
       component: () => import('./routes/permissionManagement/'),

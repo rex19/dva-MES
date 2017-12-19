@@ -1,4 +1,5 @@
 import { Tree } from 'antd';
+import { EditableComponent } from '../../components';
 const TreeNode = Tree.TreeNode;
 
 const treeData = [{
@@ -75,19 +76,22 @@ export default class PermissionManagement extends React.Component {
   }
   render() {
     return (
-      <Tree
-        showLine
-        checkable
-        onExpand={this.onExpand}
-        expandedKeys={this.state.expandedKeys}
-        autoExpandParent={this.state.autoExpandParent}
-        onCheck={this.onCheck}
-        checkedKeys={this.state.checkedKeys}
-        onSelect={this.onSelect}
-        selectedKeys={this.state.selectedKeys}
-      >
-        {this.renderTreeNodes(treeData)}
-      </Tree>
+      <div>
+        <Tree
+          showLine
+          checkable
+          onExpand={this.onExpand}
+          expandedKeys={this.state.expandedKeys}
+          autoExpandParent={this.state.autoExpandParent}
+          onCheck={this.onCheck}
+          checkedKeys={this.state.checkedKeys}
+          onSelect={this.onSelect}
+          selectedKeys={this.state.selectedKeys}
+        >
+          {this.renderTreeNodes(treeData)}
+        </Tree>
+        <EditableComponent />
+      </div>
     )
   }
 }
