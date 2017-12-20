@@ -23,7 +23,7 @@ const LineTableComponents = ({
   const TableModelsData = lineTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData } = TableModelsData
 
   console.log('TableComponents-lineTable ', TableModelsData)
   /**
@@ -171,7 +171,76 @@ const LineTableComponents = ({
               ],
             })(<Input disabled />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="线体编号"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCellNumber', {
+              initialValue: EditData.CellNumber,
+              rules: [
+                {
+                  required: true, message: '请输入Id',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="名称"
+            hasFeedback
+          >
+            {getFieldDecorator('EditDescription', {
+              initialValue: EditData.Description,
+              rules: [
+                {
+                  required: true, message: '请输入名称',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('AddState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="已分配工站"
+          >
+            <div>
+              {getFieldDecorator('EditAllocatedMultiselectData', {
+                initialValue: AllocatedMultiselectData,
+              })(
+                <Select
+                  mode="multiple"
+                  labelInValue
+                  style={{ width: '100%' }}
+                  placeholder="请选择"
+                >
+                  {TotalMultiselectData.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
         </Form>
       </div>
     )
@@ -245,6 +314,7 @@ const LineTableComponents = ({
           tableLoading={tableLoading}
           pagination={pagination}
           columns={TableColumns}
+          TableWidth={1300}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}

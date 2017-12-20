@@ -3,67 +3,29 @@ import { Form, Input, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
-import { processTableColumns } from '../../mock/tableColums'
-import EditableforEditModals from './subpage/editableforEditModals'
-// import EditableforAddModals from './subpage/editableforAddModals'
+import { supplierTableColumns } from '../../mock/tableColums'
 import './index.less'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
-const formItemLayout = globalConfig.table.formItemLayout
 //每个table可能不同的变量字段(1)
-const TableName = 'processTable'
-const TableColumns = processTableColumns
+const TableName = 'supplierTable'
+const TableColumns = supplierTableColumns
 
-
-
-class addModalValueComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    console.log('addModalValueComponent', this.props)
-    const { getFieldDecorator } = this.props
-    return (
-      <div>
-        <Form >
-          <FormItem
-            {...formItemLayout}
-            label="工艺编号"
-            hasFeedback
-          >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-
-        </Form>
-      </div>
-    )
-  }
-}
-
-
-const ProcessTableComponents = ({
-  processTable,
+const SupplierTableComponents = ({
+  supplierTable,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = processTable
+  const TableModelsData = supplierTable
   const { getFieldDecorator, validateFields, resetFields } = form
-  // const formItemLayout = globalConfig.table.formItemLayout
+  const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
 
-  console.log('ProcessTableComponents-processTable ', TableModelsData)
+  console.log('SupplierTableComponents-supplierTable ', TableModelsData)
   /**
    * crud modal
    */
@@ -135,13 +97,12 @@ const ProcessTableComponents = ({
     )
   }
   const addModalValue = () => {
-
     return (
       <div>
         <Form >
           <FormItem
             {...formItemLayout}
-            label="工艺编号"
+            label="角色"
             hasFeedback
           >
             {getFieldDecorator('AddRoleName', {
@@ -152,103 +113,6 @@ const ProcessTableComponents = ({
                 },
               ],
             })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="成品/半成品料号"
-          >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="状态"
-          >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="模版工艺编号"
-          >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="生效时间"
-            hasFeedback
-          >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="失效时间"
-            hasFeedback
-          >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="工艺步骤"
-          >
-            <EditableforEditModals />
           </FormItem>
 
         </Form>
@@ -338,7 +202,7 @@ const ProcessTableComponents = ({
       </div>
     )
   }
-  // const addModalValueCom = <addModalValueComponent formItemLayout={formItemLayout} getFieldDecorator={getFieldDecorator} />
+
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -354,9 +218,7 @@ const ProcessTableComponents = ({
           pagination={pagination}
           columns={TableColumns}
           TableWidth={1300}
-          ModalWidth={1300}
           addModalValue={addModalValue()}
-          // addModalValue={<addModalValueComponent formItemLayout={formItemLayout} getFieldDecorator={getFieldDecorator} />}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
@@ -368,6 +230,6 @@ const ProcessTableComponents = ({
 }
 
 
-export default connect(({ processTable }) => ({ processTable }))(Form.create()(ProcessTableComponents))
+export default connect(({ supplierTable }) => ({ supplierTable }))(Form.create()(SupplierTableComponents))
 
 

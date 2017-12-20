@@ -72,6 +72,31 @@ export default {
       "changeOrigin": true,
       "pathRewrite": { "^/api/Area": "/api/Area" }
     },
+    "/api/Location": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Location": "/api/Location" }
+    },
+    "/api/Supplier": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Supplier": "/api/Supplier" }
+    },
+    "/api/Customer": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Customer": "/api/Customer" }
+    },
+    "/api/FailureType": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/FailureType": "/api/FailureType" }
+    },
+    "/api/Bom": {
+      "target": url,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/Bom": "/api/Bom" }
+    },
   },
   env: {
     development: {
@@ -103,3 +128,4 @@ export default {
     include: ["dva/router", "dva/saga", "dva/fetch"]
   }
 }
+

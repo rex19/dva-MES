@@ -274,8 +274,8 @@ const processTableColumns = [{
   title: '成品/半成品料号',
   dataIndex: 'MaterialNumber',
 }, {
-  title: '版本',
-  dataIndex: 'Version',
+  title: '工厂',
+  dataIndex: 'FactoryId',
 }, {
   title: '状态',
   dataIndex: 'State',
@@ -294,9 +294,6 @@ const processTableColumns = [{
   dataIndex: 'CreationDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-}, {
-  title: '创建人',
-  dataIndex: 'Creator',
 }, {
   title: '最后修改时间',
   dataIndex: 'EditDateTime',
@@ -373,33 +370,33 @@ const regionTableColumns = [{
 
 const locationTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '库位编号',
-  dataIndex: 'userName',
+  dataIndex: 'LocationNumber',
 }, {
   title: '名称',
-  dataIndex: 'platform',
+  dataIndex: 'Description',
 }, {
   title: '区域',
-  dataIndex: 'status',
+  dataIndex: 'Area',
 }, {
   title: '坐标X轴',
-  dataIndex: 'plant',
+  dataIndex: 'X',
 }, {
   title: '坐标Y轴',
-  dataIndex: 'plant',
+  dataIndex: 'Y',
 }, {
   title: '坐标Z轴',
-  dataIndex: 'plant',
+  dataIndex: 'Z',
 }, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 const bomTableColumns = [{
   title: 'ID',
@@ -435,96 +432,96 @@ const bomTableColumns = [{
 
 const customerTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '客户编号',
-  dataIndex: 'userName',
+  dataIndex: 'CustomerCode',
 }, {
   title: '名称',
-  dataIndex: 'platform',
+  dataIndex: 'Name',
 }, {
   title: '邓氏码',
-  dataIndex: 'status',
+  dataIndex: 'DUNS',
 }, {
   title: '国家',
-  dataIndex: 'platform',
+  dataIndex: 'Country',
 }, {
   title: '省市',
-  dataIndex: 'status',
+  dataIndex: 'Province',
 }, {
   title: '详细地址',
-  dataIndex: 'platform',
+  dataIndex: 'Address',
 }, {
   title: '邮编',
-  dataIndex: 'status',
+  dataIndex: 'PostCode',
 }, {
   title: '传真',
-  dataIndex: 'platform',
+  dataIndex: 'Fax',
 }, {
   title: '联系人',
-  dataIndex: 'status',
+  dataIndex: 'ContactPerson',
 }, {
   title: '邮件',
-  dataIndex: 'status',
+  dataIndex: 'Email',
 }, {
   title: '电话',
-  dataIndex: 'platform',
+  dataIndex: 'Telphone',
 }, {
   title: '手机',
-  dataIndex: 'status',
+  dataIndex: 'MobilePhone',
 }, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 const supplierTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '供应商编号',
-  dataIndex: 'userName',
+  dataIndex: 'SupplierCode',
 }, {
   title: '名称',
-  dataIndex: 'platform',
+  dataIndex: 'Name',
 }, {
   title: '国家',
-  dataIndex: 'platform',
+  dataIndex: 'Country',
 }, {
   title: '省市',
-  dataIndex: 'status',
+  dataIndex: 'Province',
 }, {
   title: '详细地址',
-  dataIndex: 'platform',
+  dataIndex: 'Address',
 }, {
   title: '邮编',
-  dataIndex: 'status',
+  dataIndex: 'PostCode',
 }, {
   title: '传真',
-  dataIndex: 'platform',
+  dataIndex: 'Fax',
 }, {
   title: '联系人',
-  dataIndex: 'status',
+  dataIndex: 'ContactPerson',
 }, {
   title: '邮件',
-  dataIndex: 'status',
+  dataIndex: 'Email',
 }, {
   title: '电话',
-  dataIndex: 'platform',
+  dataIndex: 'Telphone',
 }, {
   title: '手机',
-  dataIndex: 'status',
+  dataIndex: 'MobilePhone',
 }, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 export {
   stationTableColumns,

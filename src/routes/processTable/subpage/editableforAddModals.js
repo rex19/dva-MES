@@ -106,7 +106,7 @@ class EditableCellSelect extends React.Component {
   }
 }
 
-class EditableTable extends React.Component {
+class EditableforAddModals extends React.Component {
   constructor(props) {
     super(props);
     this.columns = [{
@@ -257,9 +257,7 @@ class EditableTable extends React.Component {
   }
 }
 
-export default EditableTable
-
-// ReactDOM.render(<EditableTable />, mountNode);
+export default EditableforAddModals
 
 
 

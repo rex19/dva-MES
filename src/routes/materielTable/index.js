@@ -593,6 +593,7 @@ const MaterielTableComponents = ({
           tableLoading={tableLoading}
           pagination={pagination}
           columns={TableColumns}
+          TableWidth={2500}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}

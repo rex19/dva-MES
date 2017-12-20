@@ -13,6 +13,7 @@ export const ModalComponents = ({
   deleteModalVisible,
   detailsModalValue,
   handleAdd,
+  ModalWidth
 }) => {
   const handleOk = (modalType) => {
     handleAdd(modalType)
@@ -23,6 +24,7 @@ export const ModalComponents = ({
       <Modal
         title="新建"
         visible={addModalVisible}
+        width={ModalWidth || 520}
         onOk={() => handleOk('create')}
         onCancel={() => handleModalClose('addModalVisible')}
       >
@@ -31,6 +33,7 @@ export const ModalComponents = ({
       <Modal
         title="修改"
         visible={editModalVisible}
+        width={ModalWidth || 520}
         onOk={() => handleOk('edit')}
         onCancel={() => handleModalClose('editModalVisible')}
       >
@@ -39,6 +42,7 @@ export const ModalComponents = ({
       <Modal
         title="详细"
         visible={detailsModalVisible}
+        width={ModalWidth || 520}
         onOk={() => handleModalClose('detailsModalVisible')}
         onCancel={() => handleModalClose('detailsModalVisible')}
       >

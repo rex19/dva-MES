@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "SF-MES",
+  "name": "dva-MES",
   "version": "4.3.6",
   "dependencies": {
     "antd": "^2.11.2",

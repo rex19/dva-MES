@@ -392,6 +392,7 @@ const StaffTableComponents = ({
           tableLoading={tableLoading}
           pagination={pagination}
           columns={TableColumns}
+          TableWidth={1300}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}

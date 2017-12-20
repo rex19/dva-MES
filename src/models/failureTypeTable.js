@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/lineTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/roleTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -10,14 +10,20 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'lineTable'
-const QueryResponseDTO = 'Tdto'
+const TableName = 'roleTable'
+const QueryResponseDTO = 'Roledto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 1,
-  "CellNumber": "LaserMarking01",
-  "Description": "激光刻印机",
-  "State": 1
+  "Id": 2,
+  "RoleName": "testRole",
+  "State": 1,
+  "PlatformId": "1",
+  "PlatformName": "adm管理",
+  "CreationDateTime": "2017-11-01T15:36:38",
+  "Creator": "admin",
+  "EditDateTime": "2017-12-09T13:29:12.6622339",
+  "Editor": "",
+  "User": "1"
 }
 
 export default modelExtend(pageModel, {
@@ -67,7 +73,6 @@ export default modelExtend(pageModel, {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
       const data = yield call(query, payload)
-      console.log('effects-query', data)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
@@ -158,6 +163,7 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
+          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -185,6 +191,7 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
+      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
@@ -193,9 +200,10 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalCell), AllocatedMultiselectData: eval(payload.data.SelectedCell), EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalCell) }
+        console.log('else if (payload.modalType === addModalVisible)', payload)
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platform: eval(payload.data.TotalPlatform) }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

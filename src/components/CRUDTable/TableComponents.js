@@ -3,11 +3,6 @@ import { Row, Col, Button, Icon, Table, Pagination, Popconfirm } from 'antd'
 import { connect } from 'dva'
 import { ModalComponents } from './ModalComponents'
 import './index.less'
-// import {  config } from 'utils'
-// import globalConfig from 'utils/config.js';
-
-// const { table } = config
-// const { paginationConfig } = table
 
 let column = []
 
@@ -16,6 +11,8 @@ const TableComponents = ({
   tableModels,
   dispatch,
   columns,
+  TableWidth,
+  ModalWidth,
   data,
   pagination,
   addModalValue,
@@ -51,7 +48,6 @@ const TableComponents = ({
     return TotalColumn
   }
   const handleModalShow = (modalVisible, record = {}) => {
-    console.log('handleModalShow', record)
     dispatch({
       type: `${tableName}/showModalAndAjax`,
       payload: {
@@ -70,7 +66,6 @@ const TableComponents = ({
 
   }
   const onShowSizeChange = (PageIndex = 1, pageSize = 20) => {
-    console.log('onShowSizeChange', PageIndex, pageSize);
     dispatch({
       type: `${tableName}/query`,
       payload: {
@@ -82,7 +77,6 @@ const TableComponents = ({
   }
 
   const onPaginationChange = (PageIndex, pageSize) => {
-    console.log('onPaginationChange', PageIndex, pageSize);
     dispatch({
       type: `${tableName}/query`,
       payload: {
@@ -93,7 +87,6 @@ const TableComponents = ({
     })
   }
   const deleteHandler = (id) => {
-    console.log('deleteHandler', id)
     dispatch({
       type: `${tableName}/delete`,
       payload: id,
@@ -111,7 +104,7 @@ const TableComponents = ({
         <Table
           columns={columnFunc(column, columns, ActionColumn)}
           dataSource={data}
-          scroll={{ x: 1300 }}
+          scroll={{ x: TableWidth }}
           pagination={false}
           onChange={onChange}
           loading={tableLoading}
@@ -127,12 +120,13 @@ const TableComponents = ({
             onShowSizeChange={onShowSizeChange}//pageSize 变化的回调
             defaultCurrent={1}//默认的当前页数
             total={pagination.total}//数据总数
-            showTotal={(total, range) => `每页${range[0]}条,共${total}条`}
+            showTotal={(total, range) => `每页${pagination.PageSize}条,共${total}条`}
           // current={this.props.currentPage}  //当前页数
           />
         </Col>
       </Row>
       <ModalComponents
+        ModalWidth={ModalWidth}
         addModalVisible={addModalVisible}
         editModalVisible={editModalVisible}
         detailsModalVisible={detailsModalVisible}
