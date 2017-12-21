@@ -37,7 +37,7 @@ module.exports = {
     customerTable: `${APIV1}/Customer`,
     supplierTable: `${APIV1}/Supplier`,
     failureTypeTable: `${APIV1}/FailureType`,
-    bomTable: `${APIV1}/Bom`,
+    bomTable: `${APIV1}/BOM`,
 
     user: `${APIV1}/user/:id`,
     dashboard: `${APIV1}/dashboard`,

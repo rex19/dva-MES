@@ -1,37 +1,8 @@
-import { Table, Input, Icon, Button, Popconfirm, Select, Radio } from 'antd';
+import { Table, Input, Icon, Button, Popconfirm, Select } from 'antd';
 import './index.less'
 
 const Option = Select.Option;
-const RadioGroup = Radio.Group;
-class CustomTextInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.focusTextInput = this.focusTextInput.bind(this);
-  }
 
-  focusTextInput() {
-    // Explicitly focus the text input using the raw DOM API
-    console.log('CustomTextInput1', this.refs, this.ref)
-    this.textInput.focus();
-  }
-
-  render() {
-    // Use the `ref` callback to store a reference to the text input DOM
-    // element in an instance field (for example, this.textInput).
-    return (
-      <div>
-        <input
-          type="text"
-          ref={(input) => { this.textInput = input; }} />
-        <input
-          type="button"
-          value="Focus the text input"
-          onClick={this.focusTextInput}
-        />
-      </div>
-    );
-  }
-}
 class EditableCellInput extends React.Component {
   state = {
     value: this.props.value,
@@ -90,75 +61,7 @@ class EditableCellSelect extends React.Component {
     editable: false,
   }
   handleChange = (e) => {
-    console.log('handleChange', e)
     const value = e;
-    this.setState({ value });
-  }
-  check = () => {
-    this.setState({ editable: false });
-    if (this.props.onChange) {
-      console.log('check', this.state, this.refs['refs1'].getDOMNode())
-      this.props.onChange(this.state.value);
-    }
-  }
-  edit = () => {
-    this.setState({ editable: true });
-  }
-  render() {
-    const { value, editable } = this.state;
-    return (
-      <div className="editable-cell">
-        {
-          editable && this.props.type === 'StationGroupName' ?
-            <div className="editable-cell-input-wrapper">
-              <Select defaultValue='请选择' onChange={this.handleChange} onPressEnter={this.check}>
-                {this.props.StationGroup.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
-              </Select>
-              <Icon
-                type="check"
-                className="editable-cell-icon-check"
-                onClick={this.check}
-              />
-            </div>
-            : (
-              editable && this.props.type === 'Side' ?
-                <div className="editable-cell-input-wrapper">
-                  <Select defaultValue={2} onChange={this.handleChange} onPressEnter={this.check}>
-                    <Option key={1} value={1}>正面</Option>
-                    <Option key={0} value={0}>反面</Option>
-                    <Option key={2} value={2}>全面</Option>
-                  </Select>
-                  <Icon
-                    type="check"
-                    className="editable-cell-icon-check"
-                    onClick={this.check}
-                  />
-                </div>
-                :
-                <div className="editable-cell-text-wrapper">
-                  {value || ' '}
-                  <Icon
-                    type="edit"
-                    className="editable-cell-icon"
-                    onClick={this.edit}
-                  />
-                </div>
-            )
-        }
-      </div>
-    );
-  }
-}
-
-class EditableCellRadio extends React.Component {
-  state = {
-    value: this.props.value,
-    editable: false,
-  }
-  handleChange = (e) => {
-    const value = e.target.value;
     this.setState({ value });
   }
   check = () => {
@@ -177,10 +80,11 @@ class EditableCellRadio extends React.Component {
         {
           editable ?
             <div className="editable-cell-input-wrapper">
-              <RadioGroup onChange={this.handleChange} value={this.state.value} onPressEnter={this.check}>
-                <Radio value={true}>是</Radio>
-                <Radio value={false}>否</Radio>
-              </RadioGroup>
+              <Select defaultValue='激光打标' onChange={this.handleChange} onPressEnter={this.check}>
+                <Option key={0} value='激光打标'>激光打标</Option>
+                <Option key={1} value='下板机'>下板机</Option>
+                <Option key={2} value='锡膏印刷'>锡膏印刷</Option>
+              </Select>
               <Icon
                 type="check"
                 className="editable-cell-icon-check"
@@ -202,11 +106,11 @@ class EditableCellRadio extends React.Component {
   }
 }
 
-class EditableforAddModals extends React.Component {
+class EditableforEditModals extends React.Component {
   constructor(props) {
     super(props);
     this.columns = [{
-      title: '序列号',
+      title: 'Secquence',
       dataIndex: 'Secquence',
       render: (text, record) => (
         <EditableCellInput
@@ -215,71 +119,67 @@ class EditableforAddModals extends React.Component {
         />
       ),
     }, {
-      title: '描述',
+      title: 'ProcessId',
+      dataIndex: 'ProcessId',
+      render: (text, record) => (
+        <EditableCellSelect
+          value={text}
+          onChange={this.onCellChange(record.key, 'ProcessId')}
+        />
+      ),
+    }, , {
+      title: 'Desctiption',
       dataIndex: 'Desctiption',
       render: (text, record) => (
-        <EditableCellInput
+        <EditableCellSelect
           value={text}
           onChange={this.onCellChange(record.key, 'Desctiption')}
         />
       ),
     }, {
-      title: '工站组',
-      dataIndex: 'StationGroupName',
+      title: 'StationGroupId',
+      dataIndex: 'StationGroupId',
       render: (text, record) => (
         <EditableCellSelect
           value={text}
-          onChange={this.onCellChange(record.key, 'StationGroupName')}
-          StationGroup={this.props.StationGroup}
-          type='StationGroupName'
+          onChange={this.onCellChange(record.key, 'StationGroupId')}
         />
       ),
     }, {
-      title: '是否必做',
+      title: 'IsMandatory',
       dataIndex: 'IsMandatory',
       width: '10%',
       render: (text, record) => (
-        <EditableCellRadio
+        <EditableCellSelect
           value={text === true ? '是' : '否'}
           onChange={this.onCellChange(record.key, 'IsMandatory')}
         />
       ),
     }, {
-      title: '是否需要上料检验',
+      title: 'IsNeedSetupCheck',
       dataIndex: 'IsNeedSetupCheck',
       render: (text, record) => (
-        <EditableCellRadio
+        <EditableCellSelect
           value={text === true ? '是' : '否'}
           onChange={this.onCellChange(record.key, 'IsNeedSetupCheck')}
         />
       ),
     }, {
-      title: '最大测试次数',
+      title: 'MaximumTestCount',
       dataIndex: 'MaximumTestCount',
       render: (text, record) => (
-        <EditableCellInput
+        <EditableCellSelect
           value={text}
           onChange={this.onCellChange(record.key, 'MaximumTestCount')}
         />
       ),
     }, {
-      title: '是否反冲',
+      title: 'IsBackflush',
       dataIndex: 'IsBackflush',
       render: (text, record) => (
-        <EditableCellRadio
+        <EditableCellSelect
           value={text === true ? '是' : '否'}
           onChange={this.onCellChange(record.key, 'IsBackflush')}
-        />
-      ),
-    }, {
-      title: '正反面',
-      dataIndex: 'Side',
-      render: (text, record) => (
-        console.log('正反面', text, record),
-        <EditableCellSelect
-          value={text}
-          onChange={this.onCellChange(record.key, 'Side')}
-          type='Side'
         />
       ),
     }, {
@@ -301,13 +201,13 @@ class EditableforAddModals extends React.Component {
       dataSource: [{
         key: '0',
         Secquence: 1,
+        ProcessId: 2,
         Desctiption: '1',
-        StationGroupName: 4,
+        StationGroupId: 4,
         IsMandatory: true,
         IsNeedSetupCheck: true,
         MaximumTestCount: '',
         IsBackflush: true,
-        Side: 0
       }],
       count: 1,
     };
@@ -331,13 +231,13 @@ class EditableforAddModals extends React.Component {
     const newData = {
       key: count,
       Secquence: count,
+      ProcessId: count,
       Desctiption: `Desctiption${count}`,
-      StationGroupName: count,
+      StationGroupId: count,
       IsMandatory: true,
       IsNeedSetupCheck: true,
       MaximumTestCount: `${count}`,
       IsBackflush: true,
-      Side: 0
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -352,13 +252,12 @@ class EditableforAddModals extends React.Component {
       <div>
         <Button className="editable-add-btn" onClick={this.handleAdd}>Add</Button>
         <Table bordered dataSource={dataSource} columns={columns} />
-        <CustomTextInput />
       </div>
     );
   }
 }
 
-export default EditableforAddModals
+export default EditableforEditModals
 
 
 

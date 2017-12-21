@@ -137,7 +137,9 @@ const StationTableComponents = ({
               initialValue: '1',
             })(
               <Select>
-                <Option key={0} value='1'>模块1</Option>
+                {TotalStationGroup.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
               </Select>)}
           </FormItem>
           <FormItem

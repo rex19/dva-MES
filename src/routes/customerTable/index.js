@@ -23,7 +23,7 @@ const CustomerTableComponents = ({
   const TableModelsData = customerTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData } = TableModelsData
 
   console.log('CustomerTableComponents-customerTable ', TableModelsData)
   /**
@@ -102,31 +102,135 @@ const CustomerTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="角色"
+            label="客户编号"
             hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddCustomerCode', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="模块"
+            label="名称"
             hasFeedback
           >
-            {getFieldDecorator('AddPlatformID', {
-              initialValue: '1',
-            })(
-              <Select>
-                {platform.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
-              </Select>)}
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邓氏码"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="国家"
+          >
+            <div>
+              {getFieldDecorator('AddState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="省市"
+          >
+            <div>
+              {getFieldDecorator('AddState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="详细地址"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮编"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="传真"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="联系人"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮件"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="电话"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="手机"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -149,27 +253,7 @@ const CustomerTableComponents = ({
                 )}
             </div>
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="已分配人员"
-          >
-            <div>
-              {getFieldDecorator('AddUser', {
-                initialValue: [],
-              })(
-                <Select
-                  mode="multiple"
-                  labelInValue
-                  style={{ width: '100%' }}
-                  placeholder="请选择"
-                >
-                  {TotalMultiselectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </div>
-          </FormItem>
+
         </Form>
       </div>
     )
@@ -208,20 +292,6 @@ const CustomerTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="模块"
-            hasFeedback
-          >
-            {getFieldDecorator('EditPlatformID', {
-              initialValue: EditData.PlatformId.toString(),
-            })(
-              <Select>
-                {platform.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
-              </Select>)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
             label="状态"
           >
             <div>
@@ -241,27 +311,7 @@ const CustomerTableComponents = ({
                 )}
             </div>
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="已分配人员"
-          >
-            <div>
-              {getFieldDecorator('EditUser', {
-                initialValue: AllocatedMultiselectData,
-              })(
-                <Select
-                  mode="multiple"
-                  labelInValue
-                  style={{ width: '100%' }}
-                  placeholder="请选择"
-                >
-                  {TotalMultiselectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </div>
-          </FormItem>
+
         </Form>
       </div>
     )

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
 import { processTableColumns } from '../../mock/tableColums'
 import EditableforEditModals from './subpage/editableforEditModals'
-// import EditableforAddModals from './subpage/editableforAddModals'
+import EditableforAddModals from './subpage/editableforAddModals'
 import './index.less'
 
 const { Option } = Select
@@ -61,7 +61,7 @@ const ProcessTableComponents = ({
   const TableModelsData = processTable
   const { getFieldDecorator, validateFields, resetFields } = form
   // const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialNumber, StationGroup } = TableModelsData
 
   console.log('ProcessTableComponents-processTable ', TableModelsData)
   /**
@@ -135,22 +135,15 @@ const ProcessTableComponents = ({
     )
   }
   const addModalValue = () => {
-
     return (
       <div>
         <Form >
           <FormItem
             {...formItemLayout}
             label="工艺编号"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddProcessNumber', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -158,18 +151,13 @@ const ProcessTableComponents = ({
             label="成品/半成品料号"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
+              {getFieldDecorator('AddMaterialNumber', {
+                initialValue: '请选择',
               })(
                 <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
+                  {MaterialNumber.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -197,58 +185,47 @@ const ProcessTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="模版工艺编号"
-          >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
             label="生效时间"
-            hasFeedback
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddValidBegin', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  type: 'object', required: true, message: '请输入生效时间',
                 },
               ],
-            })(<Input />)}
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="失效时间"
-            hasFeedback
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddValidEnd', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  type: 'object', required: true, message: '请输入失效时间',
                 },
               ],
-            })(<Input />)}
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="工艺步骤"
           >
-            <EditableforEditModals />
+            <EditableforAddModals StationGroup={StationGroup} />
           </FormItem>
 
         </Form>

@@ -44,10 +44,7 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    TotalMultiselectData: [],
-    AllocatedMultiselectData: [],
-    platform: [],
-
+    AreaList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -191,7 +188,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
@@ -200,10 +196,9 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, AreaList: eval(payload.data.AreaList), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
-        console.log('else if (payload.modalType === addModalVisible)', payload)
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platform: eval(payload.data.TotalPlatform) }
+        return { ...state, ...payload, AreaList: eval(payload.data.AreaList) }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

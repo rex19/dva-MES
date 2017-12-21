@@ -109,7 +109,7 @@ const LineTableComponents = ({
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入线体编号',
                 },
               ],
             })(<Input />)}

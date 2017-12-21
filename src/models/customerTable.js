@@ -44,10 +44,6 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    TotalMultiselectData: [],
-    AllocatedMultiselectData: [],
-    platform: [],
-
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -170,13 +166,8 @@ export default modelExtend(pageModel, {
           throw data
         }
       } else if (payload.modalType === 'addModalVisible') {
-        const data = yield call(getAddModalData)
-        if (data.Status === 200) {
-          yield put({ type: 'showModal', payload: payload })
-          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        } else {
-          throw data
-        }
+        yield put({ type: 'showModal', payload: payload })
+        yield put({ type: 'showModalData', payload: { modalType: payload.modalType } })
       } else if (payload.modalType === 'detailsModalVisible') {
         const data = yield call(getDetailsModalData, payload.record.Id)
         if (data.Status === 200) {
@@ -191,7 +182,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
@@ -200,10 +190,9 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
-        console.log('else if (payload.modalType === addModalVisible)', payload)
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platform: eval(payload.data.TotalPlatform) }
+        return { ...state, ...payload }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

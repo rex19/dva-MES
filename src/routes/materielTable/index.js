@@ -115,27 +115,12 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="料号"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddMaterialNumber', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="图片"
-            hasFeedback
-          >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入料号',
                 },
               ],
             })(<Input />)}
@@ -143,13 +128,12 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="版本"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddVersion', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入版本',
                 },
               ],
             })(<Input />)}
@@ -157,13 +141,12 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="描述"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddDescription', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入描述',
                 },
               ],
             })(<Input />)}
@@ -171,13 +154,12 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="规格"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddSpecification', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入规格',
                 },
               ],
             })(<Input />)}
@@ -185,43 +167,31 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="客户侧料号"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddCustomerMaterialNumber', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="供应商侧料号"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddSupplierMaterialNumber', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="公司"
+            label="物料类型"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
+              {getFieldDecorator('AddMaterialGroupType', {
+                initialValue: '请选择',
               })(
                 <Select>
-                  <Option key={0} value='0'>成品</Option>
-                  <Option key={1} value='1'>半成品</Option>
-                  <Option key={2} value='-1'>原材料</Option>
+                  {MaterialType.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -229,57 +199,48 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="是否是半成品"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('AddIsProduct', {
+              initialValue: '0',
+            })(
+              <Select>
+                <Option key={0} value='0'>是</Option>
+                <Option key={1} value='1'>否</Option>
+              </Select>
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="是否是连扳"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('AddIsMultiPanel', {
+              initialValue: '0',
+            })(
+              <Select>
+                <Option key={0} value='0'>是</Option>
+                <Option key={1} value='1'>否</Option>
+              </Select>
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="是否反冲"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('AddRequireBackflush', {
+              initialValue: '0',
+            })(
+              <Select>
+                <Option key={0} value='0'>是</Option>
+                <Option key={1} value='1'>否</Option>
+              </Select>
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="连扳数"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddNumberOfPanels', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -287,13 +248,13 @@ const MaterielTableComponents = ({
             label="单位"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
+              {getFieldDecorator('AddUnit', {
+                initialValue: '请选择',
               })(
                 <Select>
-                  <Option key={0} value='0'>个</Option>
-                  <Option key={1} value='1'>克</Option>
-                  <Option key={2} value='-1'>米</Option>
+                  {Unit.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -301,29 +262,28 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="是否上料"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('AddSetupFlag', {
+              initialValue: '0',
+            })(
+              <Select>
+                <Option key={0} value='0'>是</Option>
+                <Option key={1} value='1'>否</Option>
+              </Select>
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="采购类型"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
+              {getFieldDecorator('AddProcurementType', {
+                initialValue: '请选择',
               })(
                 <Select>
-                  <Option key={0} value='0'>内部制造</Option>
-                  <Option key={1} value='1'>外部制造</Option>
-                  <Option key={2} value='-1'>安全库存</Option>
+                  {ProcurementType.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -331,71 +291,47 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="最小包装数"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddMinimumPackageQuantity', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="过期周期(天)"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddExpirationTime', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="安全库存"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddSafetyStock', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="默认库位编号"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('AddDefaultStorageLocation', {
+              initialValue: '请选择',
+            })(
+              <Select>
+                {Location.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
+              </Select>
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="容器大小"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddContainerSize', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -403,13 +339,13 @@ const MaterielTableComponents = ({
             label="湿敏等级MSL"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
+              {getFieldDecorator('AddMSL', {
+                initialValue: '请选择',
               })(
                 <Select>
-                  <Option key={0} value='0'>1</Option>
-                  <Option key={1} value='1'>2</Option>
-                  <Option key={2} value='-1'>3</Option>
+                  {MSL.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -419,8 +355,8 @@ const MaterielTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
+              {getFieldDecorator('AddStateValue', {
+                initialValue: '请选择',
               })(
                 <Select>
                   <Option key={0} value='0'>未激活</Option>
@@ -433,28 +369,45 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="默认工站组"
-            hasFeedback
           >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('AddDefaultStationGroup', {
+              initialValue: '请选择',
+            })(
+              <Select>
+                {StationGroup.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
+              </Select>
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="公司"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
+              {getFieldDecorator('AddCompanyNumber', {
+                initialValue: '请选择',
               })(
                 <Select>
-                  <Option key={0} value='0'>sf重庆</Option>
-                  <Option key={1} value='1'>sf翊流</Option>
+                  {Company.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('AddFactory', {
+                initialValue: '请选择',
+              })(
+                <Select>
+                  {Factory.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -462,15 +415,9 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="生效日期"
-            hasFeedback
           >
             {getFieldDecorator('AddValidBegin', {
               initialValue: moment('2015/01/01', dateFormat),
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(
               <DatePicker format={dateFormat} />
               )}
@@ -478,15 +425,9 @@ const MaterielTableComponents = ({
           <FormItem
             {...formItemLayout}
             label="失效日期"
-            hasFeedback
           >
             {getFieldDecorator('ValidEnd', {
               initialValue: moment('2015/01/01', dateFormat),
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(
               <DatePicker format={dateFormat} />
               )}
@@ -593,7 +534,7 @@ const MaterielTableComponents = ({
           tableLoading={tableLoading}
           pagination={pagination}
           columns={TableColumns}
-          TableWidth={2500}
+          TableWidth={2550}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}

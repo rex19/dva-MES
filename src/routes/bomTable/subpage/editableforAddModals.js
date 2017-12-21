@@ -3,35 +3,7 @@ import './index.less'
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-class CustomTextInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.focusTextInput = this.focusTextInput.bind(this);
-  }
 
-  focusTextInput() {
-    // Explicitly focus the text input using the raw DOM API
-    console.log('CustomTextInput1', this.refs, this.ref)
-    this.textInput.focus();
-  }
-
-  render() {
-    // Use the `ref` callback to store a reference to the text input DOM
-    // element in an instance field (for example, this.textInput).
-    return (
-      <div>
-        <input
-          type="text"
-          ref={(input) => { this.textInput = input; }} />
-        <input
-          type="button"
-          value="Focus the text input"
-          onClick={this.focusTextInput}
-        />
-      </div>
-    );
-  }
-}
 class EditableCellInput extends React.Component {
   state = {
     value: this.props.value,
@@ -97,7 +69,6 @@ class EditableCellSelect extends React.Component {
   check = () => {
     this.setState({ editable: false });
     if (this.props.onChange) {
-      console.log('check', this.state, this.refs['refs1'].getDOMNode())
       this.props.onChange(this.state.value);
     }
   }
@@ -206,17 +177,76 @@ class EditableforAddModals extends React.Component {
   constructor(props) {
     super(props);
     this.columns = [{
-      title: '序列号',
-      dataIndex: 'Secquence',
+      title: '子件料号',
+      dataIndex: 'MaterialName',
       render: (text, record) => (
-        <EditableCellInput
+        <EditableCellSelect
           value={text}
-          onChange={this.onCellChange(record.key, 'Secquence')}
+          onChange={this.onCellChange(record.key, 'MaterialName')}
+          StationGroup={this.props.StationGroup}
+          type='MaterialName'
         />
       ),
     }, {
-      title: '描述',
-      dataIndex: 'Desctiption',
+      title: '版本号',
+      dataIndex: 'Version',
+      render: (text, record) => (
+        <EditableCellInput
+          value={text}
+          onChange={this.onCellChange(record.key, 'Version')}
+        />
+      ),
+    }, {
+      title: '名称',
+      dataIndex: 'MaterialNumber',
+      render: (text, record) => (
+        <EditableCellInput
+          value={text}
+          onChange={this.onCellChange(record.key, 'MaterialNumber')}
+        />
+      ),
+    }, {
+      title: '设备组',
+      dataIndex: 'StationGroup',
+      render: (text, record) => (
+        <EditableCellSelect
+          value={text}
+          onChange={this.onCellChange(record.key, 'StationGroup')}
+          StationGroup={this.props.StationGroup}
+          type='StationGroup'
+        />
+      ),
+    }, {
+      title: '定位号',
+      dataIndex: 'Designator',
+      render: (text, record) => (
+        <EditableCellInput
+          value={text}
+          onChange={this.onCellChange(record.key, 'Designator')}
+        />
+      ),
+    }, {
+      title: '正反面',
+      dataIndex: 'Layer',
+      render: (text, record) => (
+        <EditableCellSelect
+          value={text}
+          onChange={this.onCellChange(record.key, 'Layer')}
+          type='Layer'
+        />
+      ),
+    }, {
+      title: '是否是产出品',
+      dataIndex: 'IsAlternative',
+      render: (text, record) => (
+        <EditableCellRadio
+          value={text === true ? '是' : '否'}
+          onChange={this.onCellChange(record.key, 'IsAlternative')}
+        />
+      ),
+    }, {
+      title: '用量',
+      dataIndex: 'Quantity',
       render: (text, record) => (
         <EditableCellInput
           value={text}
@@ -224,28 +254,7 @@ class EditableforAddModals extends React.Component {
         />
       ),
     }, {
-      title: '工站组',
-      dataIndex: 'StationGroupName',
-      render: (text, record) => (
-        <EditableCellSelect
-          value={text}
-          onChange={this.onCellChange(record.key, 'StationGroupName')}
-          StationGroup={this.props.StationGroup}
-          type='StationGroupName'
-        />
-      ),
-    }, {
-      title: '是否必做',
-      dataIndex: 'IsMandatory',
-      width: '10%',
-      render: (text, record) => (
-        <EditableCellRadio
-          value={text === true ? '是' : '否'}
-          onChange={this.onCellChange(record.key, 'IsMandatory')}
-        />
-      ),
-    }, {
-      title: '是否需要上料检验',
+      title: '是否上料检测',
       dataIndex: 'IsNeedSetupCheck',
       render: (text, record) => (
         <EditableCellRadio
@@ -254,36 +263,7 @@ class EditableforAddModals extends React.Component {
         />
       ),
     }, {
-      title: '最大测试次数',
-      dataIndex: 'MaximumTestCount',
-      render: (text, record) => (
-        <EditableCellInput
-          value={text}
-          onChange={this.onCellChange(record.key, 'MaximumTestCount')}
-        />
-      ),
-    }, {
-      title: '是否反冲',
-      dataIndex: 'IsBackflush',
-      render: (text, record) => (
-        <EditableCellRadio
-          value={text === true ? '是' : '否'}
-          onChange={this.onCellChange(record.key, 'IsBackflush')}
-        />
-      ),
-    }, {
-      title: '正反面',
-      dataIndex: 'Side',
-      render: (text, record) => (
-        console.log('正反面', text, record),
-        <EditableCellSelect
-          value={text}
-          onChange={this.onCellChange(record.key, 'Side')}
-          type='Side'
-        />
-      ),
-    }, {
-      title: 'operation',
+      title: '操作',
       dataIndex: 'operation',
       render: (text, record) => {
         return (
@@ -300,14 +280,15 @@ class EditableforAddModals extends React.Component {
     this.state = {
       dataSource: [{
         key: '0',
-        Secquence: 1,
-        Desctiption: '1',
-        StationGroupName: 4,
-        IsMandatory: true,
+        MaterialName: '1',
+        Version: '1',
+        MaterialNumber: '1',
+        Designator: '1',
+        Quantity: 0,
+        StationGroup: '1',
         IsNeedSetupCheck: true,
-        MaximumTestCount: '',
-        IsBackflush: true,
-        Side: 0
+        Layer: '1',
+        IsAlternative: true,
       }],
       count: 1,
     };
@@ -330,14 +311,15 @@ class EditableforAddModals extends React.Component {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
-      Secquence: count,
-      Desctiption: `Desctiption${count}`,
-      StationGroupName: count,
-      IsMandatory: true,
+      MaterialName: `MaterialName${count}`,
+      Version: `Version${count}`,
+      MaterialNumber: `MaterialNumber${count}`,
+      Designator: `Designator${count}`,
+      Quantity: 0,
+      StationGroup: `StationGroup${count}`,
       IsNeedSetupCheck: true,
-      MaximumTestCount: `${count}`,
-      IsBackflush: true,
-      Side: 0
+      Layer: `Layer${count}`,
+      IsAlternative: true,
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -352,7 +334,6 @@ class EditableforAddModals extends React.Component {
       <div>
         <Button className="editable-add-btn" onClick={this.handleAdd}>Add</Button>
         <Table bordered dataSource={dataSource} columns={columns} />
-        <CustomTextInput />
       </div>
     );
   }

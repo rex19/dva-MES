@@ -70,8 +70,8 @@ const Routers = function ({ history, app }) {
       component: () => import('./routes/regionTable/'),
     }, {
       path: '/masterdata/bomTable',
-      models: () => [import('./models/regionTable')],
-      component: () => import('./routes/regionTable/'),
+      models: () => [import('./models/bomTable')],
+      component: () => import('./routes/bomTable/'),
     }, {
       path: '/permissionManagement',
       // models: () => [import('./models/user')],

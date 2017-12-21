@@ -192,7 +192,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
@@ -203,7 +202,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalRole), AllocatedMultiselectData: eval(payload.data.AllocatedRole), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
-        console.log('else if (payload.modalType === addModalVisible)', payload)
         return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalRole), platform: eval(payload.data.TotalPlatform) }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }

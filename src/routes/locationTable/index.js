@@ -23,7 +23,7 @@ const LocationTableComponents = ({
   const TableModelsData = locationTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList } = TableModelsData
 
   console.log('LocationTableComponents-locationTable ', TableModelsData)
   /**
@@ -102,31 +102,54 @@ const LocationTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="角色"
-            hasFeedback
+            label="库位编号"
           >
-            {getFieldDecorator('AddRoleName', {
+            {getFieldDecorator('AddLocationNumber', {
               initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="模块"
-            hasFeedback
+            label="区域"
           >
-            {getFieldDecorator('AddPlatformID', {
+            {getFieldDecorator('AddArea', {
               initialValue: '1',
             })(
               <Select>
-                {platform.map(function (item, index) {
+                {AreaList.map(function (item, index) {
                   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                 })}
               </Select>)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="X轴坐标"
+          >
+            <div>
+              {getFieldDecorator('AddX', {
+                initialValue: '1',
+              })(<Input />)}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="Y轴坐标"
+          >
+            <div>
+              {getFieldDecorator('AddY', {
+                initialValue: '1',
+              })(<Input />)}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="Z轴坐标"
+          >
+            <div>
+              {getFieldDecorator('AddZ', {
+                initialValue: '1',
+              })(<Input />)}
+            </div>
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -145,27 +168,6 @@ const LocationTableComponents = ({
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
                   <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="已分配人员"
-          >
-            <div>
-              {getFieldDecorator('AddUser', {
-                initialValue: [],
-              })(
-                <Select
-                  mode="multiple"
-                  labelInValue
-                  style={{ width: '100%' }}
-                  placeholder="请选择"
-                >
-                  {TotalMultiselectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
                 </Select>
                 )}
             </div>
@@ -206,20 +208,7 @@ const LocationTableComponents = ({
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="模块"
-            hasFeedback
-          >
-            {getFieldDecorator('EditPlatformID', {
-              initialValue: EditData.PlatformId.toString(),
-            })(
-              <Select>
-                {platform.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
-              </Select>)}
-          </FormItem>
+
           <FormItem
             {...formItemLayout}
             label="状态"
@@ -241,27 +230,7 @@ const LocationTableComponents = ({
                 )}
             </div>
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="已分配人员"
-          >
-            <div>
-              {getFieldDecorator('EditUser', {
-                initialValue: AllocatedMultiselectData,
-              })(
-                <Select
-                  mode="multiple"
-                  labelInValue
-                  style={{ width: '100%' }}
-                  placeholder="请选择"
-                >
-                  {TotalMultiselectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </div>
-          </FormItem>
+
         </Form>
       </div>
     )

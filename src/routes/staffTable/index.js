@@ -146,7 +146,9 @@ const StaffTableComponents = ({
               initialValue: '1',
             })(
               <Select>
-                <Option key={0} value='1'>模块1</Option>
+                {platform.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
               </Select>)}
           </FormItem>
           <FormItem
@@ -171,24 +173,26 @@ const StaffTableComponents = ({
             {...formItemLayout}
             label="状态"
           >
-            {getFieldDecorator('AddState', {
-              initialValue: 1,
-              rules: [
-                {
-                  required: true, message: '请选择状态',
-                },
-              ],
-            })(
-              <RadioGroup>
-                <Radio value={1}>正常</Radio>
-                <Radio value={2}>失效</Radio>
-              </RadioGroup>
-              )}
-
+            <div>
+              {getFieldDecorator('AddState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="角色"
+            label="已分配人员角色"
           >
             <div>
               {getFieldDecorator('AddRole', {
@@ -200,8 +204,9 @@ const StaffTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
-                  <Option key={0} value={0}>角色1</Option>
-                  <Option key={1} value={1}>角色2</Option>
+                  {TotalMultiselectData.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>

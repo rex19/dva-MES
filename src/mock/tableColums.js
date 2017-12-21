@@ -170,7 +170,7 @@ const materielTableColumns = [{
   dataIndex: 'Id',
 }, {
   title: '料号',
-  dataIndex: 'MaterieNumber',
+  dataIndex: 'MaterialNumber',
 }, {
   title: '版本',
   dataIndex: 'Version',
@@ -275,7 +275,7 @@ const processTableColumns = [{
   dataIndex: 'MaterialNumber',
 }, {
   title: '工厂',
-  dataIndex: 'FactoryId',
+  dataIndex: 'Factory',
 }, {
   title: '状态',
   dataIndex: 'State',
@@ -400,34 +400,42 @@ const locationTableColumns = [{
 }]
 const bomTableColumns = [{
   title: 'ID',
-  dataIndex: 'id',
+  dataIndex: 'Id',
 }, {
   title: '料号',
-  dataIndex: 'userName',
+  dataIndex: 'MaterieNumber',
 }, {
   title: '版本号',
-  dataIndex: 'platform',
+  dataIndex: 'Version',
 }, {
   title: '名称',
-  dataIndex: 'status',
+  dataIndex: 'Name',
 }, {
   title: '生效日期',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'ValidBegin',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '失效日期',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'ValidEnd',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
+  title: '创建时间',
+  dataIndex: 'CreationDateTime',
+  sorter: true,
+  render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+}, {
+  title: '创建人',
+  dataIndex: 'Creator',
+}, {
   title: '最后修改时间',
-  dataIndex: 'lastModifyAt',
+  dataIndex: 'EditDateTime',
   sorter: true,
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'Modifier',
+  dataIndex: 'Editor',
 }]
 
 const customerTableColumns = [{

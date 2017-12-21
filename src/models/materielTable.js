@@ -196,7 +196,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {

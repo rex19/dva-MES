@@ -1,31 +1,33 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
-import { supplierTableColumns } from '../../mock/tableColums'
+import { bomTableColumns } from '../../mock/tableColums'
+import EditableforEditModals from './subpage/editableforEditModals'
+import EditableforAddModals from './subpage/editableforAddModals'
 import './index.less'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'supplierTable'
-const TableColumns = supplierTableColumns
+const TableName = 'bomTable'
+const TableColumns = bomTableColumns
 
-const SupplierTableComponents = ({
-  supplierTable,
+const BOMTableComponents = ({
+  bomTable,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = supplierTable
+  const TableModelsData = bomTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialList, MaterialItemList, StationGroup } = TableModelsData
 
-  console.log('SupplierTableComponents-supplierTable ', TableModelsData)
+  console.log('BOMTableComponents-bomTable ', TableModelsData)
   /**
    * crud modal
    */
@@ -102,130 +104,74 @@ const SupplierTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="供应商编号"
-            hasFeedback
+            label="料号"
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddMaterialList', {
               initialValue: '',
-            })(<Input />)}
+            })(<Select>
+              {MaterialList.map(function (item, index) {
+                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+              })}
+            </Select>)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="名称"
-            hasFeedback
-          >
-            {getFieldDecorator('AddCustomerCode', {
-              initialValue: '',
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="国家"
           >
             <div>
-              {getFieldDecorator('AddState', {
+              {getFieldDecorator('AddX', {
                 initialValue: '1',
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
+              })(<Input />)}
             </div>
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="省市"
+            label="生效时间"
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
           >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="详细地址"
-            hasFeedback
-          >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddValidBegin', {
               initialValue: '',
-            })(<Input />)}
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入生效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="传真"
-            hasFeedback
+            label="失效时间"
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddValidEnd', {
               initialValue: '',
-            })(<Input />)}
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入失效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="联系人"
-            hasFeedback
+            label="全视图"
           >
-            {getFieldDecorator('AddCustomerCode', {
-              initialValue: '',
-            })(<Input />)}
+            <EditableforAddModals
+              StationGroup={StationGroup}
+              MaterialList={MaterialList}
+              MaterialItemList={MaterialItemList}
+            />
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="邮件"
-            hasFeedback
-          >
-            {getFieldDecorator('AddCustomerCode', {
-              initialValue: '',
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="电话"
-            hasFeedback
-          >
-            {getFieldDecorator('AddCustomerCode', {
-              initialValue: '',
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="手机"
-            hasFeedback
-          >
-            {getFieldDecorator('AddCustomerCode', {
-              initialValue: '',
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="状态"
-          >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
-
         </Form>
       </div>
     )
@@ -240,13 +186,49 @@ const SupplierTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: '1',
+              initialValue: EditData.Id,
               rules: [
                 {
                   required: true, message: '请输入Id',
                 },
               ],
             })(<Input disabled />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="角色"
+            hasFeedback
+          >
+            {getFieldDecorator('EditRoleName', {
+              initialValue: EditData.RoleName,
+              rules: [
+                {
+                  required: true, message: '请输入角色',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('EditState', {
+                initialValue: EditData.State.toString(),
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
           </FormItem>
 
         </Form>
@@ -329,6 +311,7 @@ const SupplierTableComponents = ({
           pagination={pagination}
           columns={TableColumns}
           TableWidth={1300}
+          ModalWidth={1300}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}
@@ -341,6 +324,7 @@ const SupplierTableComponents = ({
 }
 
 
-export default connect(({ supplierTable }) => ({ supplierTable }))(Form.create()(SupplierTableComponents))
+export default connect(({ bomTable }) => ({ bomTable }))(Form.create()(BOMTableComponents))
+
 
 
