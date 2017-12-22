@@ -222,9 +222,9 @@ const StationTableComponents = ({
               initialValue: EditData.StationType.toString(),
             })(
               <Select>
-                {SelectedStationGroup.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                })}
+                <Option key={0} value='0'>制造工站</Option>
+                <Option key={1} value='1'>测试工站</Option>
+                <Option key={2} value='-1'>维修工站</Option>
               </Select>)}
           </FormItem>
           <FormItem

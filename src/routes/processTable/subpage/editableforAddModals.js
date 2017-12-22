@@ -3,35 +3,7 @@ import './index.less'
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-class CustomTextInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.focusTextInput = this.focusTextInput.bind(this);
-  }
 
-  focusTextInput() {
-    // Explicitly focus the text input using the raw DOM API
-    console.log('CustomTextInput1', this.refs, this.ref)
-    this.textInput.focus();
-  }
-
-  render() {
-    // Use the `ref` callback to store a reference to the text input DOM
-    // element in an instance field (for example, this.textInput).
-    return (
-      <div>
-        <input
-          type="text"
-          ref={(input) => { this.textInput = input; }} />
-        <input
-          type="button"
-          value="Focus the text input"
-          onClick={this.focusTextInput}
-        />
-      </div>
-    );
-  }
-}
 class EditableCellInput extends React.Component {
   state = {
     value: this.props.value,
@@ -87,17 +59,19 @@ class EditableCellInput extends React.Component {
 class EditableCellSelect extends React.Component {
   state = {
     value: this.props.value,
+    StationGroupNameKey: '',
     editable: false,
   }
   handleChange = (e) => {
     console.log('handleChange', e)
-    const value = e;
-    this.setState({ value });
+    this.setState({
+      value: e.label,
+      StationGroupNameKey: e.key
+    });
   }
   check = () => {
     this.setState({ editable: false });
     if (this.props.onChange) {
-      console.log('check', this.state, this.refs['refs1'].getDOMNode())
       this.props.onChange(this.state.value);
     }
   }
@@ -113,7 +87,7 @@ class EditableCellSelect extends React.Component {
             <div className="editable-cell-input-wrapper">
               <Select defaultValue='请选择' onChange={this.handleChange} onPressEnter={this.check}>
                 {this.props.StationGroup.map(function (item, index) {
-                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  return <Option key={index} value={item}>{item.label}</Option>
                 })}
               </Select>
               <Icon
@@ -317,6 +291,7 @@ class EditableforAddModals extends React.Component {
       const dataSource = [...this.state.dataSource];
       const target = dataSource.find(item => item.key === key);
       if (target) {
+        console.log('onCellChange', key, dataIndex, value, target, dataSource)
         target[dataIndex] = value;
         this.setState({ dataSource });
       }
@@ -352,7 +327,7 @@ class EditableforAddModals extends React.Component {
       <div>
         <Button className="editable-add-btn" onClick={this.handleAdd}>Add</Button>
         <Table bordered dataSource={dataSource} columns={columns} />
-        <CustomTextInput />
+
       </div>
     );
   }

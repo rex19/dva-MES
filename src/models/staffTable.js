@@ -200,7 +200,7 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalRole), AllocatedMultiselectData: eval(payload.data.AllocatedRole), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalRole), AllocatedMultiselectData: eval(payload.data.AllocatedRole), platform: eval(payload.data.TotalPlatform), EditData: payload.data.UserInitilizeDTO == null ? state.EditData : payload.data.UserInitilizeDTO }
       } else if (payload.modalType === 'addModalVisible') {
         return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalRole), platform: eval(payload.data.TotalPlatform) }
       } else if (payload.modalType === 'detailsModalVisible') {

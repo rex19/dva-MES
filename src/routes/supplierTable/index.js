@@ -1,9 +1,10 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, Cascader } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
 import { supplierTableColumns } from '../../mock/tableColums'
+import city from '../../utils/city'
 import './index.less'
 
 const { Option } = Select
@@ -66,6 +67,13 @@ const SupplierTableComponents = ({
       },
     })
   }
+  const handleChange = (key, values) => {
+    console.log('handleChange', key, values)
+    // let fields = getFieldsValue()
+    // fields[key] = values
+    // fields = handleFields(fields)
+    // onFilterChange(fields)
+  }
   //每个table可能不同的变量字段(4)
   const formComponentsValue = () => {
     return (
@@ -122,32 +130,23 @@ const SupplierTableComponents = ({
             {...formItemLayout}
             label="国家"
           >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
+            {getFieldDecorator('AddCountry', {
+              initialValue: '中国',
+            })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="省市"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
+              {getFieldDecorator('AddProvince', { initialValue: [] })(
+                <Cascader
+                  size="large"
+                  style={{ width: '100%' }}
+                  options={city}
+                  placeholder="请选择省市"
+                  onChange={handleChange.bind(null, 'AddProvince')}
+                />)}
             </div>
           </FormItem>
           <FormItem
@@ -241,14 +240,124 @@ const SupplierTableComponents = ({
           >
             {getFieldDecorator('EditId', {
               initialValue: '1',
-              rules: [
-                {
-                  required: true, message: '请输入Id',
-                },
-              ],
             })(<Input disabled />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="供应商编号"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="名称"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="国家"
+          >
+            {getFieldDecorator('EditCountry', {
+              initialValue: '中国',
+            })(<Input disabled />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="省市"
+          >
+            <div>
+              {getFieldDecorator('EditProvince', { initialValue: [] })(
+                <Cascader
+                  size="large"
+                  style={{ width: '100%' }}
+                  options={city}
+                  placeholder="请选择省市"
+                  onChange={handleChange.bind(null, 'EditProvince')}
+                />)}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="详细地址"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="传真"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="联系人"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮件"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="电话"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="手机"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('EditState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
         </Form>
       </div>
     )

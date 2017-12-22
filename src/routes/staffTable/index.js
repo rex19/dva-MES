@@ -221,28 +221,46 @@ const StaffTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="Id"
+            label="ID"
             hasFeedback
           >
-            {getFieldDecorator('EditId', {
+            {getFieldDecorator('AddId', {
               initialValue: EditData.Id,
-              rules: [
-                {
-                  required: true, message: '请输入Id',
-                },
-              ],
             })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="角色"
+            label="账号"
             hasFeedback
           >
-            {getFieldDecorator('EditRoleName', {
-              initialValue: EditData.RoleName,
+            {getFieldDecorator('AddAccount', {
+              initialValue: EditData.Account,
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入账号',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="员工姓名"
+            hasFeedback
+          >
+            {getFieldDecorator('AddUserName', {
+              initialValue: EditData.UserName,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="密码"
+            hasFeedback
+          >
+            {getFieldDecorator('AddPassword', {
+              initialValue: EditData.Password,
+              rules: [
+                {
+                  required: true, message: '请输入密码',
                 },
               ],
             })(<Input />)}
@@ -252,19 +270,39 @@ const StaffTableComponents = ({
             label="模块"
             hasFeedback
           >
-            {getFieldDecorator('EditPlatformID', {
+            {getFieldDecorator('AddPlatformID', {
               initialValue: EditData.PlatformId.toString(),
             })(
               <Select>
-                <Option key={0} value='1'>模块1</Option>
+                {platform.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
               </Select>)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮箱"
+            hasFeedback
+          >
+            {getFieldDecorator('AddEmailAddress', {
+              initialValue: EditData.EmailAddress,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="电话"
+            hasFeedback
+          >
+            {getFieldDecorator('AddPhone', {
+              initialValue: EditData.Phone,
+            })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="状态"
           >
             <div>
-              {getFieldDecorator('EditState', {
+              {getFieldDecorator('AddState', {
                 initialValue: EditData.State.toString(),
                 rules: [
                   {
@@ -282,11 +320,11 @@ const StaffTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="已分配人员"
+            label="已分配人员角色"
           >
             <div>
-              {getFieldDecorator('EditUser', {
-                initialValue: [],
+              {getFieldDecorator('AddAllocatedRole', {
+                initialValue: AllocatedMultiselectData,
               })(
                 <Select
                   mode="multiple"
@@ -294,8 +332,9 @@ const StaffTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
-                  <Option key={0} value={0}>角色1</Option>
-                  <Option key={1} value={1}>角色2</Option>
+                  {TotalMultiselectData.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -411,5 +450,3 @@ const StaffTableComponents = ({
 
 
 export default connect(({ staffTable }) => ({ staffTable }))(Form.create()(StaffTableComponents))
-
-

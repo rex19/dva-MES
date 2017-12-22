@@ -14,16 +14,17 @@ const TableName = 'regionTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 2,
-  "RoleName": "testRole",
-  "State": 1,
-  "PlatformId": "1",
-  "PlatformName": "adm管理",
-  "CreationDateTime": "2017-11-01T15:36:38",
+  "Id": 1,
+  "AreaNumber": "电子仓库",
+  "Name": "电子仓库",
+  "Description": "电子仓库",
+  "FactoryId": 1,
+  "Factory": "车间",
+  "State": "正常",
   "Creator": "admin",
-  "EditDateTime": "2017-12-09T13:29:12.6622339",
-  "Editor": "",
-  "User": "1"
+  "CreationDateTime": "2017-12-14T00:00:00",
+  "Editor": null,
+  "EditDateTime": "0001-01-01T00:00:00"
 }
 
 export default modelExtend(pageModel, {
@@ -196,7 +197,7 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, EditData: payload.data.areaDto == null ? state.EditData : payload.data.areaDto }
       } else if (payload.modalType === 'addModalVisible') {
         return { ...state, ...payload }
       } else if (payload.modalType === 'detailsModalVisible') {

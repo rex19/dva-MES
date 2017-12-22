@@ -14,16 +14,37 @@ const TableName = 'materielTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 2,
-  "RoleName": "testRole",
-  "State": 1,
-  "PlatformId": "1",
-  "PlatformName": "adm管理",
-  "CreationDateTime": "2017-11-01T15:36:38",
+  "Id": 1,
+  "MaterialNumber": "test001KeyBoard",
+  "Version": 1,
+  "Description": "test",
+  "Specification": "test",
+  "CustomerMaterialNumber": "customer001",
+  "SupplierMaterialNumber": "supplier001",
+  "MaterialGroupType": "mgroup",
+  "IsProduct": "True",
+  "IsMultiPanel": "True",
+  "RequireBackflush": "True",
+  "NumberOfPanels": 1,
+  "Unit": "个",
+  "SetupFlag": "True",
+  "ProcurementType": "螺丝",
+  "MinimumPackageQuantity": 10,
+  "ExpirationTime": 20,
+  "SafetyStock": 1,
+  "DefaultStorageLocation": "test001",
+  "ContainerSize": 10,
+  "MSL": "mm",
+  "StateValue": null,
+  "DefaultStationGroup": "001040",
+  "CompanyNumber": "001",
+  "FactoryNumber": "车间",
+  "ValidBegin": "2017-12-01T00:00:00",
+  "ValidEnd": "2018-12-01T00:00:00",
   "Creator": "admin",
-  "EditDateTime": "2017-12-09T13:29:12.6622339",
-  "Editor": "",
-  "User": "1"
+  "CreationDateTime": "2017-12-14T00:00:00",
+  "Editor": null,
+  "EditDateTime": "0001-01-01T00:00:00"
 }
 
 export default modelExtend(pageModel, {
@@ -168,7 +189,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
-          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -204,7 +224,18 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return {
+          ...state, ...payload,
+          MaterialType: eval(payload.data.MaterialType),
+          Unit: eval(payload.data.Unit),
+          ProcurementType: eval(payload.data.ProcurementType),
+          Location: eval(payload.data.Location),
+          MSL: eval(payload.data.MSL),
+          StationGroup: eval(payload.data.StationGroup),
+          Company: eval(payload.data.Company),
+          Factory: eval(payload.data.Factory),
+          EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto
+        }
       } else if (payload.modalType === 'addModalVisible') {
         return {
           ...state, ...payload,

@@ -159,30 +159,38 @@ const RegionTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="Id"
+            label="ID"
             hasFeedback
           >
-            {getFieldDecorator('EditId', {
+            {getFieldDecorator('AddId', {
               initialValue: EditData.Id,
-              rules: [
-                {
-                  required: true, message: '请输入Id',
-                },
-              ],
-            })(<Input disabled />)}
+            })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="角色"
+            label="区域编号"
             hasFeedback
           >
-            {getFieldDecorator('EditRoleName', {
-              initialValue: EditData.RoleName,
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
+            {getFieldDecorator('AddAreaNumber', {
+              initialValue: EditData.AreaNumber,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="名称"
+            hasFeedback
+          >
+            {getFieldDecorator('AddName', {
+              initialValue: EditData.Name,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="描述"
+            hasFeedback
+          >
+            {getFieldDecorator('AddDescription', {
+              initialValue: EditData.Description,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -190,8 +198,8 @@ const RegionTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('EditState', {
-                initialValue: EditData.State.toString(),
+              {getFieldDecorator('AddState', {
+                initialValue: '1',
                 rules: [
                   {
                     required: true, message: '请选择状态',

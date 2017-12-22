@@ -1,10 +1,13 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, Cascader } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
 import { customerTableColumns } from '../../mock/tableColums'
+import city from '../../utils/city'
 import './index.less'
+
+
 
 const { Option } = Select
 const RadioGroup = Radio.Group
@@ -66,6 +69,14 @@ const CustomerTableComponents = ({
       },
     })
   }
+
+  const handleChange = (key, values) => {
+    console.log('handleChange', key, values)
+    // let fields = getFieldsValue()
+    // fields[key] = values
+    // fields = handleFields(fields)
+    // onFilterChange(fields)
+  }
   //每个table可能不同的变量字段(4)
   const formComponentsValue = () => {
     return (
@@ -97,6 +108,7 @@ const CustomerTableComponents = ({
     )
   }
   const addModalValue = () => {
+
     return (
       <div>
         <Form >
@@ -114,7 +126,7 @@ const CustomerTableComponents = ({
             label="名称"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddName', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -123,7 +135,7 @@ const CustomerTableComponents = ({
             label="邓氏码"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddDUNS', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -131,42 +143,23 @@ const CustomerTableComponents = ({
             {...formItemLayout}
             label="国家"
           >
-            <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
+            {getFieldDecorator('AddCountry', {
+              initialValue: '中国',
+            })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="省市"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
+              {getFieldDecorator('AddProvince', { initialValue: [] })(
+                <Cascader
+                  size="large"
+                  style={{ width: '100%' }}
+                  options={city}
+                  placeholder="请选择省市"
+                  onChange={handleChange.bind(null, 'AddProvince')}
+                />)}
             </div>
           </FormItem>
           <FormItem
@@ -174,7 +167,7 @@ const CustomerTableComponents = ({
             label="详细地址"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddAddress', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -183,7 +176,7 @@ const CustomerTableComponents = ({
             label="邮编"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddPostCode', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -192,7 +185,7 @@ const CustomerTableComponents = ({
             label="传真"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddFax', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -201,7 +194,7 @@ const CustomerTableComponents = ({
             label="联系人"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddContactPerson', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -210,7 +203,7 @@ const CustomerTableComponents = ({
             label="邮件"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddEmail', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -219,7 +212,7 @@ const CustomerTableComponents = ({
             label="电话"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddTelphone', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -228,7 +221,7 @@ const CustomerTableComponents = ({
             label="手机"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddMobilePhone', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -238,6 +231,157 @@ const CustomerTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
+                initialValue: '1',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+        </Form>
+      </div>
+    )
+  }
+  const editModalValue = () => {
+    return (
+      <div>
+        <Form >
+          <FormItem
+            {...formItemLayout}
+            label="ID"
+            hasFeedback
+          >
+            {getFieldDecorator('EditId', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="客户编号"
+            hasFeedback
+          >
+            {getFieldDecorator('EditCustomerCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="名称"
+            hasFeedback
+          >
+            {getFieldDecorator('EditName', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邓氏码"
+            hasFeedback
+          >
+            {getFieldDecorator('EditDUNS', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="国家"
+          >
+            {getFieldDecorator('EditCountry', {
+              initialValue: '中国',
+            })(<Input disabled />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="省市"
+          >
+            <div>
+              {getFieldDecorator('EditProvince', { initialValue: [] })(
+                <Cascader
+                  size="large"
+                  style={{ width: '100%' }}
+                  options={city}
+                  placeholder="请选择省市"
+                  onChange={handleChange.bind(null, 'EditProvince')}
+                />)}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="详细地址"
+            hasFeedback
+          >
+            {getFieldDecorator('EditAddress', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮编"
+            hasFeedback
+          >
+            {getFieldDecorator('EditPostCode', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="传真"
+            hasFeedback
+          >
+            {getFieldDecorator('EditFax', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="联系人"
+            hasFeedback
+          >
+            {getFieldDecorator('EditContactPerson', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮件"
+            hasFeedback
+          >
+            {getFieldDecorator('EditEmail', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="电话"
+            hasFeedback
+          >
+            {getFieldDecorator('EditTelphone', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="手机"
+            hasFeedback
+          >
+            {getFieldDecorator('EditMobilePhone', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('EditState', {
                 initialValue: '1',
                 rules: [
                   {
@@ -254,63 +398,6 @@ const CustomerTableComponents = ({
             </div>
           </FormItem>
 
-        </Form>
-      </div>
-    )
-  }
-  const editModalValue = () => {
-    return (
-      <div>
-        <Form >
-          <FormItem
-            {...formItemLayout}
-            label="Id"
-            hasFeedback
-          >
-            {getFieldDecorator('EditId', {
-              initialValue: EditData.Id,
-              rules: [
-                {
-                  required: true, message: '请输入Id',
-                },
-              ],
-            })(<Input disabled />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="角色"
-            hasFeedback
-          >
-            {getFieldDecorator('EditRoleName', {
-              initialValue: EditData.RoleName,
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="状态"
-          >
-            <div>
-              {getFieldDecorator('EditState', {
-                initialValue: EditData.State.toString(),
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
-            </div>
-          </FormItem>
 
         </Form>
       </div>
@@ -407,3 +494,14 @@ const CustomerTableComponents = ({
 export default connect(({ customerTable }) => ({ customerTable }))(Form.create()(CustomerTableComponents))
 
 
+
+// {getFieldDecorator('AddCountry', {
+//   initialValue: [],
+//   rules: [
+//     {
+//       required: true, message: '请选择状态',
+//     },
+//   ],
+// })(
+//   <Cascader options={options} onChange={onChange} placeholder="Please select" />
+//   )}

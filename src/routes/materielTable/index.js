@@ -8,7 +8,7 @@ import moment from 'moment';
 import './index.less'
 
 
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
@@ -446,7 +446,7 @@ const MaterielTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: '1',
+              initialValue: EditData.Id,
               rules: [
                 {
                   required: true, message: '请输入Id',
@@ -454,7 +454,333 @@ const MaterielTableComponents = ({
               ],
             })(<Input disabled />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="料号"
+          >
+            {getFieldDecorator('AddMaterialNumber', {
+              initialValue: EditData.MaterialNumber,
+              rules: [
+                {
+                  required: true, message: '请输入料号',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="版本"
+          >
+            {getFieldDecorator('AddVersion', {
+              initialValue: EditData.Version,
+              rules: [
+                {
+                  required: true, message: '请输入版本',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="描述"
+          >
+            {getFieldDecorator('AddDescription', {
+              initialValue: EditData.Description,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="规格"
+          >
+            {getFieldDecorator('AddSpecification', {
+              initialValue: EditData.Specification,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="客户侧料号"
+          >
+            {getFieldDecorator('AddCustomerMaterialNumber', {
+              initialValue: EditData.CustomerMaterialNumber,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="供应商侧料号"
+          >
+            {getFieldDecorator('AddSupplierMaterialNumber', {
+              initialValue: EditData.SupplierMaterialNumber,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="物料类型"
+          >
+            <div>
+              {getFieldDecorator('AddMaterialGroupType', {
+                // initialValue: EditData.MaterialGroupType,
+                initialValue: '1',
+              })(
+                <Select>
+                  {MaterialType.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否是半成品"
+          >
+            {getFieldDecorator('AddIsProduct', {
+              initialValue: '1'
+            })(
+              <Select>
+                <Option key={0} value='1'>是</Option>
+                <Option key={1} value='0'>否</Option>
+              </Select>
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否是连扳"
+          >
+            {getFieldDecorator('AddIsMultiPanel', {
+              initialValue: '1',
+            })(
+              <Select>
+                <Option key={0} value='1'>是</Option>
+                <Option key={1} value='0'>否</Option>
+              </Select>
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否反冲"
+          >
+            {getFieldDecorator('AddRequireBackflush', {
+              initialValue: '1',
+            })(
+              <Select>
+                <Option key={0} value='1'>是</Option>
+                <Option key={1} value='0'>否</Option>
+              </Select>
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="连扳数"
+          >
+            {getFieldDecorator('AddNumberOfPanels', {
+              initialValue: EditData.NumberOfPanels,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="单位"
+          >
+            <div>
+              {getFieldDecorator('AddUnit', {
+                initialValue: EditData.Unit,
+              })(
+                <Select>
+                  {Unit.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否上料"
+          >
+            {getFieldDecorator('AddSetupFlag', {
+              initialValue: EditData.SetupFlag,
+            })(
+              <Select>
+                <Option key={0} value='1'>是</Option>
+                <Option key={1} value='0'>否</Option>
+              </Select>
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="采购类型"
+          >
+            <div>
+              {getFieldDecorator('AddProcurementType', {
+                // initialValue:  EditData.ProcurementType
+                initialValue: '1'
+              })(
+                <Select>
+                  {ProcurementType.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="最小包装数"
+          >
+            {getFieldDecorator('AddMinimumPackageQuantity', {
+              initialValue: EditData.MinimumPackageQuantity
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="过期周期(天)"
+          >
+            {getFieldDecorator('AddExpirationTime', {
+              initialValue: EditData.ExpirationTime
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="安全库存"
+          >
+            {getFieldDecorator('AddSafetyStock', {
+              initialValue: EditData.ExpirationTime
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="默认库位编号"
+          >
+            {getFieldDecorator('AddDefaultStorageLocation', {
+              // initialValue: EditData.DefaultStorageLocation
+              initialValue: '7'
+            })(
+              <Select>
+                {Location.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
+              </Select>
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="容器大小"
+          >
+            {getFieldDecorator('AddContainerSize', {
+              initialValue: EditData.ContainerSize,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="湿敏等级MSL"
+          >
+            <div>
+              {getFieldDecorator('AddMSL', {
+                // initialValue: EditData.MSL,
+                initialValue: '4',
+              })(
+                <Select>
+                  {MSL.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('AddStateValue', {
+                // initialValue: EditData.StateValue ,
+                initialValue: '1',
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="默认工站组"
+          >
+            {getFieldDecorator('AddDefaultStationGroup', {
+              // initialValue: EditData.DefaultStationGroup
+              initialValue: '4'
+            })(
+              <Select>
+                {StationGroup.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
+              </Select>
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="公司"
+          >
+            <div>
+              {getFieldDecorator('AddCompanyNumber', {
+                // initialValue:  EditData.CompanyNumber
+                initialValue: '1'
+              })(
+                <Select>
+                  {Company.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('AddFactory', {
+                initialValue: '1',
+              })(
+                <Select>
+                  {Factory.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="生效时间"
+          >
+            {getFieldDecorator('AddValidBegin', {
+              initialValue: moment(EditData.ValidBegin, dateFormat),
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入生效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="失效时间"
+          >
+            {getFieldDecorator('AddValidEnd', {
+              initialValue: moment(EditData.ValidEnd, dateFormat),
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入失效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+          </FormItem>
         </Form>
       </div>
     )
@@ -550,3 +876,43 @@ const MaterielTableComponents = ({
 export default connect(({ materielTable }) => ({ materielTable }))(Form.create()(MaterielTableComponents))
 
 
+// <FormItem
+// {...formItemLayout}
+// label="生效日期"
+// >
+// {getFieldDecorator('AddValidBegin', {
+//   initialValue: moment('2015/01/01', dateFormat),
+// })(
+//   <DatePicker format={dateFormat} />
+//   )}
+// </FormItem>
+// <FormItem
+// {...formItemLayout}
+// label="失效日期"
+// >
+// {getFieldDecorator('ValidEnd', {
+//   initialValue: moment('2015/01/01', dateFormat),
+// })(
+//   <DatePicker format={dateFormat} />
+//   )}
+// </FormItem>
+
+// <FormItem
+// {...formItemLayout}
+// label="生效时间"
+// wrapperCol={{
+//   xs: { span: 24 },
+//   sm: { span: 15 },
+// }}
+// >
+// {getFieldDecorator('AddValidBegin', {
+//   initialValue: moment("2017-12-14T15:08:00", dateFormat),
+//   rules: [
+//     {
+//       type: 'object', required: true, message: '请输入生效时间',
+//     },
+//   ],
+// })(
+//   <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+//   )}
+// </FormItem>

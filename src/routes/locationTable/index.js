@@ -182,40 +182,71 @@ const LocationTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="Id"
-            hasFeedback
+            label="ID"
           >
-            {getFieldDecorator('EditId', {
+            {getFieldDecorator('AddId', {
               initialValue: EditData.Id,
-              rules: [
-                {
-                  required: true, message: '请输入Id',
-                },
-              ],
             })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="角色"
-            hasFeedback
+            label="库位编号"
           >
-            {getFieldDecorator('EditRoleName', {
-              initialValue: EditData.RoleName,
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
+            {getFieldDecorator('EditLocationNumber', {
+              initialValue: EditData.LocationNumber,
             })(<Input />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="区域"
+          >
+            {getFieldDecorator('EditArea', {
+              // initialValue: EditData.LocationNumber,
+              initialValue: '1',
+            })(
+              <Select>
+                {AreaList.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
+              </Select>)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="X轴坐标"
+          >
+            <div>
+              {getFieldDecorator('EditX', {
+                initialValue: EditData.X,
+              })(<Input />)}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="Y轴坐标"
+          >
+            <div>
+              {getFieldDecorator('EditY', {
+                initialValue: EditData.Y,
+              })(<Input />)}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="Z轴坐标"
+          >
+            <div>
+              {getFieldDecorator('EditZ', {
+                initialValue: EditData.Z,
+              })(<Input />)}
+            </div>
+          </FormItem>
           <FormItem
             {...formItemLayout}
             label="状态"
           >
             <div>
               {getFieldDecorator('EditState', {
-                initialValue: EditData.State.toString(),
+                initialValue: '1',
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -230,7 +261,6 @@ const LocationTableComponents = ({
                 )}
             </div>
           </FormItem>
-
         </Form>
       </div>
     )
