@@ -297,8 +297,8 @@ const BOMTableComponents = ({
   }
 
   return (
-    <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
-      <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
+    <div className='container' >
+      <div className='formComponentsDiv' >
         <FormComponents
           formComponentsValue={formComponentsValue()}
         />
