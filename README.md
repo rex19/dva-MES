@@ -1,4 +1,4 @@
-# dva-MES
+# SF-MES
 
 ## 开发构建
 
@@ -54,7 +54,12 @@ npm i 或者 yarn install
 ```
 
 开发：
-
+nodeMock:
+```bash
+cd ./server
+npm start
+```
+前端:
 ```bash
 npm run build:dll #第一次npm run dev时需运行此命令，使开发时编译更快
 npm run dev
