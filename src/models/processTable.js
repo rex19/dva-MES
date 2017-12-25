@@ -42,11 +42,14 @@ export default modelExtend(pageModel, {
       Total: Number(globalConfig.table.paginationConfig.Total) || 10,  //总条数
     },
     EditData: EditData,
-    DetailsData: {},
+    DetailsData: {
+      Process: {},
+      ProcessStep: [{}]
+    },
     //每个table可能不同的变量字段
     MaterialNumber: [],
     StationGroup: [],
-
+    AddProcessStepDataSource: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -217,6 +220,10 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
-    }
+    },
+    //改变editable的datasource
+    editableDataChanger(state, { payload }) {
+      return { ...state, ...payload, AddProcessStepDataSource: payload.AddProcessStepDataSource }
+    },
   },
 })

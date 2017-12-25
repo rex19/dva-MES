@@ -12,7 +12,7 @@ import layer from './layer'
 import FormComponents from './CRUDTable/FormComponents'
 import TableComponents from './CRUDTable/TableComponents'
 import EditableComponent from './CRUDTable/EditableComponent'
-
+import DetailsTableComponent from './CRUDTable/DetailsTableComponent'
 
 export {
   Layout,
@@ -27,5 +27,6 @@ export {
   Page,
   FormComponents,
   TableComponents,
-  EditableComponent
+  EditableComponent,
+  DetailsTableComponent
 }

@@ -12,6 +12,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'stationGroupTable'
 const TableColumns = stationGroupTableColumns
+const AddFormLayout = ['AddGroupNumber', 'AddDescription', 'AddState']
+const EditFormLayout = ['EditId', 'EditGroupNumber', 'EditDescription', 'EditState', 'EditStationIdArray']
 
 const StationGroupTableComponents = ({
   stationGroupTable,
@@ -32,19 +34,19 @@ const StationGroupTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { GroupNumber: payload.AddGroupNumber, Description: payload.AddDescription, State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, GroupNumber: payload.EditGroupNumber, Description: payload.EditDescription, State: parseInt(payload.EditState), StationIdArray: payload.EditStationIdArray.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -105,7 +107,7 @@ const StationGroupTableComponents = ({
             label="工站组编号"
             hasFeedback
           >
-            {getFieldDecorator('AddStationNumber', {
+            {getFieldDecorator('AddGroupNumber', {
               initialValue: '',
               rules: [
                 {
@@ -119,7 +121,7 @@ const StationGroupTableComponents = ({
             label="名称"
             hasFeedback
           >
-            {getFieldDecorator('AddName', {
+            {getFieldDecorator('AddDescription', {
               initialValue: '',
               rules: [
                 {
@@ -164,11 +166,6 @@ const StationGroupTableComponents = ({
           >
             {getFieldDecorator('EditId', {
               initialValue: EditData.Id,
-              rules: [
-                {
-                  required: true, message: '请输入Id',
-                },
-              ],
             })(<Input disabled />)}
           </FormItem>
           <FormItem
@@ -225,7 +222,7 @@ const StationGroupTableComponents = ({
             label="可选工站"
           >
             <div>
-              {getFieldDecorator('EditSelectedStation', {
+              {getFieldDecorator('EditStationIdArray', {
                 initialValue: SelectedStation,
               })(
                 <Select

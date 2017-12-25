@@ -1,11 +1,14 @@
 import React from 'react'
 import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
-import { FormComponents, TableComponents } from '../../components'
+import { FormComponents, TableComponents, DetailsTableComponent } from '../../components'
 import globalConfig from 'utils/config'
-import { processTableColumns } from '../../mock/tableColums'
+import { processTableColumns, processDetailsColumns } from '../../mock/tableColums'
 import EditableforEditModals from './subpage/editableforEditModals'
 import EditableforAddModals from './subpage/editableforAddModals'
+import RowEditableTable from './subpage/rowEditableforAddModals'
+
+
 import './index.less'
 
 const { Option } = Select
@@ -18,7 +21,7 @@ const TableColumns = processTableColumns
 
 
 
-class addModalValueComponent extends React.Component {
+class AddModalValueComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -61,7 +64,7 @@ const ProcessTableComponents = ({
   const TableModelsData = processTable
   const { getFieldDecorator, validateFields, resetFields } = form
   // const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialNumber, StationGroup } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialNumber, StationGroup, AddProcessStepDataSource } = TableModelsData
 
   console.log('ProcessTableComponents-processTable ', TableModelsData)
   /**
@@ -70,14 +73,14 @@ const ProcessTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(['AddProcessNumber', 'AddMaterialNumber', 'AddState', 'AddValidBegin', 'AddValidEnd'], (err, payload) => {
+        const createParam = { ProcessNumber: payload.AddProcessNumber, MaterialNumber: parseInt(payload.AddMaterialNumber), State: parseInt(payload.AddState), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, ProcessStep: AddProcessStepDataSource }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(['AddProcessNumber', 'AddMaterialNumber', 'AddState', 'AddValidBegin', 'AddValidEnd'])
         }
       })
     } else if (modalType === 'edit') {
@@ -101,6 +104,15 @@ const ProcessTableComponents = ({
       type: `${TableName}/showModal`,
       payload: {
         modalType: modalVisible,
+      },
+    })
+  }
+  const onEditableCellChange = (data) => {
+    console.log('onEditableCellChange', data)
+    dispatch({
+      type: `${TableName}/editableDataChanger`,
+      payload: {
+        AddProcessStepDataSource: data,
       },
     })
   }
@@ -135,6 +147,7 @@ const ProcessTableComponents = ({
     )
   }
   const addModalValue = () => {
+
     return (
       <div>
         <Form >
@@ -222,14 +235,25 @@ const ProcessTableComponents = ({
               )}
           </FormItem>
           <FormItem
-            {...formItemLayout}
+            // {...formItemLayout}
+            labelCol={{
+              xs: { span: 4 },
+              sm: { span: 5 }
+            }}
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
             label="工艺步骤"
           >
-            <EditableforAddModals StationGroup={StationGroup} />
+            <RowEditableTable
+              StationGroup={StationGroup}
+              onEditableCellChange={onEditableCellChange}
+            />
           </FormItem>
 
         </Form>
-      </div>
+      </div >
     )
   }
   const editModalValue = () => {
@@ -262,60 +286,79 @@ const ProcessTableComponents = ({
           {...formItemLayout}
           label="ID"
         >
-          <Input disabled value={DetailsData.Id} />
+          <Input disabled value={DetailsData.Process.Id} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="工艺编号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.Process.ProcessNumber} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="模块"
+          label="成品/半成品料号"
         >
-          <Input disabled value={DetailsData.PlatformName} />
+          <Input disabled value={DetailsData.Process.MaterialNumber} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="版本"
+        >
+          <Input disabled value={DetailsData.Process.State} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="状态"
         >
-          <Input disabled value={DetailsData.State} />
+          <Input disabled value={DetailsData.Process.State} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="生效时间"
+        >
+          <Input disabled value={DetailsData.Process.ValidBegin} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="失效时间"
+        >
+          <Input disabled value={DetailsData.Process.ValidEnd} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.CreationDateTime} />
+          <Input disabled value={DetailsData.Process.CreationDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建人"
         >
-          <Input disabled value={DetailsData.Creator} />
+          <Input disabled value={DetailsData.Process.CreationDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="最后编辑时间"
         >
-          <Input disabled value={DetailsData.EditDateTime} />
+          <Input disabled value={DetailsData.Process.EditDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="最后编辑人"
         >
-          <Input disabled value={DetailsData.Editor} />
+          <Input disabled value={DetailsData.Process.Editor} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="拥有此角色人员"
+          label="工艺步骤"
         >
-          <Input disabled value={DetailsData.User} />
+          <DetailsTableComponent Columns={processDetailsColumns} Data={DetailsData.ProcessStep} />
         </FormItem>
       </div>
     )
   }
-  // const addModalValueCom = <addModalValueComponent formItemLayout={formItemLayout} getFieldDecorator={getFieldDecorator} />
+
+
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -333,7 +376,6 @@ const ProcessTableComponents = ({
           TableWidth={1300}
           ModalWidth={1300}
           addModalValue={addModalValue()}
-          // addModalValue={<addModalValueComponent formItemLayout={formItemLayout} getFieldDecorator={getFieldDecorator} />}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}

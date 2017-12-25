@@ -9,9 +9,12 @@ import './index.less'
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
+const { TextArea } = Input;
 //每个table可能不同的变量字段(1)
 const TableName = 'staffTable'
 const TableColumns = staffTableColumns
+const AddFormLayout = ['AddUserName', 'AddAccount', 'AddPassword', 'AddEmailAddress', 'AddPhone', 'AddUserState', 'AddPlatformID', 'AddState', 'AddRole']
+const EditFormLayout = ['EditUserName', 'EditAccount', 'EditPassword', 'EditEmailEditress', 'EditPhone', 'EditUserState', 'EditPlatformID', 'EditState', 'EditRole']
 
 const StaffTableComponents = ({
   staffTable,
@@ -32,19 +35,19 @@ const StaffTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { UserName: payload.AddUserName, Account: payload.AddAccount, Password: payload.AddPassword, EmailAddress: payload.AddEmailAddress, Phone: payload.AddPhone, UserState: parseInt(payload.AddUserState), PlatformId: parseInt(payload.AddPlatformID), Role: payload.AddRole.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, UserName: payload.EditUserName, Account: payload.EditAccount, Password: payload.EditPassword, EmailEditress: payload.EditEmailEditress, Phone: payload.EditPhone, UserState: parseInt(payload.EditUserState), PlatformId: parseInt(payload.EditPlatformID), Role: payload.EditRole.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -121,6 +124,11 @@ const StaffTableComponents = ({
           >
             {getFieldDecorator('AddUserName', {
               initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入员工姓名',
+                },
+              ],
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -174,7 +182,7 @@ const StaffTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddState', {
+              {getFieldDecorator('AddUserState', {
                 initialValue: '1',
                 rules: [
                   {
@@ -224,7 +232,7 @@ const StaffTableComponents = ({
             label="ID"
             hasFeedback
           >
-            {getFieldDecorator('AddId', {
+            {getFieldDecorator('EditId', {
               initialValue: EditData.Id,
             })(<Input disabled />)}
           </FormItem>
@@ -233,7 +241,7 @@ const StaffTableComponents = ({
             label="账号"
             hasFeedback
           >
-            {getFieldDecorator('AddAccount', {
+            {getFieldDecorator('EditAccount', {
               initialValue: EditData.Account,
               rules: [
                 {
@@ -247,7 +255,7 @@ const StaffTableComponents = ({
             label="员工姓名"
             hasFeedback
           >
-            {getFieldDecorator('AddUserName', {
+            {getFieldDecorator('EditUserName', {
               initialValue: EditData.UserName,
             })(<Input />)}
           </FormItem>
@@ -256,7 +264,7 @@ const StaffTableComponents = ({
             label="密码"
             hasFeedback
           >
-            {getFieldDecorator('AddPassword', {
+            {getFieldDecorator('EditPassword', {
               initialValue: EditData.Password,
               rules: [
                 {
@@ -270,7 +278,7 @@ const StaffTableComponents = ({
             label="模块"
             hasFeedback
           >
-            {getFieldDecorator('AddPlatformID', {
+            {getFieldDecorator('EditPlatformID', {
               initialValue: EditData.PlatformId.toString(),
             })(
               <Select>
@@ -284,8 +292,8 @@ const StaffTableComponents = ({
             label="邮箱"
             hasFeedback
           >
-            {getFieldDecorator('AddEmailAddress', {
-              initialValue: EditData.EmailAddress,
+            {getFieldDecorator('EditEmailEditress', {
+              initialValue: EditData.EmailEditress,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -293,7 +301,7 @@ const StaffTableComponents = ({
             label="电话"
             hasFeedback
           >
-            {getFieldDecorator('AddPhone', {
+            {getFieldDecorator('EditPhone', {
               initialValue: EditData.Phone,
             })(<Input />)}
           </FormItem>
@@ -302,7 +310,7 @@ const StaffTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddState', {
+              {getFieldDecorator('EditUserState', {
                 initialValue: EditData.State.toString(),
                 rules: [
                   {
@@ -323,7 +331,7 @@ const StaffTableComponents = ({
             label="已分配人员角色"
           >
             <div>
-              {getFieldDecorator('AddAllocatedRole', {
+              {getFieldDecorator('EditRole', {
                 initialValue: AllocatedMultiselectData,
               })(
                 <Select
@@ -416,7 +424,7 @@ const StaffTableComponents = ({
           {...formItemLayout}
           label="拥有此角色人员"
         >
-          <Input disabled value={DetailsData.Role} />
+          <TextArea rows={4} disabled value={DetailsData.Role} />
         </FormItem>
       </div>
     )

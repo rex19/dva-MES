@@ -9,6 +9,7 @@ import './index.less'
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
+const { TextArea } = Input
 //每个table可能不同的变量字段(1)
 const TableName = 'roleTable'
 const TableColumns = roleTableColumns
@@ -321,7 +322,7 @@ const RoleTableComponents = ({
           {...formItemLayout}
           label="拥有此角色人员"
         >
-          <Input disabled value={DetailsData.User} />
+          <TextArea rows={4} disabled value={DetailsData.User} />
         </FormItem>
       </div>
     )

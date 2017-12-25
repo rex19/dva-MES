@@ -99,6 +99,7 @@ export default modelExtend(pageModel, {
       const data = yield call(create, payload)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
+        console.log('data.Status !== 200', data)
         return errorMessage(data.ErrorMessage || '创建失败')
       } else if (data.Status === 200) {
         yield put({ type: 'hideModal', payload: 'addModalVisible' })

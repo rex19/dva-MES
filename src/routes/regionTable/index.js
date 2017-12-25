@@ -12,6 +12,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'regionTable'
 const TableColumns = regionTableColumns
+const AddFormLayout = ['AddAreaNumber', 'AddName', 'AddDescription', 'AddState']
+const EditFormLayout = ['EditId', 'EditAreaNumber', 'EditName', 'EditDescription', 'EditState']
 
 const RegionTableComponents = ({
   regionTable,
@@ -32,19 +34,19 @@ const RegionTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { AreaNumber: payload.AddAreaNumber, Name: payload.AddName, Description: payload.AddDescription, State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, AreaNumber: payload.EditAreaNumber, Name: payload.EditName, Description: payload.EditDescription, State: parseInt(payload.EditState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -133,7 +135,7 @@ const RegionTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
-                initialValue: '1',
+                initialValue: '',
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -162,7 +164,7 @@ const RegionTableComponents = ({
             label="ID"
             hasFeedback
           >
-            {getFieldDecorator('AddId', {
+            {getFieldDecorator('EditId', {
               initialValue: EditData.Id,
             })(<Input />)}
           </FormItem>
@@ -171,7 +173,7 @@ const RegionTableComponents = ({
             label="区域编号"
             hasFeedback
           >
-            {getFieldDecorator('AddAreaNumber', {
+            {getFieldDecorator('EditAreaNumber', {
               initialValue: EditData.AreaNumber,
             })(<Input />)}
           </FormItem>
@@ -180,7 +182,7 @@ const RegionTableComponents = ({
             label="名称"
             hasFeedback
           >
-            {getFieldDecorator('AddName', {
+            {getFieldDecorator('EditName', {
               initialValue: EditData.Name,
             })(<Input />)}
           </FormItem>
@@ -189,7 +191,7 @@ const RegionTableComponents = ({
             label="描述"
             hasFeedback
           >
-            {getFieldDecorator('AddDescription', {
+            {getFieldDecorator('EditDescription', {
               initialValue: EditData.Description,
             })(<Input />)}
           </FormItem>
@@ -198,8 +200,8 @@ const RegionTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddState', {
-                initialValue: '1',
+              {getFieldDecorator('EditState', {
+                initialValue: EditData.State.toString(),
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -229,15 +231,21 @@ const RegionTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="区域编号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.AreaNumber} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="模块"
+          label="名称"
         >
-          <Input disabled value={DetailsData.PlatformName} />
+          <Input disabled value={DetailsData.Name} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="描述"
+        >
+          <Input disabled value={DetailsData.Description} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -268,12 +276,6 @@ const RegionTableComponents = ({
           label="最后编辑人"
         >
           <Input disabled value={DetailsData.Editor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="拥有此角色人员"
-        >
-          <Input disabled value={DetailsData.User} />
         </FormItem>
       </div>
     )

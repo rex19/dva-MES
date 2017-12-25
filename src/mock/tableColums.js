@@ -531,6 +531,86 @@ const supplierTableColumns = [{
   title: '最后编辑人',
   dataIndex: 'Editor',
 }]
+
+const processDetailsColumns = [{
+  title: '序列号',
+  dataIndex: 'Secquence',
+}, {
+  title: '描述',
+  dataIndex: 'Description',
+}, {
+  title: '工站组',
+  dataIndex: 'StationGroupName',
+}, {
+  title: '是否必做',
+  dataIndex: 'IsMandatory',
+}, {
+  title: '是否需要上料检验',
+  dataIndex: 'IsNeedSetupCheck',
+}, {
+  title: '最大测试次数',
+  dataIndex: 'MaximumTestCount',
+}, {
+  title: '是否反冲',
+  dataIndex: 'IsBackflush',
+}, {
+  title: '正反面',
+  dataIndex: 'Side',
+}, {
+  title: '最后编辑时间',
+  dataIndex: 'EditDateTime',
+}, {
+  title: '最后编辑人',
+  dataIndex: 'Editor',
+}];
+
+const bomDetailsFullViewColumns = [{
+  title: '子件料号',
+  dataIndex: 'MaterialNumber',
+}, {
+  title: '版本号',
+  dataIndex: 'Version',
+}, {
+  title: '名称',
+  dataIndex: 'MaterialName',
+}, {
+  title: '设备组',
+  dataIndex: 'StationGroup',
+}, {
+  title: '定位号',
+  dataIndex: 'Designator',
+}, {
+  title: '正反面',
+  dataIndex: 'Layer',
+}, {
+  title: '是否是产出品',
+  dataIndex: 'IsAlternative',
+}, {
+  title: '用量',
+  dataIndex: 'Quantity',
+}, {
+  title: '是否上料检测',
+  dataIndex: 'IsNeedSetupCheck',
+}]
+const bomDetailsAggregateViewColumns = [{
+  title: '子件料号',
+  dataIndex: 'MaterialNumber',
+}, {
+  title: '版本号',
+  dataIndex: 'Version',
+}, {
+  title: '名称',
+  dataIndex: 'MaterialName',
+}, {
+  title: '设备组',
+  dataIndex: 'StationGroup',
+}, {
+  title: '正反面',
+  dataIndex: 'Layer',
+}, {
+  title: '用量',
+  dataIndex: 'Quantity',
+}]
 export {
   stationTableColumns,
   stationGroupTableColumns,
@@ -545,7 +625,11 @@ export {
   locationTableColumns,
   bomTableColumns,
   customerTableColumns,
-  supplierTableColumns
+  supplierTableColumns,
+
+  processDetailsColumns,
+  bomDetailsFullViewColumns,
+  bomDetailsAggregateViewColumns
 }
 
 

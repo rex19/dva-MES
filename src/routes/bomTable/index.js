@@ -1,9 +1,9 @@
 import React from 'react'
 import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
-import { FormComponents, TableComponents } from '../../components'
+import { FormComponents, TableComponents, DetailsTableComponent } from '../../components'
 import globalConfig from 'utils/config'
-import { bomTableColumns } from '../../mock/tableColums'
+import { bomTableColumns, bomDetailsFullViewColumns, bomDetailsAggregateViewColumns } from '../../mock/tableColums'
 import EditableforEditModals from './subpage/editableforEditModals'
 import EditableforAddModals from './subpage/editableforAddModals'
 import './index.less'
@@ -242,63 +242,80 @@ const BOMTableComponents = ({
           {...formItemLayout}
           label="ID"
         >
-          <Input disabled value={DetailsData.Id} />
+          <Input disabled value={DetailsData.BomHead.Id} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="料号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.BomHead.MaterieNumber} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="模块"
+          label="版本号"
         >
-          <Input disabled value={DetailsData.PlatformName} />
+          <Input disabled value={DetailsData.BomHead.Version} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="状态"
+          label="名称"
         >
-          <Input disabled value={DetailsData.State} />
+          <Input disabled value={DetailsData.BomHead.Name} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="生效日期"
+        >
+          <Input disabled value={DetailsData.BomHead.ValidBegin} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="失效日期"
+        >
+          <Input disabled value={DetailsData.BomHead.ValidEnd} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.CreationDateTime} />
+          <Input disabled value={DetailsData.BomHead.CreationDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建人"
         >
-          <Input disabled value={DetailsData.Creator} />
+          <Input disabled value={DetailsData.BomHead.Creator} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="最后编辑时间"
         >
-          <Input disabled value={DetailsData.EditDateTime} />
+          <Input disabled value={DetailsData.BomHead.EditDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="最后编辑人"
         >
-          <Input disabled value={DetailsData.Editor} />
+          <Input disabled value={DetailsData.BomHead.Editor} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="拥有此角色人员"
+          label="全视图"
         >
-          <Input disabled value={DetailsData.User} />
+          <DetailsTableComponent Columns={bomDetailsFullViewColumns} Data={DetailsData.BomItemList} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="合计视图"
+        >
+          <DetailsTableComponent Columns={bomDetailsAggregateViewColumns} Data={DetailsData.BomItemStatistics} />
         </FormItem>
       </div>
     )
   }
-
   return (
-    <div className='container' >
-      <div className='formComponentsDiv' >
+    <div className='containerDiv' style={{ background: 'white', padding: '20px', margin: '10px', boxShadow: '0px -3px 7px' }}>
+      <div className='formComponentsDiv' style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
         <FormComponents
           formComponentsValue={formComponentsValue()}
         />

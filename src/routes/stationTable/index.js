@@ -12,6 +12,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'stationTable'
 const TableColumns = stationTableColumns
+const AddFormLayout = ['AddStationNumber', 'AddName', 'AddStationType', 'AddState']
+const EditFormLayout = ['EditId', 'EditStationNumber', 'EditName', 'EditStationType', 'EditState', 'EditStationGroup']
 
 const StationTableComponents = ({
   stationTable,
@@ -26,25 +28,26 @@ const StationTableComponents = ({
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalStationGroup, SelectedStationGroup } = TableModelsData
 
   console.log('TableComponents-stationTable ', TableModelsData)
+
   /**
    * crud modal
    */
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { StationNumber: payload.AddStationNumber, Name: payload.AddName, State: parseInt(payload.AddState), StationType: parseInt(payload.AddStationType) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, StationNumber: payload.EditStationNumber, Name: payload.EditName, StationType: parseInt(payload.EditStationType), State: parseInt(payload.EditState), StationGroupIdArray: payload.EditStationGroup.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -134,7 +137,12 @@ const StationTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('AddStationType', {
-              initialValue: '1',
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入工站类型',
+                },
+              ],
             })(
               <Select>
                 {TotalStationGroup.map(function (item, index) {
@@ -300,12 +308,6 @@ const StationTableComponents = ({
           label="工站类型"
         >
           <Input disabled value={DetailsData.StationType} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="工站组"
-        >
-          <Input disabled value={DetailsData.StationGroupIdArray} />
         </FormItem>
         <FormItem
           {...formItemLayout}

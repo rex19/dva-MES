@@ -42,7 +42,11 @@ export default modelExtend(pageModel, {
       Total: Number(globalConfig.table.paginationConfig.Total) || 10,  //总条数
     },
     EditData: EditData,
-    DetailsData: {},
+    DetailsData: {
+      BomHead: {},
+      BomItemList: [],
+      BomItemStatistics: []
+    },
     //每个table可能不同的变量字段
     MaterialList: [],
     MaterialItemList: [],

@@ -14,16 +14,19 @@ const TableName = 'supplierTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 2,
-  "RoleName": "testRole",
-  "State": 1,
-  "PlatformId": "1",
-  "PlatformName": "adm管理",
-  "CreationDateTime": "2017-11-01T15:36:38",
-  "Creator": "admin",
-  "EditDateTime": "2017-12-09T13:29:12.6622339",
-  "Editor": "",
-  "User": "1"
+  "SupplierCode": "code001",
+  "Name": "nametest001",
+  "DUNS": "086",
+  "Country": "中国",
+  "Province": "上海",
+  "Address": "秀浦路3500号",
+  "PostCode": "200010",
+  "Fax": "02199999989",
+  "ContactPerson": "testperson01",
+  "Email": "test@163.com",
+  "Telphone": "15800000000",
+  "MobilePhone": "13000000000",
+  "State": 1
 }
 
 export default modelExtend(pageModel, {
@@ -164,8 +167,13 @@ export default modelExtend(pageModel, {
         // } else {
         //   throw data
         // }
-        yield put({ type: 'showModal', payload: payload })
-        yield put({ type: 'showModalData', payload: { modalType: payload.modalType } })
+        const data = yield call(getDetailsModalData, payload.record.Id)
+        if (data.Status === 200) {
+          yield put({ type: 'showModal', payload: payload })
+          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        } else {
+          throw data
+        }
 
       } else if (payload.modalType === 'addModalVisible') {
         yield put({ type: 'showModal', payload: payload })
@@ -192,7 +200,8 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, EditData: payload.data }
+        // return { ...state, ...payload, EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
       } else if (payload.modalType === 'addModalVisible') {
         return { ...state, ...payload }
       } else if (payload.modalType === 'detailsModalVisible') {

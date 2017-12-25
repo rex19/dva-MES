@@ -249,7 +249,6 @@ class EditableforAddModals extends React.Component {
       title: '正反面',
       dataIndex: 'Side',
       render: (text, record) => (
-        console.log('正反面', text, record),
         <EditableCellSelect
           value={text}
           onChange={this.onCellChange(record.key, 'Side')}
@@ -257,7 +256,7 @@ class EditableforAddModals extends React.Component {
         />
       ),
     }, {
-      title: 'operation',
+      title: '操作',
       dataIndex: 'operation',
       render: (text, record) => {
         return (
@@ -272,17 +271,7 @@ class EditableforAddModals extends React.Component {
     }];
 
     this.state = {
-      dataSource: [{
-        key: '0',
-        Secquence: 1,
-        Desctiption: '1',
-        StationGroupName: 4,
-        IsMandatory: true,
-        IsNeedSetupCheck: true,
-        MaximumTestCount: '',
-        IsBackflush: true,
-        Side: 0
-      }],
+      dataSource: [],
       count: 1,
     };
   }
@@ -291,9 +280,9 @@ class EditableforAddModals extends React.Component {
       const dataSource = [...this.state.dataSource];
       const target = dataSource.find(item => item.key === key);
       if (target) {
-        console.log('onCellChange', key, dataIndex, value, target, dataSource)
         target[dataIndex] = value;
         this.setState({ dataSource });
+        this.props.onEditableCellChange(dataSource)
       }
     };
   }
@@ -305,14 +294,14 @@ class EditableforAddModals extends React.Component {
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
-      Secquence: count,
-      Desctiption: `Desctiption${count}`,
-      StationGroupName: count,
-      IsMandatory: true,
-      IsNeedSetupCheck: true,
-      MaximumTestCount: `${count}`,
-      IsBackflush: true,
-      Side: 0
+      Secquence: '点击输入',
+      Desctiption: '点击输入',
+      StationGroupName: '点击输入',
+      IsMandatory: '点击输入',
+      IsNeedSetupCheck: '点击输入',
+      MaximumTestCount: '点击输入',
+      IsBackflush: '点击输入',
+      Side: '点击输入'
     };
     this.setState({
       dataSource: [...dataSource, newData],

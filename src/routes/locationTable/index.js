@@ -12,6 +12,23 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'locationTable'
 const TableColumns = locationTableColumns
+const AddFormLayout = [
+  'AddLocationNumber',
+  'AddDescription',
+  'AddAreaId',
+  'AddX',
+  'AddY',
+  'AddZ',
+  'AddState']
+const EditFormLayout = [
+  'EditId',
+  'EditLocationNumber',
+  'EditDescription',
+  'EditAreaId',
+  'EditX',
+  'EditY',
+  'EditZ',
+  'EditState']
 
 const LocationTableComponents = ({
   locationTable,
@@ -32,19 +49,19 @@ const LocationTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { LocationNumber: payload.AddLocationNumber, Description: payload.AddDescription, AreaId: payload.AddAreaId, X: payload.AddX, Y: payload.AddY, Z: payload.AddZ, State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, LocationNumber: payload.EditLocationNumber, Description: payload.EditDescription, AreaId: payload.EditAreaId, X: payload.EditX, Y: payload.EditY, Z: payload.EditZ, State: parseInt(payload.EditState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -110,10 +127,18 @@ const LocationTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="名称"
+          >
+            {getFieldDecorator('AddDescription', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="区域"
           >
-            {getFieldDecorator('AddArea', {
-              initialValue: '1',
+            {getFieldDecorator('AddAreaId', {
+              initialValue: '',
             })(
               <Select>
                 {AreaList.map(function (item, index) {
@@ -127,7 +152,7 @@ const LocationTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddX', {
-                initialValue: '1',
+                initialValue: '',
               })(<Input />)}
             </div>
           </FormItem>
@@ -137,7 +162,7 @@ const LocationTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddY', {
-                initialValue: '1',
+                initialValue: '',
               })(<Input />)}
             </div>
           </FormItem>
@@ -147,7 +172,7 @@ const LocationTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddZ', {
-                initialValue: '1',
+                initialValue: '',
               })(<Input />)}
             </div>
           </FormItem>
@@ -157,7 +182,7 @@ const LocationTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
-                initialValue: '1',
+                initialValue: '',
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -198,9 +223,17 @@ const LocationTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="名称"
+          >
+            {getFieldDecorator('EditDescription', {
+              initialValue: EditData.Description,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="区域"
           >
-            {getFieldDecorator('EditArea', {
+            {getFieldDecorator('EditAreaId', {
               // initialValue: EditData.LocationNumber,
               initialValue: '1',
             })(
@@ -276,15 +309,33 @@ const LocationTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="库位编号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.LocationNumber} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="模块"
+          label="区域"
         >
-          <Input disabled value={DetailsData.PlatformName} />
+          <Input disabled value={DetailsData.Area} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="X轴坐标"
+        >
+          <Input disabled value={DetailsData.X} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Y轴坐标"
+        >
+          <Input disabled value={DetailsData.Y} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Z轴坐标"
+        >
+          <Input disabled value={DetailsData.Z} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -296,7 +347,7 @@ const LocationTableComponents = ({
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.CreationDateTime} />
+          <Input disabled value={DetailsData.CreateDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -315,12 +366,6 @@ const LocationTableComponents = ({
           label="最后编辑人"
         >
           <Input disabled value={DetailsData.Editor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="拥有此角色人员"
-        >
-          <Input disabled value={DetailsData.User} />
         </FormItem>
       </div>
     )

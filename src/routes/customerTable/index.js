@@ -15,6 +15,34 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'customerTable'
 const TableColumns = customerTableColumns
+const AddFormLayout = [
+  'AddCustomerCode',
+  'AddName',
+  'AddDUNS',
+  'AddCountry',
+  'AddProvince',
+  'AddAddress',
+  'AddPostCode',
+  'AddFax',
+  'AddContactPerson',
+  'AddEmail',
+  'AddTelphone',
+  'AddMobilePhone',
+  'AddState']
+const EditFormLayout = [
+  'EditCustomerCode',
+  'EditName',
+  'EditDUNS',
+  'EditCountry',
+  'EditProvince',
+  'EditAddress',
+  'EditPostCode',
+  'EditFax',
+  'EditContactPerson',
+  'EditEmail',
+  'EditTelphone',
+  'EditMobilePhone',
+  'EditState']
 
 const CustomerTableComponents = ({
   customerTable,
@@ -35,19 +63,48 @@ const CustomerTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = {
+          CustomerCode: payload.AddCustomerCode,
+          Name: payload.AddName,
+          DUNS: payload.AddDUNS,
+          Country: payload.AddCountry,
+          Province: payload.AddProvince.join(','),
+          Address: payload.AddAddress,
+          PostCode: payload.AddPostCode,
+          Fax: payload.AddFax,
+          ContactPerson: payload.AddContactPerson,
+          Email: payload.AddEmail,
+          Telphone: payload.AddTelphone,
+          MobilePhone: payload.AddMobilePhone,
+          State: parseInt(payload.AddState)
+        }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = {
+          Id: payload.EditId,
+          CustomerCode: payload.EditCustomerCode,
+          Name: payload.EditName,
+          DUNS: payload.EditDUNS,
+          Country: payload.EditCountry,
+          Province: payload.EditProvince.join(','),
+          Address: payload.EditAddress,
+          PostCode: payload.EditPostCode,
+          Fax: payload.EditFax,
+          ContactPerson: payload.EditContactPerson,
+          Email: payload.EditEmail,
+          Telphone: payload.EditTelphone,
+          MobilePhone: payload.EditMobilePhone,
+          State: parseInt(payload.EditState)
+        }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -152,7 +209,9 @@ const CustomerTableComponents = ({
             label="省市"
           >
             <div>
-              {getFieldDecorator('AddProvince', { initialValue: [] })(
+              {getFieldDecorator('AddProvince', {
+                initialValue: []
+              })(
                 <Cascader
                   size="large"
                   style={{ width: '100%' }}
@@ -231,7 +290,7 @@ const CustomerTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
-                initialValue: '1',
+                initialValue: '',
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -260,7 +319,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: '',
+              initialValue: EditData.Id,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -269,7 +328,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+              initialValue: EditData.CustomerCode,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -278,7 +337,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditName', {
-              initialValue: '',
+              initialValue: EditData.Name,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -287,7 +346,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditDUNS', {
-              initialValue: '',
+              initialValue: EditData.DUNS,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -295,7 +354,7 @@ const CustomerTableComponents = ({
             label="国家"
           >
             {getFieldDecorator('EditCountry', {
-              initialValue: '中国',
+              initialValue: EditData.Country,
             })(<Input disabled />)}
           </FormItem>
           <FormItem
@@ -303,7 +362,9 @@ const CustomerTableComponents = ({
             label="省市"
           >
             <div>
-              {getFieldDecorator('EditProvince', { initialValue: [] })(
+              {getFieldDecorator('EditProvince', {
+                initialValue: EditData.Province.split(','),
+              })(
                 <Cascader
                   size="large"
                   style={{ width: '100%' }}
@@ -319,7 +380,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditAddress', {
-              initialValue: '',
+              initialValue: EditData.Address,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -328,7 +389,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditPostCode', {
-              initialValue: '',
+              initialValue: EditData.PostCode,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -337,7 +398,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditFax', {
-              initialValue: '',
+              initialValue: EditData.Fax,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -346,7 +407,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditContactPerson', {
-              initialValue: '',
+              initialValue: EditData.ContactPerson,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -355,7 +416,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditEmail', {
-              initialValue: '',
+              initialValue: EditData.Email,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -364,7 +425,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditTelphone', {
-              initialValue: '',
+              initialValue: EditData.Telphone,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -373,7 +434,7 @@ const CustomerTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditMobilePhone', {
-              initialValue: '',
+              initialValue: EditData.MobilePhone,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -382,7 +443,7 @@ const CustomerTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditState', {
-                initialValue: '1',
+                initialValue: EditData.State.toString(),
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -414,15 +475,74 @@ const CustomerTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="客户编号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.CustomerCode} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="模块"
+          label="名称"
         >
-          <Input disabled value={DetailsData.PlatformName} />
+          <Input disabled value={DetailsData.Name} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="邓氏码"
+        >
+          <Input disabled value={DetailsData.DUNS} />
+        </FormItem> <FormItem
+          {...formItemLayout}
+          label="国家"
+        >
+          <Input disabled value={DetailsData.Country} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="省市"
+        >
+          <Input disabled value={DetailsData.Province} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="详细地址"
+        >
+          <Input disabled value={DetailsData.Address} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="邮编"
+        >
+          <Input disabled value={DetailsData.PostCode} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="传真"
+        >
+          <Input disabled value={DetailsData.Fax} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="联系人"
+        >
+          <Input disabled value={DetailsData.ContactPerson} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="邮件"
+        >
+          <Input disabled value={DetailsData.Email} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="电话"
+        >
+          <Input disabled value={DetailsData.Telphone} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="手机"
+        >
+          <Input disabled value={DetailsData.MobilePhone} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -434,13 +554,13 @@ const CustomerTableComponents = ({
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.CreationDateTime} />
+          <Input disabled value={DetailsData.EditDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建人"
         >
-          <Input disabled value={DetailsData.Creator} />
+          <Input disabled value={DetailsData.Editor} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -453,12 +573,6 @@ const CustomerTableComponents = ({
           label="最后编辑人"
         >
           <Input disabled value={DetailsData.Editor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="拥有此角色人员"
-        >
-          <Input disabled value={DetailsData.User} />
         </FormItem>
       </div>
     )

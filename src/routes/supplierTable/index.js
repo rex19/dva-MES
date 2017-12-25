@@ -13,6 +13,32 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'supplierTable'
 const TableColumns = supplierTableColumns
+const AddFormLayout = [
+  'AddSupplierCode',
+  'AddName',
+  'AddCountry',
+  'AddProvince',
+  'AddAddress',
+  'AddPostCode',
+  'AddFax',
+  'AddContactPerson',
+  'AddEmail',
+  'AddTelphone',
+  'AddMobilePhone',
+  'AddState']
+const EditFormLayout = [
+  'EditSupplierCode',
+  'EditName',
+  'EditCountry',
+  'EditProvince',
+  'EditAddress',
+  'EditPostCode',
+  'EditFax',
+  'EditContactPerson',
+  'EditEmail',
+  'EditTelphone',
+  'EditMobilePhone',
+  'EditState']
 
 const SupplierTableComponents = ({
   supplierTable,
@@ -33,19 +59,46 @@ const SupplierTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = {
+          SupplierCode: payload.AddSupplierCode,
+          Name: payload.AddName,
+          Country: payload.AddCountry,
+          Province: payload.AddProvince.join(','),
+          Address: payload.AddAddress,
+          PostCode: payload.AddPostCode,
+          Fax: payload.AddFax,
+          ContactPerson: payload.AddContactPerson,
+          Email: payload.AddEmail,
+          Telphone: payload.AddTelphone,
+          MobilePhone: payload.AddMobilePhone,
+          State: parseInt(payload.AddState)
+        }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = {
+          Id: payload.EditId,
+          SupplierCode: payload.EditSupplierCode,
+          Name: payload.EditName,
+          Country: payload.EditCountry,
+          Province: payload.EditProvince.join(','),
+          Address: payload.EditAddress,
+          PostCode: payload.EditPostCode,
+          Fax: payload.EditFax,
+          ContactPerson: payload.EditContactPerson,
+          Email: payload.EditEmail,
+          Telphone: payload.EditTelphone,
+          MobilePhone: payload.EditMobilePhone,
+          State: parseInt(payload.EditState)
+        }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -113,7 +166,7 @@ const SupplierTableComponents = ({
             label="供应商编号"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddSupplierCode', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -122,7 +175,7 @@ const SupplierTableComponents = ({
             label="名称"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddName', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -154,7 +207,16 @@ const SupplierTableComponents = ({
             label="详细地址"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddAddress', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮编"
+            hasFeedback
+          >
+            {getFieldDecorator('AddPostCode', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -163,7 +225,7 @@ const SupplierTableComponents = ({
             label="传真"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddFax', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -172,7 +234,7 @@ const SupplierTableComponents = ({
             label="联系人"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddContactPerson', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -181,7 +243,7 @@ const SupplierTableComponents = ({
             label="邮件"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddEmail', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -190,7 +252,7 @@ const SupplierTableComponents = ({
             label="电话"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddTelphone', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -199,7 +261,7 @@ const SupplierTableComponents = ({
             label="手机"
             hasFeedback
           >
-            {getFieldDecorator('AddCustomerCode', {
+            {getFieldDecorator('AddMobilePhone', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -209,7 +271,7 @@ const SupplierTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
-                initialValue: '1',
+                initialValue: '',
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -224,7 +286,6 @@ const SupplierTableComponents = ({
                 )}
             </div>
           </FormItem>
-
         </Form>
       </div>
     )
@@ -235,20 +296,20 @@ const SupplierTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="Id"
+            label="ID"
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: '1',
-            })(<Input disabled />)}
+              initialValue: EditData.Id,
+            })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="供应商编号"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditSuppliserCode', {
+              initialValue: EditData.SupplierCode,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -256,8 +317,8 @@ const SupplierTableComponents = ({
             label="名称"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditName', {
+              initialValue: EditData.Name,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -265,7 +326,7 @@ const SupplierTableComponents = ({
             label="国家"
           >
             {getFieldDecorator('EditCountry', {
-              initialValue: '中国',
+              initialValue: EditData.Country,
             })(<Input disabled />)}
           </FormItem>
           <FormItem
@@ -273,7 +334,9 @@ const SupplierTableComponents = ({
             label="省市"
           >
             <div>
-              {getFieldDecorator('EditProvince', { initialValue: [] })(
+              {getFieldDecorator('EditProvince', {
+                initialValue: EditData.Province.split(','),
+              })(
                 <Cascader
                   size="large"
                   style={{ width: '100%' }}
@@ -288,8 +351,17 @@ const SupplierTableComponents = ({
             label="详细地址"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditAddress', {
+              initialValue: EditData.Address,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="邮编"
+            hasFeedback
+          >
+            {getFieldDecorator('EditPostCode', {
+              initialValue: EditData.PostCode,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -297,8 +369,8 @@ const SupplierTableComponents = ({
             label="传真"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditFax', {
+              initialValue: EditData.Fax,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -306,8 +378,8 @@ const SupplierTableComponents = ({
             label="联系人"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditContactPerson', {
+              initialValue: EditData.ContactPerson,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -315,8 +387,8 @@ const SupplierTableComponents = ({
             label="邮件"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditEmail', {
+              initialValue: EditData.Email,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -324,8 +396,8 @@ const SupplierTableComponents = ({
             label="电话"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditTelphone', {
+              initialValue: EditData.Telphone,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -333,8 +405,8 @@ const SupplierTableComponents = ({
             label="手机"
             hasFeedback
           >
-            {getFieldDecorator('EditCustomerCode', {
-              initialValue: '',
+            {getFieldDecorator('EditMobilePhone', {
+              initialValue: EditData.MobilePhone,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -343,7 +415,7 @@ const SupplierTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditState', {
-                initialValue: '1',
+                initialValue: EditData.State.toString(),
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -373,15 +445,63 @@ const SupplierTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="供应商编号"
         >
-          <Input disabled value={DetailsData.RoleName} />
+          <Input disabled value={DetailsData.SupplierCode} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="模块"
+          label="名称"
         >
-          <Input disabled value={DetailsData.PlatformName} />
+          <Input disabled value={DetailsData.Name} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="国家"
+        >
+          <Input disabled value={DetailsData.Country} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="省市"
+        >
+          <Input disabled value={DetailsData.Province} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="详细地址"
+        >
+          <Input disabled value={DetailsData.Address} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="传真"
+        >
+          <Input disabled value={DetailsData.Fax} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="联系人"
+        >
+          <Input disabled value={DetailsData.ContactPerson} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="邮件"
+        >
+          <Input disabled value={DetailsData.Email} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="电话"
+        >
+          <Input disabled value={DetailsData.Telphone} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="手机"
+        >
+          <Input disabled value={DetailsData.MobilePhone} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -393,13 +513,13 @@ const SupplierTableComponents = ({
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.CreationDateTime} />
+          <Input disabled value={DetailsData.EditDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建人"
         >
-          <Input disabled value={DetailsData.Creator} />
+          <Input disabled value={DetailsData.Editor} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -412,12 +532,6 @@ const SupplierTableComponents = ({
           label="最后编辑人"
         >
           <Input disabled value={DetailsData.Editor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="拥有此角色人员"
-        >
-          <Input disabled value={DetailsData.User} />
         </FormItem>
       </div>
     )

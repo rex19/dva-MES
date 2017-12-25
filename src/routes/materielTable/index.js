@@ -788,60 +788,188 @@ const MaterielTableComponents = ({
   const detailsModalValue = () => {
     return (
       <div>
-        <FormItem
-          {...formItemLayout}
-          label="ID"
-        >
-          <Input disabled value={DetailsData.Id} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="角色"
-        >
-          <Input disabled value={DetailsData.RoleName} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="模块"
-        >
-          <Input disabled value={DetailsData.PlatformName} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="状态"
-        >
-          <Input disabled value={DetailsData.State} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="创建时间"
-        >
-          <Input disabled value={DetailsData.CreationDateTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="创建人"
-        >
-          <Input disabled value={DetailsData.Creator} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑时间"
-        >
-          <Input disabled value={DetailsData.EditDateTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑人"
-        >
-          <Input disabled value={DetailsData.Editor} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="拥有此角色人员"
-        >
-          <Input disabled value={DetailsData.User} />
-        </FormItem>
+        <Form >
+          <FormItem
+            {...formItemLayout}
+            label="料号"
+          >
+            <Input disabled value={DetailsData.MaterialNumber} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="版本"
+          >
+            <Input disabled value={DetailsData.Version} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="描述"
+          >
+            <Input disabled value={DetailsData.Description} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="规格"
+          >
+            <Input disabled value={DetailsData.Specification} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="客户侧料号"
+          >
+            <Input disabled value={DetailsData.CustomerMaterialNumber} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="供应商侧料号"
+          >
+            <Input disabled value={DetailsData.SupplierMaterialNumber} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="物料类型"
+          >
+            <Input disabled value={DetailsData.MaterialGroupType} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否是半成品"
+          >
+            <Input disabled value={DetailsData.IsProduct} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否是连扳"
+          >
+            <Input disabled value={DetailsData.IsMultiPanel} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否反冲"
+          >
+            <Input disabled value={DetailsData.RequireBackflush} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="连扳数"
+          >
+            <Input disabled value={DetailsData.NumberOfPanels} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="单位"
+          >
+            <Input disabled value={DetailsData.Unit} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否上料"
+          >
+            <Input disabled value={DetailsData.SetupFlag} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="采购类型"
+          >
+            <Input disabled value={DetailsData.ProcurementType} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="最小包装数"
+          >
+            <Input disabled value={DetailsData.MinimumPackageQuantity} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="过期周期(天)"
+          >
+            <Input disabled value={DetailsData.ExpirationTime} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="安全库存"
+          >
+            <Input disabled value={DetailsData.SafetyStock} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="默认库位编号"
+          >
+            <Input disabled value={DetailsData.DefaultStorageLocation} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="容器大小"
+          >
+            <Input disabled value={DetailsData.ContainerSize} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="湿敏等级MSL"
+          >
+            <Input disabled value={DetailsData.MSL} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <Input disabled value={DetailsData.StateValue} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="默认工站组"
+          >
+            <Input disabled value={DetailsData.DefaultStationGroup} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="公司"
+          >
+            <Input disabled value={DetailsData.CompanyNumber} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <Input disabled value={DetailsData.FactoryNumber} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="生效日期"
+          >
+            <Input disabled value={DetailsData.ValidBegin} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="失效日期"
+          >
+            <Input disabled value={DetailsData.ValidEnd} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="创建时间"
+          >
+            <Input disabled value={DetailsData.ValidEnd} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="创建人"
+          >
+            <Input disabled value={DetailsData.ValidBegin} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="最后编辑时间"
+          >
+            <Input disabled value={DetailsData.ValidEnd} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="编辑人"
+          >
+            <Input disabled value={DetailsData.ValidBegin} />
+          </FormItem>
+        </Form>
       </div>
     )
   }

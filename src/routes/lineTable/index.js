@@ -12,6 +12,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'lineTable'
 const TableColumns = lineTableColumns
+const AddFormLayout = ['AddCellNumber', 'AddDescription', 'AddState', 'AddStation']
+const EditFormLayout = ['EditId', 'EditCellNumber', 'EditDescription', 'EditState', 'EditStation']
 
 const LineTableComponents = ({
   lineTable,
@@ -32,19 +34,19 @@ const LineTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { CellNumber: payload.AddCellNumber, Description: payload.AddDescription, State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, CellNumber: payload.EditCellNumber, Description: payload.EditDescription, State: parseInt(payload.EditState), Station: payload.EditStation.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -134,7 +136,7 @@ const LineTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
-                initialValue: '1',
+                initialValue: '',
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -180,7 +182,7 @@ const LineTableComponents = ({
               initialValue: EditData.CellNumber,
               rules: [
                 {
-                  required: true, message: '请输入Id',
+                  required: true, message: '请输入线体编号',
                 },
               ],
             })(<Input />)}
@@ -205,7 +207,7 @@ const LineTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
-                initialValue: '1',
+                initialValue: EditData.State.toString(),
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -225,7 +227,7 @@ const LineTableComponents = ({
             label="已分配工站"
           >
             <div>
-              {getFieldDecorator('EditAllocatedMultiselectData', {
+              {getFieldDecorator('EditStation', {
                 initialValue: AllocatedMultiselectData,
               })(
                 <Select
@@ -256,7 +258,7 @@ const LineTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="角色"
+          label="线体编号"
         >
           <Input disabled value={DetailsData.CellNumber} />
         </FormItem>
