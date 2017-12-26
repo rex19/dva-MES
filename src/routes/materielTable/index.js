@@ -15,6 +15,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'materielTable'
 const TableColumns = materielTableColumns
+const AddFormLayout = ['AddProcessNumber', 'AddMaterialId', 'AddState', 'AddValidBegin', 'AddValidEnd']
+const EditFormLayout = ['EditId', 'EditProcessNumber', 'EditMaterialId', 'EditState', 'EditValidBegin', 'EditValidEnd']
 
 const MaterielTableComponents = ({
   materielTable,
@@ -36,6 +38,63 @@ const MaterielTableComponents = ({
     StationGroup,
     Company,
     Factory } = TableModelsData
+  const AddFormLayout = [
+    "AddMaterialNumber",
+    "AddVersion",
+    "AddDescription",
+    "AddSpecification",
+    "AddCustomerMaterialNumber",
+    "AddSupplierMaterialNumber",
+    "AddMaterialGroupType",
+    "AddIsProduct",
+    "AddIsMultiPanel",
+    "AddRequireBackflush",
+    "AddNumberOfPanels",
+    "AddUnit",
+    "AddSetupFlag",
+    "AddProcurementType",
+    "AddMinimumPackageQuantity",
+    "AddExpirationTime",
+    "AddSafetyStock",
+    "AddDefaultStorageLocationId",
+    "AddContainerSize",
+    "AddMSL",
+    "AddState",
+    "AddDefaultStationGroupId",
+    "AddCompanyId",
+    "AddFactoryId",
+    "AddValidBegin",
+    "AddValidEnd",
+  ]
+  const EditFormLayout = [
+    "EditId",
+    "EditMaterialNumber",
+    "EditVersion",
+    "EditDescription",
+    "EditSpecification",
+    "EditCustomerMaterialNumber",
+    "EditSupplierMaterialNumber",
+    "EditMaterialGroupType",
+    "EditIsProduct",
+    "EditIsMultiPanel",
+    "EditRequireBackflush",
+    "EditNumberOfPanels",
+    "EditUnit",
+    "EditSetupFlag",
+    "EditProcurementType",
+    "EditMinimumPackageQuantity",
+    "EditExpirationTime",
+    "EditSafetyStock",
+    "EditDefaultStorageLocationId",
+    "EditContainerSize",
+    "EditMSL",
+    "EditState",
+    "EditDefaultStationGroupId",
+    "EditCompanyId",
+    "EditFactoryId",
+    "EditValidBegin",
+    "EditValidEnd",
+  ]
 
   console.log('MaterielTableComponents-materielTable ', TableModelsData)
   /**
@@ -44,19 +103,74 @@ const MaterielTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = {
+          MaterialNumber: payload.AddMaterialNumber,
+          Version: payload.AddVersion,
+          Description: payload.AddDescription,
+          Specification: payload.AddSpecification,
+          CustomerMaterialNumber: payload.AddCustomerMaterialNumber,
+          SupplierMaterialNumber: payload.AddSupplierMaterialNumber,
+          MaterialGroupType: payload.AddMaterialGroupType,
+          IsProduct: payload.AddIsProduct,
+          IsMultiPanel: payload.AddIsMultiPanel,
+          RequireBackflush: payload.AddRequireBackflush,
+          NumberOfPanels: payload.AddNumberOfPanels,
+          Unit: payload.AddUnit,
+          SetupFlag: payload.AddSetupFlag,
+          ProcurementType: payload.AddProcurementType,
+          MinimumPackageQuantity: payload.AddMinimumPackageQuantity,
+          ExpirationTime: payload.AddExpirationTime,
+          SafetyStock: payload.AddSafetyStock,
+          DefaultStorageLocationId: payload.AddDefaultStorageLocationId,
+          ContainerSize: payload.AddContainerSize,
+          MSL: payload.AddMSL,
+          State: payload.AddState,
+          DefaultStationGroupId: payload.AddDefaultStationGroupId,
+          CompanyId: payload.AddCompanyId,
+          FactoryId: payload.AddFactoryId,
+          ValidBegin: payload.AddValidBegin,
+          ValidEnd: payload.AddValidEnd
+        }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = {
+          Id: payload.EditId,
+          MaterialNumber: payload.EditMaterialNumber,
+          Version: payload.EditVersion,
+          Description: payload.EditDescription,
+          Specification: payload.EditSpecification,
+          CustomerMaterialNumber: payload.EditCustomerMaterialNumber,
+          SupplierMaterialNumber: payload.EditSupplierMaterialNumber,
+          MaterialGroupType: payload.EditMaterialGroupType,
+          IsProduct: payload.EditIsProduct,
+          IsMultiPanel: payload.EditIsMultiPanel,
+          RequireBackflush: payload.EditRequireBackflush,
+          NumberOfPanels: payload.EditNumberOfPanels,
+          Unit: payload.EditUnit,
+          SetupFlag: payload.EditSetupFlag,
+          ProcurementType: payload.EditProcurementType,
+          MinimumPackageQuantity: payload.EditMinimumPackageQuantity,
+          ExpirationTime: payload.EditExpirationTime,
+          SafetyStock: payload.EditSafetyStock,
+          DefaultStorageLocationId: payload.EditDefaultStorageLocationId,
+          ContainerSize: payload.EditContainerSize,
+          MSL: payload.EditMSL,
+          State: payload.EditState,
+          DefaultStationGroupId: payload.EditDefaultStationGroupId,
+          CompanyId: payload.EditCompanyId,
+          FactoryId: payload.EditFactoryId,
+          ValidBegin: payload.EditValidBegin,
+          ValidEnd: payload.EditValidEnd
+        }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -186,7 +300,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddMaterialGroupType', {
-                initialValue: '请选择',
+                initialValue: '',
               })(
                 <Select>
                   {MaterialType.map(function (item, index) {
@@ -201,7 +315,7 @@ const MaterielTableComponents = ({
             label="是否是半成品"
           >
             {getFieldDecorator('AddIsProduct', {
-              initialValue: '0',
+              initialValue: '',
             })(
               <Select>
                 <Option key={0} value='0'>是</Option>
@@ -214,7 +328,7 @@ const MaterielTableComponents = ({
             label="是否是连扳"
           >
             {getFieldDecorator('AddIsMultiPanel', {
-              initialValue: '0',
+              initialValue: '',
             })(
               <Select>
                 <Option key={0} value='0'>是</Option>
@@ -227,7 +341,7 @@ const MaterielTableComponents = ({
             label="是否反冲"
           >
             {getFieldDecorator('AddRequireBackflush', {
-              initialValue: '0',
+              initialValue: '',
             })(
               <Select>
                 <Option key={0} value='0'>是</Option>
@@ -249,7 +363,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddUnit', {
-                initialValue: '请选择',
+                initialValue: '',
               })(
                 <Select>
                   {Unit.map(function (item, index) {
@@ -264,7 +378,7 @@ const MaterielTableComponents = ({
             label="是否上料"
           >
             {getFieldDecorator('AddSetupFlag', {
-              initialValue: '0',
+              initialValue: '',
             })(
               <Select>
                 <Option key={0} value='0'>是</Option>
@@ -278,7 +392,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddProcurementType', {
-                initialValue: '请选择',
+                initialValue: '',
               })(
                 <Select>
                   {ProcurementType.map(function (item, index) {
@@ -317,7 +431,7 @@ const MaterielTableComponents = ({
             label="默认库位编号"
           >
             {getFieldDecorator('AddDefaultStorageLocation', {
-              initialValue: '请选择',
+              initialValue: '',
             })(
               <Select>
                 {Location.map(function (item, index) {
@@ -340,7 +454,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddMSL', {
-                initialValue: '请选择',
+                initialValue: '',
               })(
                 <Select>
                   {MSL.map(function (item, index) {
@@ -355,8 +469,8 @@ const MaterielTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddStateValue', {
-                initialValue: '请选择',
+              {getFieldDecorator('AddState', {
+                initialValue: '',
               })(
                 <Select>
                   <Option key={0} value='0'>未激活</Option>
@@ -370,8 +484,8 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="默认工站组"
           >
-            {getFieldDecorator('AddDefaultStationGroup', {
-              initialValue: '请选择',
+            {getFieldDecorator('AddDefaultStationGroupId', {
+              initialValue: '',
             })(
               <Select>
                 {StationGroup.map(function (item, index) {
@@ -385,8 +499,8 @@ const MaterielTableComponents = ({
             label="公司"
           >
             <div>
-              {getFieldDecorator('AddCompanyNumber', {
-                initialValue: '请选择',
+              {getFieldDecorator('AddCompanyId', {
+                initialValue: '',
               })(
                 <Select>
                   {Company.map(function (item, index) {
@@ -401,8 +515,8 @@ const MaterielTableComponents = ({
             label="工厂"
           >
             <div>
-              {getFieldDecorator('AddFactory', {
-                initialValue: '请选择',
+              {getFieldDecorator('AddFactoryId', {
+                initialValue: '',
               })(
                 <Select>
                   {Factory.map(function (item, index) {
@@ -458,7 +572,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="料号"
           >
-            {getFieldDecorator('AddMaterialNumber', {
+            {getFieldDecorator('EditMaterialNumber', {
               initialValue: EditData.MaterialNumber,
               rules: [
                 {
@@ -471,7 +585,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="版本"
           >
-            {getFieldDecorator('AddVersion', {
+            {getFieldDecorator('EditVersion', {
               initialValue: EditData.Version,
               rules: [
                 {
@@ -484,7 +598,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="描述"
           >
-            {getFieldDecorator('AddDescription', {
+            {getFieldDecorator('EditDescription', {
               initialValue: EditData.Description,
             })(<Input />)}
           </FormItem>
@@ -492,7 +606,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="规格"
           >
-            {getFieldDecorator('AddSpecification', {
+            {getFieldDecorator('EditSpecification', {
               initialValue: EditData.Specification,
             })(<Input />)}
           </FormItem>
@@ -500,7 +614,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="客户侧料号"
           >
-            {getFieldDecorator('AddCustomerMaterialNumber', {
+            {getFieldDecorator('EditCustomerMaterialNumber', {
               initialValue: EditData.CustomerMaterialNumber,
             })(<Input />)}
           </FormItem>
@@ -508,7 +622,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="供应商侧料号"
           >
-            {getFieldDecorator('AddSupplierMaterialNumber', {
+            {getFieldDecorator('EditSupplierMaterialNumber', {
               initialValue: EditData.SupplierMaterialNumber,
             })(<Input />)}
           </FormItem>
@@ -517,9 +631,8 @@ const MaterielTableComponents = ({
             label="物料类型"
           >
             <div>
-              {getFieldDecorator('AddMaterialGroupType', {
-                // initialValue: EditData.MaterialGroupType,
-                initialValue: '1',
+              {getFieldDecorator('EditMaterialGroupType', {
+                initialValue: EditData.MaterialGroupTypeId.toString(),
               })(
                 <Select>
                   {MaterialType.map(function (item, index) {
@@ -533,12 +646,12 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="是否是半成品"
           >
-            {getFieldDecorator('AddIsProduct', {
-              initialValue: '1'
+            {getFieldDecorator('EditIsProduct', {
+              initialValue: EditData.IsProduct,
             })(
               <Select>
-                <Option key={0} value='1'>是</Option>
-                <Option key={1} value='0'>否</Option>
+                <Option key={0} value={true}>是</Option>
+                <Option key={1} value={false}>否</Option>
               </Select>
               )}
           </FormItem>
@@ -546,12 +659,12 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="是否是连扳"
           >
-            {getFieldDecorator('AddIsMultiPanel', {
-              initialValue: '1',
+            {getFieldDecorator('EditIsMultiPanel', {
+              initialValue: EditData.IsMultiPanel,
             })(
               <Select>
-                <Option key={0} value='1'>是</Option>
-                <Option key={1} value='0'>否</Option>
+                <Option key={0} value={true}>是</Option>
+                <Option key={1} value={false}>否</Option>
               </Select>
               )}
           </FormItem>
@@ -559,12 +672,12 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="是否反冲"
           >
-            {getFieldDecorator('AddRequireBackflush', {
-              initialValue: '1',
+            {getFieldDecorator('EditRequireBackflush', {
+              initialValue: EditData.RequireBackflush,
             })(
               <Select>
-                <Option key={0} value='1'>是</Option>
-                <Option key={1} value='0'>否</Option>
+                <Option key={0} value={true}>是</Option>
+                <Option key={1} value={false}>否</Option>
               </Select>
               )}
           </FormItem>
@@ -572,7 +685,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="连扳数"
           >
-            {getFieldDecorator('AddNumberOfPanels', {
+            {getFieldDecorator('EditNumberOfPanels', {
               initialValue: EditData.NumberOfPanels,
             })(<Input />)}
           </FormItem>
@@ -581,8 +694,8 @@ const MaterielTableComponents = ({
             label="单位"
           >
             <div>
-              {getFieldDecorator('AddUnit', {
-                initialValue: EditData.Unit,
+              {getFieldDecorator('EditUnit', {
+                initialValue: EditData.UnitId.toString(),
               })(
                 <Select>
                   {Unit.map(function (item, index) {
@@ -596,12 +709,12 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="是否上料"
           >
-            {getFieldDecorator('AddSetupFlag', {
+            {getFieldDecorator('EditSetupFlag', {
               initialValue: EditData.SetupFlag,
             })(
               <Select>
-                <Option key={0} value='1'>是</Option>
-                <Option key={1} value='0'>否</Option>
+                <Option key={0} value={true}>是</Option>
+                <Option key={1} value={false}>否</Option>
               </Select>
               )}
           </FormItem>
@@ -610,9 +723,9 @@ const MaterielTableComponents = ({
             label="采购类型"
           >
             <div>
-              {getFieldDecorator('AddProcurementType', {
-                // initialValue:  EditData.ProcurementType
-                initialValue: '1'
+              {getFieldDecorator('EditProcurementType', {
+                initialValue: EditData.ProcurementTypeId.toString(),
+                // initialValue: '1'
               })(
                 <Select>
                   {ProcurementType.map(function (item, index) {
@@ -626,7 +739,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="最小包装数"
           >
-            {getFieldDecorator('AddMinimumPackageQuantity', {
+            {getFieldDecorator('EditMinimumPackageQuantity', {
               initialValue: EditData.MinimumPackageQuantity
             })(<Input />)}
           </FormItem>
@@ -634,7 +747,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="过期周期(天)"
           >
-            {getFieldDecorator('AddExpirationTime', {
+            {getFieldDecorator('EditExpirationTime', {
               initialValue: EditData.ExpirationTime
             })(<Input />)}
           </FormItem>
@@ -642,7 +755,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="安全库存"
           >
-            {getFieldDecorator('AddSafetyStock', {
+            {getFieldDecorator('EditSafetyStock', {
               initialValue: EditData.ExpirationTime
             })(<Input />)}
           </FormItem>
@@ -650,9 +763,9 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="默认库位编号"
           >
-            {getFieldDecorator('AddDefaultStorageLocation', {
-              // initialValue: EditData.DefaultStorageLocation
-              initialValue: '7'
+            {getFieldDecorator('EditDefaultStorageLocation', {
+              initialValue: EditData.DefaultStorageLocationId.toString(),
+              // initialValue: '7'
             })(
               <Select>
                 {Location.map(function (item, index) {
@@ -665,7 +778,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="容器大小"
           >
-            {getFieldDecorator('AddContainerSize', {
+            {getFieldDecorator('EditContainerSize', {
               initialValue: EditData.ContainerSize,
             })(<Input />)}
           </FormItem>
@@ -674,9 +787,9 @@ const MaterielTableComponents = ({
             label="湿敏等级MSL"
           >
             <div>
-              {getFieldDecorator('AddMSL', {
-                // initialValue: EditData.MSL,
-                initialValue: '4',
+              {getFieldDecorator('EditMSL', {
+                initialValue: EditData.MSLId.toString(),
+                // initialValue: '4',
               })(
                 <Select>
                   {MSL.map(function (item, index) {
@@ -691,9 +804,9 @@ const MaterielTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddStateValue', {
-                // initialValue: EditData.StateValue ,
-                initialValue: '1',
+              {getFieldDecorator('EditState', {
+                initialValue: EditData.State.toString(),
+                // initialValue: '1',
               })(
                 <Select>
                   <Option key={0} value='0'>未激活</Option>
@@ -707,9 +820,9 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="默认工站组"
           >
-            {getFieldDecorator('AddDefaultStationGroup', {
-              // initialValue: EditData.DefaultStationGroup
-              initialValue: '4'
+            {getFieldDecorator('EditDefaultStationGroup', {
+              initialValue: EditData.DefaultStationGroupId.toString(),
+              // initialValue: '4'
             })(
               <Select>
                 {StationGroup.map(function (item, index) {
@@ -723,9 +836,9 @@ const MaterielTableComponents = ({
             label="公司"
           >
             <div>
-              {getFieldDecorator('AddCompanyNumber', {
-                // initialValue:  EditData.CompanyNumber
-                initialValue: '1'
+              {getFieldDecorator('EditCompanyNumber', {
+                initialValue: EditData.CompanyId.toString(),
+                // initialValue: '1'
               })(
                 <Select>
                   {Company.map(function (item, index) {
@@ -740,8 +853,8 @@ const MaterielTableComponents = ({
             label="工厂"
           >
             <div>
-              {getFieldDecorator('AddFactory', {
-                initialValue: '1',
+              {getFieldDecorator('EditFactory', {
+                initialValue: EditData.FactoryId
               })(
                 <Select>
                   {Factory.map(function (item, index) {
@@ -755,7 +868,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="生效时间"
           >
-            {getFieldDecorator('AddValidBegin', {
+            {getFieldDecorator('EditValidBegin', {
               initialValue: moment(EditData.ValidBegin, dateFormat),
               rules: [
                 {
@@ -770,7 +883,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="失效时间"
           >
-            {getFieldDecorator('AddValidEnd', {
+            {getFieldDecorator('EditValidEnd', {
               initialValue: moment(EditData.ValidEnd, dateFormat),
               rules: [
                 {

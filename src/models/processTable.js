@@ -14,17 +14,36 @@ const TableName = 'processTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 2,
-  "RoleName": "testRole",
-  "State": 1,
-  "PlatformId": "1",
-  "PlatformName": "adm管理",
-  "CreationDateTime": "2017-11-01T15:36:38",
-  "Creator": "admin",
-  "EditDateTime": "2017-12-09T13:29:12.6622339",
-  "Editor": "",
-  "User": "1"
+  "Process": {
+    "Id": 1,
+    "ProcessNumber": "test001",
+    "MaterialNumber": "test001KeyBoard",
+    "Factory": "车间",
+    "State": "正常",
+    "ValidBegin": "0001-01-01T00:00:00",
+    "ValidEnd": "0001-01-01T00:00:00",
+    "CreationDateTime": "2017-12-20T00:00:00",
+    "EditDateTime": "0001-01-01T00:00:00",
+    "Editor": null
+  },
+  "ProcessStep": [
+    {
+      "Secquence": 1,
+      "Description": "teststep",
+      "StationGroupId": "0010401",
+      "IsMandatory": "True",
+      "IsNeedSetupCheck": "True",
+      "IsBackflush": "True",
+      "Side": 1,
+      "MaximumTestCount": 10,
+      "Editor": "admin",
+      "EditDateTime": "0001-01-01T00:00:00"
+    }
+  ]
 }
+// const isClose = () => {
+//   return Cookie.get('user_session') && Cookie.get('user_session') > new Date().getTime()
+// }
 
 export default modelExtend(pageModel, {
 
@@ -50,6 +69,8 @@ export default modelExtend(pageModel, {
     MaterialNumber: [],
     StationGroup: [],
     AddProcessStepDataSource: [],
+    EditProcessStepDataSource: [],
+    // ModalsClosed: !!isClose(),  https://github.com/pmg1989/dva-admin/blob/master/src/models/app.js
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -66,6 +87,18 @@ export default modelExtend(pageModel, {
         }
       })
     },
+
+    // setup ({ dispatch }) {
+    //   dispatch({ type: 'query' })
+    //   let tid
+    //   window.onresize = () => {
+    //     clearTimeout(tid)
+    //     tid = setTimeout(() => {
+    //       dispatch({ type: 'changeNavbar' })
+    //     }, 300)
+    //   }
+    // },
+
   },
 
   effects: {
@@ -165,7 +198,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
-          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -193,7 +225,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
@@ -202,7 +233,7 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return { ...state, ...payload, MaterialNumber: eval(payload.data.MaterialNumber), StationGroup: eval(payload.data.StationGroup), EditData: payload.data.ProcessAndProcessStep == null ? state.EditData : payload.data.ProcessAndProcessStep }
       } else if (payload.modalType === 'addModalVisible') {
         return { ...state, ...payload, MaterialNumber: eval(payload.data.MaterialNumber), StationGroup: eval(payload.data.StationGroup) }
       } else if (payload.modalType === 'detailsModalVisible') {
@@ -223,7 +254,12 @@ export default modelExtend(pageModel, {
     },
     //改变editable的datasource
     editableDataChanger(state, { payload }) {
-      return { ...state, ...payload, AddProcessStepDataSource: payload.AddProcessStepDataSource }
+      if (payload.type === 'RowEditableAddTable') {
+        return { ...state, ...payload, AddProcessStepDataSource: payload.ProcessStepDataSource }
+      } else if (payload.type === 'RowEditableEditTable') {
+        console.log('payload.type === RowEditableEditTable', payload)
+        return { ...state, ...payload, EditProcessStepDataSource: payload.ProcessStepDataSource }
+      }
     },
   },
 })

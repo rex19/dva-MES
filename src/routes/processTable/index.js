@@ -2,15 +2,17 @@ import React from 'react'
 import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents, DetailsTableComponent } from '../../components'
+import moment from 'moment';
 import globalConfig from 'utils/config'
 import { processTableColumns, processDetailsColumns } from '../../mock/tableColums'
 import EditableforEditModals from './subpage/editableforEditModals'
 import EditableforAddModals from './subpage/editableforAddModals'
-import RowEditableTable from './subpage/rowEditableforAddModals'
+import RowEditableAddTable from './subpage/rowEditableforAddModals'
+import RowEditableEditTable from './subpage/rowEditableforEditModals'
 
 
 import './index.less'
-
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
@@ -18,40 +20,8 @@ const formItemLayout = globalConfig.table.formItemLayout
 //每个table可能不同的变量字段(1)
 const TableName = 'processTable'
 const TableColumns = processTableColumns
-
-
-
-class AddModalValueComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    console.log('addModalValueComponent', this.props)
-    const { getFieldDecorator } = this.props
-    return (
-      <div>
-        <Form >
-          <FormItem
-            {...formItemLayout}
-            label="工艺编号"
-            hasFeedback
-          >
-            {getFieldDecorator('AddRoleName', {
-              initialValue: '',
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-
-        </Form>
-      </div>
-    )
-  }
-}
+const AddFormLayout = ['AddProcessNumber', 'AddMaterialId', 'AddState', 'AddValidBegin', 'AddValidEnd']
+const EditFormLayout = ['EditId', 'EditProcessNumber', 'EditMaterialId', 'EditState', 'EditValidBegin', 'EditValidEnd']
 
 
 const ProcessTableComponents = ({
@@ -64,7 +34,7 @@ const ProcessTableComponents = ({
   const TableModelsData = processTable
   const { getFieldDecorator, validateFields, resetFields } = form
   // const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialNumber, StationGroup, AddProcessStepDataSource } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialNumber, StationGroup, AddProcessStepDataSource, EditProcessStepDataSource } = TableModelsData
 
   console.log('ProcessTableComponents-processTable ', TableModelsData)
   /**
@@ -73,19 +43,19 @@ const ProcessTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddProcessNumber', 'AddMaterialNumber', 'AddState', 'AddValidBegin', 'AddValidEnd'], (err, payload) => {
-        const createParam = { ProcessNumber: payload.AddProcessNumber, MaterialNumber: parseInt(payload.AddMaterialNumber), State: parseInt(payload.AddState), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, ProcessStep: AddProcessStepDataSource }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { ProcessNumber: payload.AddProcessNumber, MaterialId: parseInt(payload.AddMaterialId), State: parseInt(payload.AddState), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, ProcessStep: AddProcessStepDataSource }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddProcessNumber', 'AddMaterialNumber', 'AddState', 'AddValidBegin', 'AddValidEnd'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, ProcessNumber: payload.EditProcessNumber, MaterialId: payload.EditMaterialId, State: payload.EditState, ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, ProcessStep: EditProcessStepDataSource }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -107,12 +77,13 @@ const ProcessTableComponents = ({
       },
     })
   }
-  const onEditableCellChange = (data) => {
-    console.log('onEditableCellChange', data)
+  const onEditableCellChange = (dataSource, type) => {
+    console.log('onEditableCellChange-processIndex', dataSource, type)
     dispatch({
       type: `${TableName}/editableDataChanger`,
       payload: {
-        AddProcessStepDataSource: data,
+        ProcessStepDataSource: dataSource,
+        type: type
       },
     })
   }
@@ -164,8 +135,8 @@ const ProcessTableComponents = ({
             label="成品/半成品料号"
           >
             <div>
-              {getFieldDecorator('AddMaterialNumber', {
-                initialValue: '请选择',
+              {getFieldDecorator('AddMaterialId', {
+                initialValue: '',
               })(
                 <Select>
                   {MaterialNumber.map(function (item, index) {
@@ -181,7 +152,7 @@ const ProcessTableComponents = ({
           >
             <div>
               {getFieldDecorator('AddState', {
-                initialValue: '1',
+                initialValue: '',
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -246,14 +217,14 @@ const ProcessTableComponents = ({
             }}
             label="工艺步骤"
           >
-            <RowEditableTable
+            <RowEditableAddTable
               StationGroup={StationGroup}
               onEditableCellChange={onEditableCellChange}
             />
           </FormItem>
 
         </Form>
-      </div >
+      </div>
     )
   }
   const editModalValue = () => {
@@ -266,7 +237,7 @@ const ProcessTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: '1',
+              initialValue: EditData.Process.Id,
               rules: [
                 {
                   required: true, message: '请输入Id',
@@ -274,7 +245,107 @@ const ProcessTableComponents = ({
               ],
             })(<Input disabled />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="工艺编号"
+          >
+            {getFieldDecorator('EditProcessNumber', {
+              initialValue: EditData.Process.ProcessNumber,
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="成品/半成品料号"
+          >
+            <div>
+              {getFieldDecorator('EditMaterialId', {
+                initialValue: EditData.Process.MaterialNumber,
+              })(
+                <Select>
+                  {MaterialNumber.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('EditState', {
+                initialValue: EditData.Process.State,
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                  <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="生效时间"
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
+          >
+            {getFieldDecorator('EditValidBegin', {
+              initialValue: moment(EditData.Process.ValidBegin, dateFormat),
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入生效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="失效时间"
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
+          >
+            {getFieldDecorator('EditValidEnd', {
+              initialValue: moment(EditData.Process.ValidEnd, dateFormat),
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入失效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+          </FormItem>
+          <FormItem
+            // {...formItemLayout}
+            labelCol={{
+              xs: { span: 4 },
+              sm: { span: 5 }
+            }}
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
+            label="工艺步骤"
+          >
+            <RowEditableEditTable
+              StationGroup={StationGroup}
+              onEditableCellChange={onEditableCellChange}
+              EditDataSource={EditData.ProcessStep}
+            />
+          </FormItem>
         </Form>
       </div>
     )

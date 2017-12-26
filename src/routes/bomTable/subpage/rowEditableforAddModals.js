@@ -38,26 +38,14 @@ class EditableCellSelect extends React.Component {
     this.props.onChange(e);
   }
   valueToString = (value, type) => {
-    // console.log('valueToString', value, type, this.props.StationGroup)
+    console.log('valueToString', value, type, this.props.StationGroup)
     if (type === 'StationGroupId' && this.props.StationGroup) {
-      console.log('valueToString1', value, parseInt(value), this.props.StationGroup)
-      if (this.props.StationGroup) {
-        console.log('valueToString2')
-        let x = this.props.StationGroup.map((item, index) => {
-          console.log('valueToString4', item, index)
-          if (item.key === parseInt(value)) {
-            return item
-          }
-        })
-        const y = x[0]
-        console.log('valueToString3', x)
-      }
-      // const StationGroupId_key = value
-      // const StationGroupArray = this.props.StationGroup
-      // const StationGroupIdItem = StationGroupArray.find((item) => item.key === value)
+      const StationGroupId_key = value
+      const StationGroupArray = this.props.StationGroup
+      const StationGroupIdItem = StationGroupArray.find((item) => item.key === value)
       //根据key查找对应的label  返回出去
       // console.log('valueToString2', StationGroupArray.find((item) => item.key === value))
-      return '空'
+      return StationGroupIdItem.label || '请选择'
     } else if (type === 'StationGroupId' && this.props.StationGroup !== true) {
       return '请选择'
     } else if (type === 'Side') {
@@ -85,7 +73,7 @@ class EditableCellSelect extends React.Component {
             })}
           </Select>
         </div>
-        : this.valueToString(this.props.value, 'StationGroupId')//this.props.value //
+        : this.props.value //this.valueToString(this.props.value, 'StationGroupId')
     } else if (this.props.type === 'Side') {
       return this.props.editable === true ?
         <div className="editable-cell-input-wrapper">
@@ -155,68 +143,69 @@ class RowEditableAddTable extends React.Component {
       count: 1
     };
     this.columns = [{
-      title: '序列号',
-      dataIndex: 'Secquence',
-      render: (text, record) => this.renderColumns(text, record, 'Secquence'),
+      title: '子件料号',
+      dataIndex: 'MaterialName',
+      // render: (text, record) => (
+      //   <EditableCellSelect
+      //     editable={record.editable}
+      //     value={text}
+      //     onChange={value => this.handleChange(value, record.key, 'MaterialName')}
+      //     StationGroup={this.props.StationGroup}
+      //     type='MaterialName'
+      //   />
+      // ),
+      render: (text, record) => this.renderColumns(text, record, 'MaterialName'),
     }, {
-      title: '描述',
-      dataIndex: 'Description',
-      render: (text, record) => this.renderColumns(text, record, 'Description'),
+      title: '版本号',
+      dataIndex: 'Version',
+      render: (text, record) => this.renderColumns(text, record, 'Version'),
     }, {
-      title: '工站组',
-      dataIndex: 'StationGroupId',
-      render: (text, record) => (
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'StationGroupId')}
-          StationGroup={this.props.StationGroup}
-          type='StationGroupId'
-        />
-      ),
+      title: '名称',
+      dataIndex: 'MaterialNumber',
+      render: (text, record) => this.renderColumns(text, record, 'MaterialNumber'),
     }, {
-      title: '是否必做',
-      dataIndex: 'IsMandatory',
+      title: '设备组',
+      dataIndex: 'StationGroup',
+      render: (text, record) => this.renderColumns(text, record, 'StationGroup'),
+      // render: (text, record) => (
+      //   <EditableCellSelect
+      //     editable={record.editable}
+      //     value={text}
+      //     onChange={value => this.handleChange(value, record.key, 'StationGroup')}
+      //     StationGroup={this.props.StationGroup}
+      //     type='StationGroup'
+      //   />
+      // ),
+    }, {
+      title: '定位号',
+      dataIndex: 'Designator',
+      render: (text, record) => this.renderColumns(text, record, 'Designator'),
+    }, {
+      title: '正反面',
+      dataIndex: 'Layer',
+      render: (text, record) => this.renderColumns(text, record, 'Layer'),
+    }, {
+      title: '是否是产出品',
+      dataIndex: 'IsAlternative',
       render: (text, record) => (
         <EditableCellRadio
           editable={record.editable}
           value={text}
-          onChange={value => this.handleChange(value, record.key, 'IsMandatory')}
+          onChange={value => this.handleChange(value, record.key, 'IsAlternative')}
         />
       ),
     }, {
-      title: '是否需要上料检验',
+      title: '用量',
+      dataIndex: 'Quantity',
+      render: (text, record) => this.renderColumns(text, record, 'Quantity'),
+    }, {
+      title: '是否上料检测',
       dataIndex: 'IsNeedSetupCheck',
       render: (text, record) => (
         <EditableCellRadio
           editable={record.editable}
           value={text}
           onChange={value => this.handleChange(value, record.key, 'IsNeedSetupCheck')}
-        />
-      ),
-    }, {
-      title: '最大测试次数',
-      dataIndex: 'MaximumTestCount',
-      render: (text, record) => this.renderColumns(text, record, 'MaximumTestCount'),
-    }, {
-      title: '是否反冲',
-      dataIndex: 'IsBackflush',
-      render: (text, record) => (
-        <EditableCellRadio
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'IsBackflush')}
-        />
-      ),
-    }, {
-      title: '正反面',
-      dataIndex: 'Side',
-      render: (text, record) => (
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'Side')}
-          type='Side'
         />
       ),
     }, {
@@ -293,14 +282,15 @@ class RowEditableAddTable extends React.Component {
     const { count, data } = this.state;
     const newData = {
       key: count,
-      Secquence: count,
-      Description: `描述`,
-      StationGroupId: '请选择',
-      IsMandatory: true,
+      MaterialName: `MaterialName${count}`,
+      Version: `Version${count}`,
+      MaterialNumber: `MaterialNumber${count}`,
+      Designator: `Designator${count}`,
+      Quantity: 0,
+      StationGroup: `StationGroup${count}`,
       IsNeedSetupCheck: true,
-      MaximumTestCount: 0,
-      IsBackflush: true,
-      Side: 1,
+      Layer: `Layer${count}`,
+      IsAlternative: true,
     };
     this.setState({
       data: [...data, newData],

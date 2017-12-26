@@ -37,41 +37,17 @@ class EditableCellSelect extends React.Component {
   handleSideOnChange = (e) => {
     this.props.onChange(e);
   }
-  valueToString = (value, type) => {
-    // console.log('valueToString', value, type, this.props.StationGroup)
-    if (type === 'StationGroupId' && this.props.StationGroup) {
-      console.log('valueToString1', value, parseInt(value), this.props.StationGroup)
-      if (this.props.StationGroup) {
-        console.log('valueToString2')
-        let x = this.props.StationGroup.map((item, index) => {
-          console.log('valueToString4', item, index)
-          if (item.key === parseInt(value)) {
-            return item
-          }
-        })
-        const y = x[0]
-        console.log('valueToString3', x)
-      }
-      // const StationGroupId_key = value
-      // const StationGroupArray = this.props.StationGroup
-      // const StationGroupIdItem = StationGroupArray.find((item) => item.key === value)
-      //根据key查找对应的label  返回出去
-      // console.log('valueToString2', StationGroupArray.find((item) => item.key === value))
-      return '空'
-    } else if (type === 'StationGroupId' && this.props.StationGroup !== true) {
-      return '请选择'
-    } else if (type === 'Side') {
-      switch (value) {
-        case 0:
-          return '反面'
-          break;
-        case 1:
-          return '正面'
-          break;
-        case 2:
-          return '全面'
-          break;
-      }
+  valueToString = (value) => {
+    switch (value) {
+      case 0:
+        return '反面'
+        break;
+      case 1:
+        return '正面'
+        break;
+      case 2:
+        return '全面'
+        break;
     }
   }
   renderSelect = () => {
@@ -85,7 +61,7 @@ class EditableCellSelect extends React.Component {
             })}
           </Select>
         </div>
-        : this.valueToString(this.props.value, 'StationGroupId')//this.props.value //
+        : this.props.value || '空'
     } else if (this.props.type === 'Side') {
       return this.props.editable === true ?
         <div className="editable-cell-input-wrapper">
@@ -95,7 +71,7 @@ class EditableCellSelect extends React.Component {
             <Option key={2} value={2}>全面</Option>
           </Select>
         </div>
-        : this.valueToString(this.props.value, 'Side')
+        : this.valueToString(this.props.value)
     }
   }
   render() {
@@ -147,11 +123,11 @@ class EditableCellRadio extends React.Component {
   }
 }
 
-class RowEditableAddTable extends React.Component {
+class RowEditableEditTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data,
+      data: this.props.EditDataSource || [],
       count: 1
     };
     this.columns = [{
@@ -275,7 +251,7 @@ class RowEditableAddTable extends React.Component {
       delete target.editable;
       this.setState({ data: newData });
       this.cacheData = newData.map(item => ({ ...item }));
-      this.props.onEditableCellChange(this.state.data, 'RowEditableAddTable')
+      this.props.onEditableCellChange(this.state.data, 'RowEditableEditTable')
     }
 
     let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 5000);
@@ -301,6 +277,7 @@ class RowEditableAddTable extends React.Component {
       MaximumTestCount: 0,
       IsBackflush: true,
       Side: 1,
+      ProcessId: count
     };
     this.setState({
       data: [...data, newData],
@@ -310,7 +287,7 @@ class RowEditableAddTable extends React.Component {
 
 
   render() {
-    console.log('RowEditableTable', this.state, 'this.state.data-----', this.state.data)
+    console.log('RowEditableTable', this.state.data, 'this.state.data-----', this.props)
     return (
       <div>
         <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
@@ -322,4 +299,4 @@ class RowEditableAddTable extends React.Component {
 
 
 
-export default RowEditableAddTable
+export default RowEditableEditTable

@@ -14,16 +14,16 @@ const TableName = 'bomTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 2,
-  "RoleName": "testRole",
-  "State": 1,
-  "PlatformId": "1",
-  "PlatformName": "adm管理",
-  "CreationDateTime": "2017-11-01T15:36:38",
+  "Id": 1,
+  "MaterieNumber": "test001KeyBoard",
+  "Version": 1,
+  "Name": "test",
+  "ValidBegin": "2017-12-21T00:00:00",
+  "ValidEnd": "2018-01-01T00:00:00",
   "Creator": "admin",
-  "EditDateTime": "2017-12-09T13:29:12.6622339",
-  "Editor": "",
-  "User": "1"
+  "CreationDateTime": "2017-12-21T00:00:00",
+  "Editor": null,
+  "EditDateTime": "0001-01-01T00:00:00"
 }
 
 export default modelExtend(pageModel, {
@@ -50,7 +50,11 @@ export default modelExtend(pageModel, {
     //每个table可能不同的变量字段
     MaterialList: [],
     MaterialItemList: [],
-    StationGroup: []
+    StationGroup: [],
+    BomItemDto: [],
+    Version: '',
+    AddBomItemDtoDataSource: [],
+    EditBomItemDtoDataSource: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -166,7 +170,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
-          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -202,9 +205,21 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return {
+          ...state, ...payload,
+          MaterialList: eval(payload.data.MaterialList),
+          MaterialItemList: payload.data.MaterialItemList,
+          StationGroup: eval(payload.data.StationGroup),
+          BomItemDto: payload.data.BomItemDto,
+          EditData: payload.data.BomHeadDto == null ? state.EditData : payload.data.BomHeadDto
+        }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, MaterialList: eval(payload.data.MaterialList), MaterialItemList: payload.data.MaterialItemList, StationGroup: eval(payload.data.StationGroup) }
+        return {
+          ...state, ...payload,
+          MaterialList: eval(payload.data.MaterialList),
+          MaterialItemList: payload.data.MaterialItemList,
+          StationGroup: eval(payload.data.StationGroup)
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }
@@ -220,6 +235,19 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
-    }
+    },
+    //改变editable的datasource
+    editableDataChanger(state, { payload }) {
+      if (payload.type === 'RowEditableAddTable') {
+        return { ...state, ...payload, AddBomItemDtoDataSource: payload.BomItemDtoDataSource }
+      } else if (payload.type === 'RowEditableEditTable') {
+        return { ...state, ...payload, EditBomItemDtoDataSource: payload.BomItemDtoDataSource }
+      }
+    },
+    //改变 Version
+    ChangeVersion(state, { payload }) {
+      console.log('ChangeVersion', payload)
+      return { ...state, ...payload, Version: payload.Version }
+    },
   },
 })

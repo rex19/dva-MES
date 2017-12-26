@@ -6,6 +6,8 @@ import globalConfig from 'utils/config'
 import { bomTableColumns, bomDetailsFullViewColumns, bomDetailsAggregateViewColumns } from '../../mock/tableColums'
 import EditableforEditModals from './subpage/editableforEditModals'
 import EditableforAddModals from './subpage/editableforAddModals'
+import RowEditableAddTable from './subpage/rowEditableforAddModals'
+import RowEditableEditTable from './subpage/rowEditableforEditModals'
 import './index.less'
 
 const { Option } = Select
@@ -14,6 +16,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'bomTable'
 const TableColumns = bomTableColumns
+const AddFormLayout = ['AddMaterialId', 'AddVersion', 'AddValidBegin', 'AddValidEnd']
+const EditFormLayout = ['EditId', 'EditMaterialId', 'EditVersion', 'EditValidBegin', 'EditValidEnd']
 
 const BOMTableComponents = ({
   bomTable,
@@ -25,7 +29,7 @@ const BOMTableComponents = ({
   const TableModelsData = bomTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialList, MaterialItemList, StationGroup } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialList, MaterialItemList, StationGroup, BomItemDto, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
 
   console.log('BOMTableComponents-bomTable ', TableModelsData)
   /**
@@ -34,19 +38,19 @@ const BOMTableComponents = ({
   // 定义表单域 =>发出Action  每个table可能不同的变量字段(3)
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
-      validateFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'], (err, payload) => {
-        const createParam = { RoleName: payload.AddRoleName, PlatformId: parseInt(payload.AddPlatformID), State: parseInt(payload.AddState), User: payload.AddUser.map(item => parseInt(item.key)) }
+      validateFields(AddFormLayout, (err, payload) => {
+        const createParam = { MaterialId: payload.AddMaterialId, Version: payload.AddVersion, ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, BomItemList: AddBomItemDtoDataSource }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
           })
-          resetFields(['AddRoleName', 'AddPlatformID', 'AddState', 'AddUser'])
+          resetFields(AddFormLayout)
         }
       })
     } else if (modalType === 'edit') {
-      validateFields(['EditId', 'EditRoleName', 'EditPlatformID', 'EditState', 'EditUser'], (err, payload) => {
-        const editParam = { Id: payload.EditId, RoleName: payload.EditRoleName, PlatformID: parseInt(payload.EditPlatformID), State: parseInt(payload.EditState), User: payload.EditUser.map(item => parseInt(item.key)) }
+      validateFields(EditFormLayout, (err, payload) => {
+        const editParam = { Id: payload.EditId, MaterialId: payload.EditMaterialId, Version: payload.EditVersion, ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -65,6 +69,16 @@ const BOMTableComponents = ({
       type: `${TableName}/showModal`,
       payload: {
         modalType: modalVisible,
+      },
+    })
+  }
+  //把添加删除Modal的子table数据存到store  然后一起分发到请求
+  const onEditableCellChange = (dataSource, type) => {
+    dispatch({
+      type: `${TableName}/editableDataChanger`,
+      payload: {
+        BomItemDtoDataSource: dataSource,
+        type: type
       },
     })
   }
@@ -98,7 +112,24 @@ const BOMTableComponents = ({
       </Form>
     )
   }
+  //改变版本
+  const MaterialIdOnChange = (value) => {
+    const valueInt = parseInt(value)
+    const temp = MaterialItemList.find((item, index) => {
+      if (eval(item.MaterialNumber)[0].key === valueInt) {
+        return item
+      }
+    })
+    dispatch({
+      type: `${TableName}/ChangeVersion`,
+      payload: {
+        Version: temp.Version,
+      },
+    })
+  }
+
   const addModalValue = () => {
+
     return (
       <div>
         <Form >
@@ -106,9 +137,9 @@ const BOMTableComponents = ({
             {...formItemLayout}
             label="料号"
           >
-            {getFieldDecorator('AddMaterialList', {
+            {getFieldDecorator('AddMaterialId', {
               initialValue: '',
-            })(<Select>
+            })(<Select onChange={MaterialIdOnChange}>
               {MaterialList.map(function (item, index) {
                 return <Option key={index} value={item.key.toString()}>{item.label}</Option>
               })}
@@ -119,8 +150,8 @@ const BOMTableComponents = ({
             label="名称"
           >
             <div>
-              {getFieldDecorator('AddX', {
-                initialValue: '1',
+              {getFieldDecorator('AddVersion', {
+                initialValue: Version,
               })(<Input />)}
             </div>
           </FormItem>
@@ -166,7 +197,8 @@ const BOMTableComponents = ({
             {...formItemLayout}
             label="全视图"
           >
-            <EditableforAddModals
+            <RowEditableAddTable
+              onEditableCellChange={onEditableCellChange}
               StationGroup={StationGroup}
               MaterialList={MaterialList}
               MaterialItemList={MaterialItemList}
@@ -196,41 +228,76 @@ const BOMTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="角色"
-            hasFeedback
+            label="料号"
           >
-            {getFieldDecorator('EditRoleName', {
-              initialValue: EditData.RoleName,
-              rules: [
-                {
-                  required: true, message: '请输入角色',
-                },
-              ],
-            })(<Input />)}
+            {getFieldDecorator('EditMaterialId', {
+              initialValue: '',
+            })(<Select onChange={MaterialIdOnChange}>
+              {MaterialList.map(function (item, index) {
+                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+              })}
+            </Select>)}
           </FormItem>
-
           <FormItem
             {...formItemLayout}
-            label="状态"
+            label="名称"
           >
             <div>
-              {getFieldDecorator('EditState', {
-                initialValue: EditData.State.toString(),
-                rules: [
-                  {
-                    required: true, message: '请选择状态',
-                  },
-                ],
-              })(
-                <Select>
-                  <Option key={0} value='0'>未激活</Option>
-                  <Option key={1} value='1'>激活</Option>
-                  <Option key={2} value='-1'>已删除</Option>
-                </Select>
-                )}
+              {getFieldDecorator('EditVersion', {
+                initialValue: '',
+              })(<Input />)}
             </div>
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="生效时间"
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
+          >
+            {getFieldDecorator('EditValidBegin', {
+              initialValue: '',
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入生效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="失效时间"
+            wrapperCol={{
+              xs: { span: 24 },
+              sm: { span: 15 },
+            }}
+          >
+            {getFieldDecorator('EditValidEnd', {
+              initialValue: '',
+              rules: [
+                {
+                  type: 'object', required: true, message: '请输入失效时间',
+                },
+              ],
+            })(
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="全视图"
+          >
+            <RowEditableEditTable
+              onEditableCellChange={onEditableCellChange}
+              EditDataSource={BomItemDto}
+              StationGroup={StationGroup}
+              MaterialList={MaterialList}
+              MaterialItemList={MaterialItemList}
+            />
+          </FormItem>
         </Form>
       </div>
     )
