@@ -1,8 +1,9 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
+import { Form, Input, InputNumber, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents, DetailsTableComponent } from '../../components'
 import globalConfig from 'utils/config'
+import moment from 'moment';
 import { bomTableColumns, bomDetailsFullViewColumns, bomDetailsAggregateViewColumns } from '../../mock/tableColums'
 import EditableforEditModals from './subpage/editableforEditModals'
 import EditableforAddModals from './subpage/editableforAddModals'
@@ -10,6 +11,7 @@ import RowEditableAddTable from './subpage/rowEditableforAddModals'
 import RowEditableEditTable from './subpage/rowEditableforEditModals'
 import './index.less'
 
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
@@ -29,7 +31,7 @@ const BOMTableComponents = ({
   const TableModelsData = bomTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialList, MaterialItemList, StationGroup, BomItemDto, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialList, StationGroup, BomItemDto, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
 
   console.log('BOMTableComponents-bomTable ', TableModelsData)
   /**
@@ -39,7 +41,7 @@ const BOMTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { MaterialId: payload.AddMaterialId, Version: payload.AddVersion, ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, BomItemList: AddBomItemDtoDataSource }
+        const createParam = { MaterialId: parseInt(payload.AddMaterialId), Version: parseInt(payload.AddVersion), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, BomItemList: AddBomItemDtoDataSource }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -50,7 +52,7 @@ const BOMTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, MaterialId: payload.EditMaterialId, Version: payload.EditVersion, ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource }
+        const editParam = { Id: payload.EditId, MaterialId: parseInt(payload.EditMaterialId), Version: parseInt(payload.EditVersion), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -112,21 +114,21 @@ const BOMTableComponents = ({
       </Form>
     )
   }
-  //改变版本
-  const MaterialIdOnChange = (value) => {
-    const valueInt = parseInt(value)
-    const temp = MaterialItemList.find((item, index) => {
-      if (eval(item.MaterialNumber)[0].key === valueInt) {
-        return item
-      }
-    })
-    dispatch({
-      type: `${TableName}/ChangeVersion`,
-      payload: {
-        Version: temp.Version,
-      },
-    })
-  }
+  // //改变版本
+  // const MaterialIdOnChange = (value) => {
+  //   const valueInt = parseInt(value)
+  //   const temp = MaterialItemList.find((item, index) => {
+  //     if (eval(item.MaterialNumber)[0].key === valueInt) {
+  //       return item
+  //     }
+  //   })
+  //   dispatch({
+  //     type: `${TableName}/ChangeVersion`,
+  //     payload: {
+  //       Version: temp.Version,
+  //     },
+  //   })
+  // }
 
   const addModalValue = () => {
 
@@ -135,11 +137,16 @@ const BOMTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="料号"
+            label="料号|名称|版本"
           >
             {getFieldDecorator('AddMaterialId', {
               initialValue: '',
-            })(<Select onChange={MaterialIdOnChange}>
+              rules: [
+                {
+                  required: true, message: '请输入料号|名称|版本',
+                },
+              ],
+            })(<Select >
               {MaterialList.map(function (item, index) {
                 return <Option key={index} value={item.key.toString()}>{item.label}</Option>
               })}
@@ -147,13 +154,17 @@ const BOMTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="名称"
+            label="版本"
+            hasFeedback
           >
-            <div>
-              {getFieldDecorator('AddVersion', {
-                initialValue: Version,
-              })(<Input />)}
-            </div>
+            {getFieldDecorator('AddVersion', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入版本',
+                },
+              ],
+            })(<InputNumber />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -201,7 +212,7 @@ const BOMTableComponents = ({
               onEditableCellChange={onEditableCellChange}
               StationGroup={StationGroup}
               MaterialList={MaterialList}
-              MaterialItemList={MaterialItemList}
+            // MaterialItemList={MaterialItemList}
             />
           </FormItem>
         </Form>
@@ -228,11 +239,16 @@ const BOMTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="料号"
+            label="料号|名称|版本"
           >
             {getFieldDecorator('EditMaterialId', {
-              initialValue: '',
-            })(<Select onChange={MaterialIdOnChange}>
+              initialValue: EditData.MaterialId.toString(),
+              rules: [
+                {
+                  required: true, message: '请输入料号',
+                },
+              ],
+            })(<Select >
               {MaterialList.map(function (item, index) {
                 return <Option key={index} value={item.key.toString()}>{item.label}</Option>
               })}
@@ -240,13 +256,17 @@ const BOMTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="名称"
+            label="版本"
+            hasFeedback
           >
-            <div>
-              {getFieldDecorator('EditVersion', {
-                initialValue: '',
-              })(<Input />)}
-            </div>
+            {getFieldDecorator('EditVersion', {
+              initialValue: EditData.Version,
+              rules: [
+                {
+                  required: true, message: '请输入版本',
+                },
+              ],
+            })(<InputNumber />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -257,7 +277,7 @@ const BOMTableComponents = ({
             }}
           >
             {getFieldDecorator('EditValidBegin', {
-              initialValue: '',
+              initialValue: moment(EditData.ValidBegin, dateFormat),
               rules: [
                 {
                   type: 'object', required: true, message: '请输入生效时间',
@@ -276,7 +296,7 @@ const BOMTableComponents = ({
             }}
           >
             {getFieldDecorator('EditValidEnd', {
-              initialValue: '',
+              initialValue: moment(EditData.ValidEnd, dateFormat),
               rules: [
                 {
                   type: 'object', required: true, message: '请输入失效时间',
@@ -295,7 +315,6 @@ const BOMTableComponents = ({
               EditDataSource={BomItemDto}
               StationGroup={StationGroup}
               MaterialList={MaterialList}
-              MaterialItemList={MaterialItemList}
             />
           </FormItem>
         </Form>

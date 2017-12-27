@@ -31,23 +31,33 @@ const EditableCellInput = ({ editable, value, onChange }) => (
 class EditableCellSelect extends React.Component {
 
   handleStationGroupIdOnChange = (e) => {
-    this.props.onChange(e.key);
+    this.props.onChange(e);
   }
 
   handleSideOnChange = (e) => {
     this.props.onChange(e);
   }
-  valueToString = (value) => {
-    switch (value) {
-      case 0:
-        return '反面'
-        break;
-      case 1:
-        return '正面'
-        break;
-      case 2:
-        return '全面'
-        break;
+  valueToString = (value, type) => {
+    if (type === 'StationGroupId' && this.props.StationGroup) {
+      if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
+        const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
+        return temp.label
+      }
+      return '空'
+    } else if (type === 'StationGroupId' && this.props.StationGroup !== true) {
+      return '请选择'
+    } else if (type === 'Side') {
+      switch (value) {
+        case 0:
+          return '反面'
+          break;
+        case 1:
+          return '正面'
+          break;
+        case 2:
+          return '全面'
+          break;
+      }
     }
   }
   renderSelect = () => {
@@ -57,11 +67,11 @@ class EditableCellSelect extends React.Component {
           <Select defaultValue='请选择' onChange={this.handleStationGroupIdOnChange}>
             {this.props.StationGroup.map(function (item, index) {
               // console.log('this.props.StationGroup.map', item, index)
-              return <Option key={index} value={item}>{item.label}</Option>
+              return <Option key={index} value={item.key}>{item.label}</Option>
             })}
           </Select>
         </div>
-        : this.props.value || '空'
+        : this.valueToString(this.props.value, 'StationGroupId')//this.props.value //
     } else if (this.props.type === 'Side') {
       return this.props.editable === true ?
         <div className="editable-cell-input-wrapper">
@@ -71,7 +81,7 @@ class EditableCellSelect extends React.Component {
             <Option key={2} value={2}>全面</Option>
           </Select>
         </div>
-        : this.valueToString(this.props.value)
+        : this.valueToString(this.props.value, 'Side')
     }
   }
   render() {
@@ -206,11 +216,15 @@ class RowEditableEditTable extends React.Component {
               editable ?
                 <span>
                   <a onClick={() => this.save(record.key)}>保存</a>
-                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
+                  <Popconfirm title="确定取消?" onConfirm={() => this.cancel(record.key)}>
                     <a>取消</a>
                   </Popconfirm>
                 </span>
-                : <a onClick={() => this.edit(record.key)}>编辑</a>
+                : <span><a onClick={() => this.edit(record.key)}>编辑</a>
+                  <span className="ant-divider" />
+                  <Popconfirm title="确定删除?" onConfirm={() => this.onDelete(record.key)}>
+                    <a href="#">删除</a>
+                  </Popconfirm></span>
             }
           </div>
         );
@@ -219,6 +233,8 @@ class RowEditableEditTable extends React.Component {
 
     this.cacheData = data.map(item => ({ ...item }));
   }
+
+
   renderColumns(text, record, column) {
     return (
       <EditableCellInput
@@ -235,6 +251,10 @@ class RowEditableEditTable extends React.Component {
       target[column] = value;
       this.setState({ data: newData }, console.log('handleChange-this.state.data', target, this.state.data));
     }
+  }
+  onDelete = (key) => {
+    const data = [...this.state.data];
+    this.setState({ data: data.filter(item => item.key !== key) });
   }
   edit(key) {
     const newData = [...this.state.data];

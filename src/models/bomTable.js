@@ -15,6 +15,7 @@ const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
   "Id": 1,
+  "MaterialId": 1,
   "MaterieNumber": "test001KeyBoard",
   "Version": 1,
   "Name": "test",
@@ -200,6 +201,10 @@ export default modelExtend(pageModel, {
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
+      // console.log('hideModal', payload)
+      // if(payload==='editModalVisible'){
+
+      // }
       return { ...state, ...payload, [payload]: false }
     },
     //Modals初始化数据   不同table可能需要修改的reducers函数
@@ -208,7 +213,7 @@ export default modelExtend(pageModel, {
         return {
           ...state, ...payload,
           MaterialList: eval(payload.data.MaterialList),
-          MaterialItemList: payload.data.MaterialItemList,
+          // MaterialItemList: payload.data.MaterialItemList,
           StationGroup: eval(payload.data.StationGroup),
           BomItemDto: payload.data.BomItemDto,
           EditData: payload.data.BomHeadDto == null ? state.EditData : payload.data.BomHeadDto
@@ -217,7 +222,7 @@ export default modelExtend(pageModel, {
         return {
           ...state, ...payload,
           MaterialList: eval(payload.data.MaterialList),
-          MaterialItemList: payload.data.MaterialItemList,
+          // MaterialItemList: payload.data.MaterialItemList,
           StationGroup: eval(payload.data.StationGroup)
         }
       } else if (payload.modalType === 'detailsModalVisible') {

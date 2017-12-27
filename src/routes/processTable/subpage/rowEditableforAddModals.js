@@ -31,32 +31,18 @@ const EditableCellInput = ({ editable, value, onChange }) => (
 class EditableCellSelect extends React.Component {
 
   handleStationGroupIdOnChange = (e) => {
-    this.props.onChange(e.key);
+    this.props.onChange(e);
   }
 
   handleSideOnChange = (e) => {
     this.props.onChange(e);
   }
   valueToString = (value, type) => {
-    // console.log('valueToString', value, type, this.props.StationGroup)
     if (type === 'StationGroupId' && this.props.StationGroup) {
-      console.log('valueToString1', value, parseInt(value), this.props.StationGroup)
-      if (this.props.StationGroup) {
-        console.log('valueToString2')
-        let x = this.props.StationGroup.map((item, index) => {
-          console.log('valueToString4', item, index)
-          if (item.key === parseInt(value)) {
-            return item
-          }
-        })
-        const y = x[0]
-        console.log('valueToString3', x)
+      if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
+        const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
+        return temp.label
       }
-      // const StationGroupId_key = value
-      // const StationGroupArray = this.props.StationGroup
-      // const StationGroupIdItem = StationGroupArray.find((item) => item.key === value)
-      //根据key查找对应的label  返回出去
-      // console.log('valueToString2', StationGroupArray.find((item) => item.key === value))
       return '空'
     } else if (type === 'StationGroupId' && this.props.StationGroup !== true) {
       return '请选择'
@@ -81,7 +67,7 @@ class EditableCellSelect extends React.Component {
           <Select defaultValue='请选择' onChange={this.handleStationGroupIdOnChange}>
             {this.props.StationGroup.map(function (item, index) {
               // console.log('this.props.StationGroup.map', item, index)
-              return <Option key={index} value={item}>{item.label}</Option>
+              return <Option key={index} value={item.key}>{item.label}</Option>
             })}
           </Select>
         </div>
@@ -230,11 +216,15 @@ class RowEditableAddTable extends React.Component {
               editable ?
                 <span>
                   <a onClick={() => this.save(record.key)}>保存</a>
-                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
+                  <Popconfirm title="确定取消?" onConfirm={() => this.cancel(record.key)}>
                     <a>取消</a>
                   </Popconfirm>
                 </span>
-                : <a onClick={() => this.edit(record.key)}>编辑</a>
+                : <span><a onClick={() => this.edit(record.key)}>编辑</a>
+                  <span className="ant-divider" />
+                  <Popconfirm title="确定删除?" onConfirm={() => this.onDelete(record.key)}>
+                    <a href="#">删除</a>
+                  </Popconfirm></span>
             }
           </div>
         );
@@ -288,6 +278,10 @@ class RowEditableAddTable extends React.Component {
       delete target.editable;
       this.setState({ data: newData });
     }
+  }
+  onDelete = (key) => {
+    const data = [...this.state.data];
+    this.setState({ data: data.filter(item => item.key !== key) });
   }
   handleAdd() {
     const { count, data } = this.state;
