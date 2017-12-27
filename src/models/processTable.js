@@ -228,6 +228,7 @@ export default modelExtend(pageModel, {
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
+      window.ProcessTempRender = false
       return { ...state, ...payload, [payload]: false }
     },
     //Modals初始化数据   不同table可能需要修改的reducers函数

@@ -20,6 +20,7 @@ const TableName = 'bomTable'
 const TableColumns = bomTableColumns
 const AddFormLayout = ['AddMaterialId', 'AddVersion', 'AddValidBegin', 'AddValidEnd']
 const EditFormLayout = ['EditId', 'EditMaterialId', 'EditVersion', 'EditValidBegin', 'EditValidEnd']
+window.BOMTempRender = false
 
 const BOMTableComponents = ({
   bomTable,
@@ -52,7 +53,7 @@ const BOMTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, MaterialId: parseInt(payload.EditMaterialId), Version: parseInt(payload.EditVersion), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource }
+        const editParam = { Id: payload.EditId, MaterialId: parseInt(payload.EditMaterialId), Version: parseInt(payload.EditVersion), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource.length > 0 ? EditBomItemDtoDataSource : BomItemDto }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -315,6 +316,7 @@ const BOMTableComponents = ({
               EditDataSource={BomItemDto}
               StationGroup={StationGroup}
               MaterialList={MaterialList}
+
             />
           </FormItem>
         </Form>

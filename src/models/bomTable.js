@@ -59,6 +59,7 @@ export default modelExtend(pageModel, {
   },
   subscriptions: {
     setup({ dispatch, history }) {
+      console.log('bom-subscriptions', dispatch, history)
       history.listen((location) => {
         if (location.pathname === `/masterdata/${TableName}`) {
           dispatch({
@@ -105,6 +106,7 @@ export default modelExtend(pageModel, {
     * create({
       payload,
     }, { call, put, select }) {
+
       const data = yield call(create, payload)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
@@ -205,6 +207,7 @@ export default modelExtend(pageModel, {
       // if(payload==='editModalVisible'){
 
       // }
+      window.BOMTempRender = false
       return { ...state, ...payload, [payload]: false }
     },
     //Modals初始化数据   不同table可能需要修改的reducers函数

@@ -1,4 +1,4 @@
-import { Table, Input, Popconfirm, Select, Radio, Button } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Select, Radio, Button } from 'antd';
 
 
 const Option = Select.Option;
@@ -18,7 +18,14 @@ const data = [];
 //     Side: 1,
 //   });
 // }
-
+const EditableCellInputTypeOfInt = ({ editable, value, onChange }) => (
+  <div>
+    {editable
+      ? <InputNumber style={{ margin: '-5px 0' }} value={value} onChange={value => onChange(value)} />
+      : value
+    }
+  </div>
+);
 const EditableCellInput = ({ editable, value, onChange }) => (
   <div>
     {editable
@@ -233,6 +240,13 @@ class RowEditableAddTable extends React.Component {
 
     this.cacheData = data.map(item => ({ ...item }));
   }
+  componentWillReceiveProps(nextProps) {
+    if (window.ProcessTempRender) {
+      return true
+    } else if (!window.ProcessTempRender) {
+      this.setState({ data: [] })
+    }
+  }
   renderColumns(text, record, column) {
     return (
       <EditableCellInput
@@ -259,6 +273,7 @@ class RowEditableAddTable extends React.Component {
     }
   }
   save(key) {
+    window.ProcessTempRender = true
     const newData = [...this.state.data];
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
@@ -295,6 +310,7 @@ class RowEditableAddTable extends React.Component {
       MaximumTestCount: 0,
       IsBackflush: true,
       Side: 1,
+      ProcessId: count
     };
     this.setState({
       data: [...data, newData],

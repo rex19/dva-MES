@@ -269,6 +269,14 @@ class RowEditableAddTable extends React.Component {
 
     this.cacheData = data.map(item => ({ ...item }));
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (window.BOMTempRender) {
+      return true
+    } else if (!window.BOMTempRender) {
+      this.setState({ data: [] })
+    }
+  }
   renderColumns(text, record, column) {
     return (
       <EditableCellInput
@@ -300,6 +308,7 @@ class RowEditableAddTable extends React.Component {
     }
   }
   save(key) {
+    window.BOMTempRender = true
     const newData = [...this.state.data];
     const target = newData.filter(item => key === item.key)[0];
     if (target) {

@@ -9,9 +9,9 @@ import EditableforEditModals from './subpage/editableforEditModals'
 import EditableforAddModals from './subpage/editableforAddModals'
 import RowEditableAddTable from './subpage/rowEditableforAddModals'
 import RowEditableEditTable from './subpage/rowEditableforEditModals'
-
-
 import './index.less'
+
+window.ProcessTempRender = false
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 const { Option } = Select
 const RadioGroup = Radio.Group
@@ -55,7 +55,7 @@ const ProcessTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, ProcessNumber: payload.EditProcessNumber, MaterialId: payload.EditMaterialId, State: payload.EditState, ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, ProcessStep: EditProcessStepDataSource }
+        const editParam = { Id: payload.EditId, ProcessNumber: payload.EditProcessNumber, MaterialId: parseInt(payload.EditMaterialId), State: parseInt(payload.EditState), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, ProcessStep: EditProcessStepDataSource.length > 0 ? EditProcessStepDataSource : EditData.ProcessStep }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,

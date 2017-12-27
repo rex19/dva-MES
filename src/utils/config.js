@@ -67,6 +67,10 @@ module.exports = {
     formItemLayout: {
       labelCol: { span: 5 },
       wrapperCol: { span: 15 },
+    },
+    TempRender: {
+      BOMTempRender: false,//window.属性，用于editable判断是否需要运行componentWillReceiveProps 去setState清空缓存数据
+      ProcessTempRender: false
     }
   }
 }

@@ -50,14 +50,21 @@ class EditableCellSelect extends React.Component {
         const temp = this.props.MaterialList.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
+      const temp = this.props.MaterialList.find((item, index) => item.key === parseInt(this.props.MaterialIdValue))
+      return temp.label
       return '请选择'
     } else if (type === 'SetupStationGroupId' && this.props.StationGroup) {
+      console.log('else if (type === SetupStationGroupId && this.props.StationGroup) {', value)
       if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
+        console.log('else if (type === SetupStationGroupId this.props.StationGroup.length > 0 && Number.isInteger(value)')
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
-      return '请选择'
-    } else if (type === 'SetupStationGroupId' && this.props.StationGroup !== true) {
+
+      const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
+      return temp.label
+    } else if (type === 'SetupStationGroupId' && !this.props.StationGroup) {
+      console.log('else if (type === SetupStationGroupId && !this.props.StationGroup) {', value)
       return '请选择'
     } else if (type === 'Layer') {
       switch (value) {
@@ -171,6 +178,7 @@ class RowEditableEditTable extends React.Component {
           value={text}
           onChange={value => this.handleChange(value, record.key, 'MaterialId')}
           MaterialList={this.props.MaterialList}
+          MaterialIdValue={record.MaterialId}
           type='MaterialId'
         />
       ),
@@ -188,11 +196,13 @@ class RowEditableEditTable extends React.Component {
       title: '设备组',
       dataIndex: 'SetupStationGroupId',
       render: (text, record) => (
+        console.log('设备组', text, record),
         <EditableCellSelect
           editable={record.editable}
           value={text}
           onChange={value => this.handleChange(value, record.key, 'SetupStationGroupId')}
           StationGroup={this.props.StationGroup}
+          StationGroupIdValue={record.StationGroupId}
           type='SetupStationGroupId'
         />
       ),
@@ -270,8 +280,11 @@ class RowEditableEditTable extends React.Component {
     this.cacheData = data.map(item => ({ ...item }));
   }
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps', nextProps)
-    this.setState({ data: this.props.EditDataSource })
+    if (window.BOMTempRender) {
+      return true
+    } else if (!window.BOMTempRender) {
+      this.setState({ data: this.props.EditDataSource })
+    }
   }
 
   renderColumns(text, record, column) {
@@ -305,13 +318,14 @@ class RowEditableEditTable extends React.Component {
     }
   }
   save(key) {
+    window.BOMTempRender = true
     const newData = [...this.state.data];
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
       delete target.editable;
       this.setState({ data: newData });
       this.cacheData = newData.map(item => ({ ...item }));
-      this.props.onEditableCellChange(this.state.data, 'RowEditableAddTable')
+      this.props.onEditableCellChange(this.state.data, 'RowEditableEditTable')
     }
 
     let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 5000);

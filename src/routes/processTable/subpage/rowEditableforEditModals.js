@@ -1,4 +1,4 @@
-import { Table, Input, Popconfirm, Select, Radio, Button } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Select, Radio, Button } from 'antd';
 
 
 const Option = Select.Option;
@@ -18,7 +18,14 @@ const data = [];
 //     Side: 1,
 //   });
 // }
-
+const EditableCellInputTypeOfInt = ({ editable, value, onChange }) => (
+  <div>
+    {editable
+      ? <InputNumber style={{ margin: '-5px 0' }} value={value} onChange={value => onChange(value)} />
+      : value
+    }
+  </div>
+);
 const EditableCellInput = ({ editable, value, onChange }) => (
   <div>
     {editable
@@ -184,6 +191,13 @@ class RowEditableEditTable extends React.Component {
       title: '最大测试次数',
       dataIndex: 'MaximumTestCount',
       render: (text, record) => this.renderColumns(text, record, 'MaximumTestCount'),
+      // render: (text, record) => (
+      //   <EditableCellInputTypeOfInt
+      //     editable={record.editable}
+      //     value={text}
+      //     onChange={value => this.handleChange(value, record.key, 'MaximumTestCount')}
+      //   />
+      // ),
     }, {
       title: '是否反冲',
       dataIndex: 'IsBackflush',
@@ -234,7 +248,13 @@ class RowEditableEditTable extends React.Component {
     this.cacheData = data.map(item => ({ ...item }));
   }
 
-
+  componentWillReceiveProps(nextProps) {
+    if (window.ProcessTempRender) {
+      return true
+    } else if (!window.ProcessTempRender) {
+      this.setState({ data: this.props.EditDataSource })
+    }
+  }
   renderColumns(text, record, column) {
     return (
       <EditableCellInput
@@ -265,6 +285,7 @@ class RowEditableEditTable extends React.Component {
     }
   }
   save(key) {
+    window.ProcessTempRender = true
     const newData = [...this.state.data];
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
