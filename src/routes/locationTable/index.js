@@ -50,7 +50,7 @@ const LocationTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { LocationNumber: payload.AddLocationNumber, Description: payload.AddDescription, AreaId: payload.AddAreaId, X: payload.AddX, Y: payload.AddY, Z: payload.AddZ, State: parseInt(payload.AddState) }
+        const createParam = { LocationNumber: payload.AddLocationNumber, Description: payload.AddDescription, AreaId: parseInt(payload.AddAreaId), X: payload.AddX, Y: payload.AddY, Z: payload.AddZ, State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -61,7 +61,7 @@ const LocationTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, LocationNumber: payload.EditLocationNumber, Description: payload.EditDescription, AreaId: payload.EditAreaId, X: payload.EditX, Y: payload.EditY, Z: payload.EditZ, State: parseInt(payload.EditState) }
+        const editParam = { Id: payload.EditId, LocationNumber: payload.EditLocationNumber, Description: payload.EditDescription, AreaId: parseInt(payload.EditAreaId), X: payload.EditX, Y: payload.EditY, Z: payload.EditZ, State: parseInt(payload.EditState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -209,7 +209,7 @@ const LocationTableComponents = ({
             {...formItemLayout}
             label="ID"
           >
-            {getFieldDecorator('AddId', {
+            {getFieldDecorator('EditId', {
               initialValue: EditData.Id,
             })(<Input disabled />)}
           </FormItem>

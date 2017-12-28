@@ -27,6 +27,7 @@ const AddFormLayout = [
   'AddMobilePhone',
   'AddState']
 const EditFormLayout = [
+  'EditId',
   'EditSupplierCode',
   'EditName',
   'EditCountry',
@@ -301,14 +302,14 @@ const SupplierTableComponents = ({
           >
             {getFieldDecorator('EditId', {
               initialValue: EditData.Id,
-            })(<Input />)}
+            })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="供应商编号"
             hasFeedback
           >
-            {getFieldDecorator('EditSuppliserCode', {
+            {getFieldDecorator('EditSupplierCode', {
               initialValue: EditData.SupplierCode,
             })(<Input />)}
           </FormItem>

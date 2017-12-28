@@ -45,13 +45,16 @@ class EditableCellSelect extends React.Component {
     this.props.onChange(e);
   }
   valueToString = (value, type) => {
-    if (type === 'StationGroupId' && this.props.StationGroup) {
+    if (type === 'StationGroupId' && this.props.StationGroup.length > 0) {
       if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
-      return '空'
-    } else if (type === 'StationGroupId' && this.props.StationGroup !== true) {
+      // const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
+      // return temp.label
+      console.log('valueToString', this.props.StationGroup, value, this.props.StationGroupIdValue)
+      return '请选择'
+    } else if (type === 'StationGroupId' && !this.props.StationGroup) {
       return '请选择'
     } else if (type === 'Side') {
       switch (value) {
@@ -145,7 +148,7 @@ class RowEditableEditTable extends React.Component {
     super(props);
     this.state = {
       data: this.props.EditDataSource || [],
-      count: 1
+      count: this.props.EditDataSource.length || 1
     };
     this.columns = [{
       title: '序列号',
@@ -164,6 +167,7 @@ class RowEditableEditTable extends React.Component {
           value={text}
           onChange={value => this.handleChange(value, record.key, 'StationGroupId')}
           StationGroup={this.props.StationGroup}
+          StationGroupIdValue={record.StationGroupId}
           type='StationGroupId'
         />
       ),
@@ -318,7 +322,7 @@ class RowEditableEditTable extends React.Component {
       MaximumTestCount: 0,
       IsBackflush: true,
       Side: 1,
-      ProcessId: count
+      ProcessId: this.props.ProcessId
     };
     this.setState({
       data: [...data, newData],

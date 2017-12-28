@@ -10,7 +10,7 @@ const data = [];
 //     key: i.toString(),
 //     Secquence: i,
 //     Description: `描述`,
-//     SetupStationGroupId: '请选择',
+//     StationGroupId: '请选择',
 //     IsMandatory: true,
 //     IsNeedSetupCheck: `是`,
 //     MaximumTestCount: 22,
@@ -51,13 +51,13 @@ class EditableCellSelect extends React.Component {
         return temp.label
       }
       return '请选择'
-    } else if (type === 'SetupStationGroupId' && this.props.StationGroup) {
+    } else if (type === 'StationGroupId' && this.props.StationGroup) {
       if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
       return '请选择'
-    } else if (type === 'SetupStationGroupId' && this.props.StationGroup !== true) {
+    } else if (type === 'StationGroupId' && this.props.StationGroup !== true) {
       return '请选择'
     } else if (type === 'Layer') {
       switch (value) {
@@ -84,7 +84,7 @@ class EditableCellSelect extends React.Component {
           </Select>
         </div>
         : this.valueToString(this.props.value, 'MaterialId')
-    } else if (this.props.type === 'SetupStationGroupId') {
+    } else if (this.props.type === 'StationGroupId') {
       return this.props.editable === true ?
         <div className="editable-cell-input-wrapper">
           <Select defaultValue='请选择' onChange={this.handleStationGroupOnChange}>
@@ -93,7 +93,7 @@ class EditableCellSelect extends React.Component {
             })}
           </Select>
         </div>
-        : this.valueToString(this.props.value, 'SetupStationGroupId')
+        : this.valueToString(this.props.value, 'StationGroupId')
     } else if (this.props.type === 'Layer') {
       return this.props.editable === true ?
         <div className="editable-cell-input-wrapper">
@@ -186,14 +186,14 @@ class RowEditableAddTable extends React.Component {
       ),
     }, {
       title: '设备组',
-      dataIndex: 'SetupStationGroupId',
+      dataIndex: 'StationGroupId',
       render: (text, record) => (
         <EditableCellSelect
           editable={record.editable}
           value={text}
-          onChange={value => this.handleChange(value, record.key, 'SetupStationGroupId')}
+          onChange={value => this.handleChange(value, record.key, 'StationGroupId')}
           StationGroup={this.props.StationGroup}
-          type='SetupStationGroupId'
+          type='StationGroupId'
         />
       ),
     }, {
@@ -334,7 +334,7 @@ class RowEditableAddTable extends React.Component {
     const newData = {
       key: count,
       MaterialId: 1,
-      SetupStationGroupId: '请选择',
+      StationGroupId: '请选择',
       Version: count,
       Designator: `PCB`, //不能超过10位
       Quantity: 0,

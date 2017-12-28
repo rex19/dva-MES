@@ -10,7 +10,7 @@ const data = [];
 //     key: i.toString(),
 //     Secquence: i,
 //     Description: `描述`,
-//     SetupStationGroupId: '请选择',
+//     StationGroupId: '请选择',
 //     IsMandatory: true,
 //     IsNeedSetupCheck: `是`,
 //     MaximumTestCount: 22,
@@ -52,20 +52,20 @@ class EditableCellSelect extends React.Component {
       }
       const temp = this.props.MaterialList.find((item, index) => item.key === parseInt(this.props.MaterialIdValue))
       return temp.label
-      return '请选择'
-    } else if (type === 'SetupStationGroupId' && this.props.StationGroup) {
-      console.log('else if (type === SetupStationGroupId && this.props.StationGroup) {', value)
+      // return '请选择'
+    } else if (type === 'StationGroupId' && this.props.StationGroup.length > 0 && value !== '') {
+      console.log('else if (type === StationGroupId && this.props.StationGroup) {', value)
       if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
-        console.log('else if (type === SetupStationGroupId this.props.StationGroup.length > 0 && Number.isInteger(value)')
+        console.log('else if (type === StationGroupId this.props.StationGroup.length > 0 && Number.isInteger(value)')
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
-
-      const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
-      return temp.label
-    } else if (type === 'SetupStationGroupId' && !this.props.StationGroup) {
-      console.log('else if (type === SetupStationGroupId && !this.props.StationGroup) {', value)
       return '请选择'
+      // const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
+      // return temp.label
+    } else if (type === 'StationGroupId' && !this.props.StationGroup) {
+      console.log('else if (type === StationGroupId && !this.props.StationGroup) {', value)
+      return '请选择2'
     } else if (type === 'Layer') {
       switch (value) {
         case 0:
@@ -91,7 +91,7 @@ class EditableCellSelect extends React.Component {
           </Select>
         </div>
         : this.valueToString(this.props.value, 'MaterialId')
-    } else if (this.props.type === 'SetupStationGroupId') {
+    } else if (this.props.type === 'StationGroupId') {
       return this.props.editable === true ?
         <div className="editable-cell-input-wrapper">
           <Select defaultValue='请选择' onChange={this.handleStationGroupOnChange}>
@@ -100,7 +100,7 @@ class EditableCellSelect extends React.Component {
             })}
           </Select>
         </div>
-        : this.valueToString(this.props.value, 'SetupStationGroupId')
+        : this.valueToString(this.props.value, 'StationGroupId')
     } else if (this.props.type === 'Layer') {
       return this.props.editable === true ?
         <div className="editable-cell-input-wrapper">
@@ -194,16 +194,16 @@ class RowEditableEditTable extends React.Component {
       ),
     }, {
       title: '设备组',
-      dataIndex: 'SetupStationGroupId',
+      dataIndex: 'StationGroupId',
       render: (text, record) => (
         console.log('设备组', text, record),
         <EditableCellSelect
           editable={record.editable}
           value={text}
-          onChange={value => this.handleChange(value, record.key, 'SetupStationGroupId')}
+          onChange={value => this.handleChange(value, record.key, 'StationGroupId')}
           StationGroup={this.props.StationGroup}
           StationGroupIdValue={record.StationGroupId}
-          type='SetupStationGroupId'
+          type='StationGroupId'
         />
       ),
     }, {
@@ -344,7 +344,7 @@ class RowEditableEditTable extends React.Component {
     const newData = {
       key: count,
       MaterialId: 1,
-      SetupStationGroupId: '请选择',
+      StationGroupId: '请选择',
       Version: count,
       Designator: `PCB`, //不能超过10位
       Quantity: 0,

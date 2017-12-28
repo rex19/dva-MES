@@ -30,6 +30,7 @@ const AddFormLayout = [
   'AddMobilePhone',
   'AddState']
 const EditFormLayout = [
+  'EditId',
   'EditCustomerCode',
   'EditName',
   'EditDUNS',
@@ -320,7 +321,7 @@ const CustomerTableComponents = ({
           >
             {getFieldDecorator('EditId', {
               initialValue: EditData.Id,
-            })(<Input />)}
+            })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}

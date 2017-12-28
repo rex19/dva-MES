@@ -344,6 +344,7 @@ const ProcessTableComponents = ({
               StationGroup={StationGroup}
               onEditableCellChange={onEditableCellChange}
               EditDataSource={EditData.ProcessStep}
+              ProcessId={EditData.Process.Id}
             />
           </FormItem>
         </Form>

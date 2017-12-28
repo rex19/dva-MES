@@ -531,7 +531,7 @@ const MaterielTableComponents = ({
             label="生效日期"
           >
             {getFieldDecorator('AddValidBegin', {
-              initialValue: moment('2015/01/01', dateFormat),
+              initialValue: '',
             })(
               <DatePicker format={dateFormat} />
               )}
@@ -541,7 +541,7 @@ const MaterielTableComponents = ({
             label="失效日期"
           >
             {getFieldDecorator('ValidEnd', {
-              initialValue: moment('2015/01/01', dateFormat),
+              initialValue: '',
             })(
               <DatePicker format={dateFormat} />
               )}

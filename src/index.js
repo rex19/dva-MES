@@ -3,6 +3,8 @@ import dva from 'dva'
 import createLoading from 'dva-loading'
 import createHistory from 'history/createBrowserHistory'
 import 'babel-polyfill'
+import Perf from 'react-addons-perf'
+window.Perf = Perf //React性能检测工具 挂载到全局变量方便使用
 
 // 1. Initialize
 const app = dva({
@@ -10,7 +12,7 @@ const app = dva({
     effects: true,
   }),
   history: createHistory(),
-  onError (error) {
+  onError(error) {
     message.error(error.message)
   },
 })

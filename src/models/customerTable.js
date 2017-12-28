@@ -160,14 +160,7 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
-        // const data = yield call(getEditModalData, payload.record.Id)
-        // if (data.Status === 200) {
-        //   yield put({ type: 'showModal', payload: payload })
-        //   yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        // } else {
-        //   throw data
-        // }
-        const data = yield call(getDetailsModalData, payload.record.Id)
+        const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })

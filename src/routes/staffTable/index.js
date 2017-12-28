@@ -13,8 +13,8 @@ const { TextArea } = Input;
 //每个table可能不同的变量字段(1)
 const TableName = 'staffTable'
 const TableColumns = staffTableColumns
-const AddFormLayout = ['AddUserName', 'AddAccount', 'AddPassword', 'AddEmailAddress', 'AddPhone', 'AddUserState', 'AddPlatformID', 'AddState', 'AddRole']
-const EditFormLayout = ['EditUserName', 'EditAccount', 'EditPassword', 'EditEmailEditress', 'EditPhone', 'EditUserState', 'EditPlatformID', 'EditState', 'EditRole']
+const AddFormLayout = ['AddUserName', 'AddAccount', 'AddPassword', 'AddEmailAddress', 'AddPhone', 'AddState', 'AddPlatformID', 'AddState', 'AddRole']
+const EditFormLayout = ['EditId', 'EditUserName', 'EditAccount', 'EditPassword', 'EditEmailAddress', 'EditPhone', 'EditState', 'EditPlatformID', 'EditState', 'EditRole']
 
 const StaffTableComponents = ({
   staffTable,
@@ -36,7 +36,7 @@ const StaffTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { UserName: payload.AddUserName, Account: payload.AddAccount, Password: payload.AddPassword, EmailAddress: payload.AddEmailAddress, Phone: payload.AddPhone, UserState: parseInt(payload.AddUserState), PlatformId: parseInt(payload.AddPlatformID), Role: payload.AddRole.map(item => parseInt(item.key)) }
+        const createParam = { UserName: payload.AddUserName, Account: payload.AddAccount, Password: payload.AddPassword, EmailAddress: payload.AddEmailAddress, Phone: payload.AddPhone, State: parseInt(payload.AddState), PlatformId: parseInt(payload.AddPlatformID), Role: payload.AddRole.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -47,7 +47,7 @@ const StaffTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, UserName: payload.EditUserName, Account: payload.EditAccount, Password: payload.EditPassword, EmailEditress: payload.EditEmailEditress, Phone: payload.EditPhone, UserState: parseInt(payload.EditUserState), PlatformId: parseInt(payload.EditPlatformID), Role: payload.EditRole.map(item => parseInt(item.key)) }
+        const editParam = { Id: payload.EditId, UserName: payload.EditUserName, Account: payload.EditAccount, Password: payload.EditPassword, EmailAddress: payload.EditEmailAddress, Phone: payload.EditPhone, State: parseInt(payload.EditState), PlatformId: parseInt(payload.EditPlatformID), Role: payload.EditRole.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -182,7 +182,7 @@ const StaffTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddUserState', {
+              {getFieldDecorator('AddState', {
                 initialValue: '1',
                 rules: [
                   {
@@ -292,8 +292,8 @@ const StaffTableComponents = ({
             label="邮箱"
             hasFeedback
           >
-            {getFieldDecorator('EditEmailEditress', {
-              initialValue: EditData.EmailEditress,
+            {getFieldDecorator('EditEmailAddress', {
+              initialValue: EditData.EmailAddress,
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -310,7 +310,7 @@ const StaffTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('EditUserState', {
+              {getFieldDecorator('EditState', {
                 initialValue: EditData.State.toString(),
                 rules: [
                   {
