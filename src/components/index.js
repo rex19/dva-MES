@@ -13,6 +13,7 @@ import FormComponents from './CRUDTable/FormComponents'
 import TableComponents from './CRUDTable/TableComponents'
 import EditableComponent from './CRUDTable/EditableComponent'
 import DetailsTableComponent from './CRUDTable/DetailsTableComponent'
+import WMSTableComponents from './WMSSystemTable/WMSTableComponents'
 
 export {
   Layout,
@@ -28,5 +29,6 @@ export {
   FormComponents,
   TableComponents,
   EditableComponent,
-  DetailsTableComponent
+  DetailsTableComponent,
+  WMSTableComponents
 }

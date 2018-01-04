@@ -1,7 +1,7 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/roleTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/materielTable'
 import { pageModel } from 'models/common'
-import { errorMessage, successMessage } from '../components/Message/message.js'
+import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
 import globalConfig from 'utils/config'
 /**
@@ -10,20 +10,37 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'roleTable'
+const TableName = 'materielTable'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 2,
-  "RoleName": "testRole",
+  "Id": 1,
+  "MaterialNumber": "test001KeyBoard",
+  "Version": 1,
+  "Description": "test",
+  "Specification": "test",
+  "CustomerMaterialNumber": "customer001",
+  "SupplierMaterialNumber": "supplier001",
+  "MaterialGroupTypeId": 1,
+  "IsProduct": true,
+  "IsMultiPanel": true,
+  "RequireBackflush": true,
+  "NumberOfPanels": 1,
+  "UnitId": 1,
+  "SetupFlag": true,
+  "ProcurementTypeId": 1,
+  "MinimumPackageQuantity": 10,
+  "ExpirationTime": 20,
+  "SafetyStock": 1,
+  "DefaultStorageLocationId": 7,
+  "ContainerSize": 10,
+  "MSLId": 4,
   "State": 1,
-  "PlatformId": "1",
-  "PlatformName": "adm管理",
-  "CreationDateTime": "2017-11-01T15:36:38",
-  "Creator": "admin",
-  "EditDateTime": "2017-12-09T13:29:12.6622339",
-  "Editor": "",
-  "User": "1"
+  "DefaultStationGroupId": 4,
+  "CompanyId": 1,
+  "FactoryId": "1",
+  "ValidBegin": "2017-12-01T00:00:00",
+  "ValidEnd": "2018-12-01T00:00:00"
 }
 
 export default modelExtend(pageModel, {
@@ -44,9 +61,14 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    TotalMultiselectData: [],
-    AllocatedMultiselectData: [],
-    platform: [],
+    MaterialType: [],
+    Unit: [],
+    ProcurementType: [],
+    Location: [],
+    MSL: [],
+    StationGroup: [],
+    Company: [],
+    Factory: [],
 
   },
   subscriptions: {
@@ -163,7 +185,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
-          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -191,7 +212,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
@@ -200,10 +220,30 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return {
+          ...state, ...payload,
+          MaterialType: eval(payload.data.MaterialType),
+          Unit: eval(payload.data.Unit),
+          ProcurementType: eval(payload.data.ProcurementType),
+          Location: eval(payload.data.Location),
+          MSL: eval(payload.data.MSL),
+          StationGroup: eval(payload.data.StationGroup),
+          Company: eval(payload.data.Company),
+          Factory: eval(payload.data.Factory),
+          EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto
+        }
       } else if (payload.modalType === 'addModalVisible') {
-        console.log('else if (payload.modalType === addModalVisible)', payload)
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platform: eval(payload.data.TotalPlatform) }
+        return {
+          ...state, ...payload,
+          MaterialType: eval(payload.data.MaterialType),
+          Unit: eval(payload.data.Unit),
+          ProcurementType: eval(payload.data.ProcurementType),
+          Location: eval(payload.data.Location),
+          MSL: eval(payload.data.MSL),
+          StationGroup: eval(payload.data.StationGroup),
+          Company: eval(payload.data.Company),
+          Factory: eval(payload.data.Factory),
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }
@@ -222,36 +262,3 @@ export default modelExtend(pageModel, {
     }
   },
 })
-
-
-// * query({
-//   payload,
-// }, { call, put, select }) {
-//   yield put({ type: 'loadingChanger', payload: 'showLoading' })
-//   yield put({ type: 'tablePaginationChanger', payload: payload })
-//   const data = yield call(query, payload)
-//   const pagination = yield select(state => state[TableName].pagination)
-//   if (data.Status !== 200) {
-//     return errorMessage(data.ErrorMessage || '查询失败')
-//   } else if (data.Status === 200) {
-//     if (data.Data.ResultStatus !== 200) {
-//       return errorMessage(data.Data.ResultMessage || '查询失败')
-//     } else if (data.Data.ResultStatus === 200) {
-//       const result = yield call(addKey, data.Data.ResultData[QueryResponseDTO]) //+1
-//       yield put({
-//         type: 'querySuccess',
-//         payload: {
-//           list: result,
-//           pagination: {
-//             PageIndex: Number(pagination.PageIndex) || 1,
-//             PageSize: Number(pagination.PageSize) || 10,
-//             total: data.Data.RowCount,
-//           },
-//         },
-//       })
-//       yield put({ type: 'loadingChanger', payload: 'closeLoading' })
-//     }
-//   } else {
-//     throw data
-//   }
-// },

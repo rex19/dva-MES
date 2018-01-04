@@ -1,5 +1,6 @@
 
 const APIV1 = '/api'
+// const APIV3 = '/sfmeswms/api'
 // const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
@@ -38,6 +39,8 @@ module.exports = {
     supplierTable: `${APIV1}/Supplier`,
     failureTypeTable: `${APIV1}/FailureType`,
     bomTable: `${APIV1}/BOM`,
+
+    rawMaterialReceiptsTable: `${APIV1}/MaterialReceiving`,
 
     user: `${APIV1}/user/:id`,
     dashboard: `${APIV1}/dashboard`,

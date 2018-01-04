@@ -611,6 +611,7 @@ const bomDetailsAggregateViewColumns = [{
   title: '用量',
   dataIndex: 'Quantity',
 }]
+
 export {
   stationTableColumns,
   stationGroupTableColumns,
@@ -629,7 +630,8 @@ export {
 
   processDetailsColumns,
   bomDetailsFullViewColumns,
-  bomDetailsAggregateViewColumns
+  bomDetailsAggregateViewColumns,
+
 }
 
 

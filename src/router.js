@@ -118,6 +118,14 @@ const Routers = function ({ history, app }) {
       path: '/post',
       models: () => [import('./models/post')],
       component: () => import('./routes/post/'),
+    }, {
+      path: '/wmsSystem/rawMaterialReceipts',
+      models: () => [import('./models/wmsSystem/rawMaterialReceipts')],
+      component: () => import('./routes/wmsSystem/rawMaterialReceipts/'),
+    }, {
+      path: '/wmsSystem/workOrder',
+      models: () => [import('./models/wmsSystem/workOrder')],
+      component: () => import('./routes/wmsSystem/workOrder/'),
     },
   ]
 
