@@ -22,6 +22,12 @@ const Login = ({
       if (errors) {
         return
       }
+      // const params = {
+      //   grant_type: 'password',
+      //   UserName: values.username,
+      //   password: values.password,
+      // }
+      // dispatch({ type: 'login/login', payload: params })
       dispatch({ type: 'login/login', payload: values })
     })
   }

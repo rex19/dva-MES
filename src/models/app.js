@@ -112,7 +112,7 @@ export default {
     * logout({
       payload,
     }, { call, put }) {
-      const data = yield call(logout, parse(payload))
+      const data = yield call(logout, parse(payload))   //call ajax=>  /api/v1/logout
       if (data.success) {
         yield put({ type: 'query' })
       } else {
