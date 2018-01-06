@@ -126,7 +126,15 @@ const Routers = function ({ history, app }) {
       path: '/wmsSystem/workOrder',
       models: () => [import('./models/wmsSystem/workOrder')],
       component: () => import('./routes/wmsSystem/workOrder/'),
-    },
+    }, {
+      path: '/wmsSystem/containerInfo',
+      models: () => [import('./models/wmsSystem/containerInfo')],
+      component: () => import('./routes/wmsSystem/containerInfo/'),
+    }, {
+      path: '/wmsSystem/packingFlag',
+      models: () => [import('./models/wmsSystem/packingFlag')],
+      component: () => import('./routes/wmsSystem/packingFlag/'),
+    }
   ]
 
   return (

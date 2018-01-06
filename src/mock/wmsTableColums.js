@@ -170,14 +170,243 @@ const wmsWorkOrder_DetailsColums = [{
 }]
 
 
+const wmsContainerInfoColums = [{
+  title: 'Id',
+  dataIndex: 'Id',
+}, {
+  title: '料号',
+  dataIndex: 'MaterialNumber',
+}, {
+  title: '容器UID',
+  dataIndex: 'ContainerNumber',
+}, {
+  title: '状态',
+  dataIndex: 'StateName',
+}, {
+  title: '单位',
+  dataIndex: 'UnitName',
+}, {
+  title: '容量',
+  dataIndex: 'TotalQuantity',
+}, {
+  title: '现在数量',
+  dataIndex: 'Quantity',
+}, {
+  title: '目前所在库位',
+  dataIndex: 'CurrentLocationNumber',
+}, {
+  title: '供应商',
+  dataIndex: 'SupplierName',
+}, {
+  title: '批次',
+  dataIndex: 'BatchNumber',
+}, {
+  title: '制造时间',
+  dataIndex: 'ManufacturingDateTime',
+}, {
+  title: '过期时间',
+  dataIndex: 'ExpirationDate',
+}, {
+  title: '创建时间',
+  dataIndex: 'CreationDateTime',
+}, {
+  title: '创建人',
+  dataIndex: 'CreatorName',
+}, {
+  title: '操作',
+  key: (new Date()).valueOf(),
+  fixed: 'right',
+  width: 140,
+  render: (text, record) => (
+    <span>
+      <a onClick={() => console.log('chakan')} className="ant-dropdown-link">
+        查看
+      </a>
+    </span>
+  ),
+}]
+
+
+const wmsContainerInfo_MoveRecordColums = [{
+  title: 'Id',
+  dataIndex: 'Id',
+}, {
+  title: '容器UID',
+  dataIndex: 'ContainerNumber',
+}, {
+  title: '源库位',
+  dataIndex: 'SourceLocationNumber',
+}, {
+  title: '目的库位',
+  dataIndex: 'DestinationLocationNumber',
+}, {
+  title: '操作类型',
+  dataIndex: 'OperationFormTypeName',
+}, {
+  title: '操作时间',
+  dataIndex: 'OperationDateTime',
+}, {
+  title: '操作人员',
+  dataIndex: 'OperatorUserName',
+}, {
+  title: '表单号',
+  dataIndex: 'OperationFormNumber',
+}, {
+  title: '单据子项号',
+  dataIndex: 'OperationFormItemNumber',
+}, {
+  title: '操作',
+  key: (new Date()).valueOf(),
+  fixed: 'right',
+  width: 140,
+  render: (text, record) => (
+    <span>
+      <a onClick={() => console.log('chakan')} className="ant-dropdown-link">
+        查看
+      </a>
+    </span>
+  ),
+}]
+
+const wmsPackingFlagColums = [{
+  title: 'Id',
+  dataIndex: 'Id',
+}, {
+  title: '料号',
+  dataIndex: 'MaterialNumber',
+}, {
+  title: '容器UID',
+  dataIndex: 'ContainerNumber',
+}, {
+  title: '客户箱号',
+  dataIndex: 'CustomerBoxNumber',
+}, {
+  title: '状态',
+  dataIndex: 'StateName',
+}, {
+  title: '单位',
+  dataIndex: 'UnitName',
+}, {
+  title: '容量',
+  dataIndex: 'TotalQuantity',
+}, {
+  title: '现在数量',
+  dataIndex: 'Quantity',
+}, {
+  title: '目前所在库位',
+  dataIndex: 'CurrentLocationNumber',
+}, {
+  title: '供应商',
+  dataIndex: 'SupplierName',
+}, {
+  title: '批次',
+  dataIndex: 'BatchNumber',
+}, {
+  title: '制造时间',
+  dataIndex: 'ManufacturingDateTime',
+}, {
+  title: '创建时间',
+  dataIndex: 'CreationDateTime',
+}, {
+  title: '创建人',
+  dataIndex: 'CreatorName',
+}, {
+  title: '操作',
+  key: (new Date()).valueOf(),
+  fixed: 'right',
+  width: 140,
+  render: (text, record) => (
+    <span>
+      <a onClick={() => console.log('chakan')} className="ant-dropdown-link">
+        查看
+      </a>
+    </span>
+  ),
+}]
+
+const wmsPackingFlag_MoveRecordColums = [{
+  title: 'Id',
+  dataIndex: 'Id',
+}, {
+  title: '容器UID',
+  dataIndex: 'ContainerNumber',
+}, {
+  title: '源库位',
+  dataIndex: 'SourceLocationNumber',
+}, {
+  title: '目的库位',
+  dataIndex: 'DestinationLocationNumber',
+}, {
+  title: '操作类型',
+  dataIndex: 'OperationFormTypeName',
+}, {
+  title: '操作时间',
+  dataIndex: 'OperationDateTime',
+}, {
+  title: '操作人员',
+  dataIndex: 'OperatorUserName',
+}, {
+  title: '表单号',
+  dataIndex: 'OperationFormNumber',
+}, {
+  title: '单据子项号',
+  dataIndex: 'OperationFormItemNumber',
+}, {
+  title: '操作',
+  key: (new Date()).valueOf(),
+  fixed: 'right',
+  width: 140,
+  render: (text, record) => (
+    <span>
+      <a onClick={() => console.log('chakan')} className="ant-dropdown-link">
+        查看
+      </a>
+    </span>
+  ),
+}]
+const wmsPackingFlag_ProductInfoColums = [{
+  title: 'Id',
+  dataIndex: 'Id',
+}, {
+  title: '产品序列号',
+  dataIndex: 'SerialNumber',
+}, {
+  title: '装箱时间',
+  dataIndex: 'PackingDateTime',
+}, {
+  title: '装箱人',
+  dataIndex: 'CreatorUesrName',
+}, {
+  title: '操作',
+  key: (new Date()).valueOf(),
+  fixed: 'right',
+  width: 140,
+  render: (text, record) => (
+    <span>
+      <a onClick={() => console.log('chakan')} className="ant-dropdown-link">
+        查看
+    </a>
+    </span>
+  ),
+}]
 export {
   //WMS系统
   wmsRawMaterialReceiptsColums,
   wmsRawMaterialReceipts_DetailsColums,
   wmsRawMaterialReceipts_Details_InfoColums,
-
+  //工单
   wmsWorkOrderColums,
   wmsWorkOrder_DetailsColums,
+  //容器信息
+  wmsContainerInfoColums,
+  wmsContainerInfo_MoveRecordColums,
+  //成品箱信息查询
+  wmsPackingFlagColums,
+  wmsPackingFlag_MoveRecordColums,
+  wmsPackingFlag_ProductInfoColums
 }
 
 
+// <a onClick={onClick('x')} className="ant-dropdown-link">
+// 查看
+// </a>

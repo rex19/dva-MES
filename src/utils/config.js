@@ -50,7 +50,8 @@ module.exports = {
     bomTable: `${APIV1}/BOM`,
     //sfwms
     rawMaterialReceiptsTable: `${APIV1}/MaterialReceiving`,
-
+    containerInfoTable: `${APIV1}/Container`,
+    packingFlagTable: `${APIV1}/Container`,
 
   },
   crudApi: {
