@@ -17,6 +17,7 @@ import { connect } from 'dva'
 import { WMSTableComponents } from '../../../components'
 import globalConfig from 'utils/config'
 import {
+  WmsRawMaterialReceiptsColumsComp,
   wmsRawMaterialReceiptsColums,
   wmsRawMaterialReceipts_DetailsColums,
   wmsRawMaterialReceipts_Details_InfoColums
@@ -27,7 +28,7 @@ import './index.less'
 
 //每个table可能不同的变量字段(1)
 const TableName = 'rawMaterialReceipts'
-const TableColumns = wmsRawMaterialReceiptsColums
+
 
 const RawMaterialReceiptsTableComponents = ({
   rawMaterialReceipts,
@@ -38,6 +39,17 @@ const RawMaterialReceiptsTableComponents = ({
   // const { list } = rawMaterialReceipts
   // const TableModelsData = rawMaterialReceipts
   // const { list } = TableModelsData
+  const handleChange = () => {
+    console.log('handleChange')
+  }
+
+  const TableColumns = () => {
+    return (
+      <WmsRawMaterialReceiptsColumsComp
+        handleChange={handleChange}
+      />
+    )
+  }
   const list = [{
     "Id": 5,
     "FormNumber": "FORM_MR000001",

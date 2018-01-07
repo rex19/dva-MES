@@ -7,12 +7,15 @@ import pathToRegexp from 'path-to-regexp'
 import { message } from 'antd'
 import { YQL, CORS } from './config'
 
+import Cookies from 'js-cookie'
+
 const fetch = (options) => {
   let {
     method = 'get',
     data,
     fetchType,
     url,
+    headers
   } = options
   // console.log('fetch', options)
   const cloneData = lodash.cloneDeep(data)
@@ -57,15 +60,17 @@ const fetch = (options) => {
     case 'get':
       return axios.get(url, {
         params: cloneData,
+        headers: headers
       })
     case 'delete':
       return axios.delete(url, {
         data: cloneData,
+        headers: headers
       })
     case 'post':
-      return axios.post(url, cloneData)
+      return axios.post(url, cloneData, { headers })
     case 'put':
-      return axios.put(url, cloneData)
+      return axios.put(url, cloneData, { headers })
     case 'patch':
       return axios.patch(url, cloneData)
     default:
@@ -74,27 +79,32 @@ const fetch = (options) => {
 }
 
 export default function request(options) {
-  // console.log('request (options) 1', options.url, options.url.indexOf('//'))
-  // console.log('request (options)2 ', options.url.split('//')[0], options.url.split('//')[1].split('/')[0])
-  // options.fetchType = 'CORS'
-  if (options.url && options.url.indexOf('//') > -1) {  //判断options参数是否
-    const origin = `${options.url.split('//')[0]}//${options.url.split('//')[1].split('/')[0]}`
-    // console.log("(options.url && options.url.indexOf('//') > -1", origin, options)
-    if (window.location.origin !== origin) {
-      if (CORS && CORS.indexOf(origin) > -1) {
-        console.log("cors", cors)
-        options.fetchType = 'CORS'
-      } else if (YQL && YQL.indexOf(origin) > -1) {
-        console.log("YQL", YQL)
-        options.fetchType = 'YQL'
-      } else {
-        console.log("JSONP", JSONP)
-        options.fetchType = 'JSONP'
-      }
+
+  // if (options.url && options.url.indexOf('//') > -1) {  //判断options参数是否有域名
+  //   const origin = `${options.url.split('//')[0]}//${options.url.split('//')[1].split('/')[0]}`
+  //   // console.log("(options.url && options.url.indexOf('//') > -1", origin, options)
+  //   if (window.location.origin !== origin) {
+  //     if (CORS && CORS.indexOf(origin) > -1) {
+  //       console.log("cors", cors)
+  //       options.fetchType = 'CORS'
+  //     } else if (YQL && YQL.indexOf(origin) > -1) {
+  //       console.log("YQL", YQL)
+  //       options.fetchType = 'YQL'
+  //     } else {
+  //       console.log("JSONP")
+  //       options.fetchType = 'JSONP'
+  //     }
+  //   }
+  // }
+  const tokenParams = Cookies.get('token')
+  const optionsParams = {
+    ...options,
+    headers: {
+      Authorization: tokenParams == null ? null : `bear ${tokenParams}`
     }
   }
+  return fetch(optionsParams).then((response) => {
 
-  return fetch(options).then((response) => {
     const { statusText, status } = response
     let data = options.fetchType === 'YQL' ? response.data.query.results.json : response.data
     if (data instanceof Array) {

@@ -1,5 +1,7 @@
 
-const APIV1 = '/api'
+const APIV1 = 'http://localhost:3009/api'
+// const APIV1 = 'http://dsm.smart-flow.cn:7002/sfmes/api'
+// const APIV1 = '/api'
 // const APIV3 = '/sfmeswms/api'
 // const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'

@@ -8,6 +8,7 @@ import { EnumRoleType } from 'enums'
 import { query, logout } from 'services/app'
 import * as menusService from 'services/menus'
 import queryString from 'query-string'
+import Cookies from 'js-cookie'
 
 const { prefix } = config
 
@@ -72,20 +73,30 @@ export default {
         const { permissions } = user
         let menu = list
         console.log('menus==1', menu)
-        if (permissions.role === EnumRoleType.ADMIN || permissions.role === EnumRoleType.DEVELOPER) {
-          console.log('menus==2', permissions)
-          permissions.visit = list.map(item => item.id)
-        } else {
-          menu = list.filter((item) => {
-            const cases = [
-              permissions.visit.includes(item.id),
-              item.mpid ? permissions.visit.includes(item.mpid) || item.mpid === '-1' : true,
-              item.bpid ? permissions.visit.includes(item.bpid) : true,
-            ]
-            return cases.every(_ => _)
-          })
-          console.log('menus==3', menu)
-        }
+        //update
+        menu = list.filter((item) => {
+          const cases = [
+            permissions.visit.includes(item.id),
+            item.mpid ? permissions.visit.includes(item.mpid) || item.mpid === '-1' : true,
+            item.bpid ? permissions.visit.includes(item.bpid) : true,
+          ]
+          return cases.every(_ => _)
+        })
+
+        // if (permissions.role === EnumRoleType.ADMIN || permissions.role === EnumRoleType.DEVELOPER) {
+        //   console.log('menus==2', permissions)
+        //   permissions.visit = list.map(item => item.id)
+        // } else {
+        //   menu = list.filter((item) => {
+        //     const cases = [
+        //       permissions.visit.includes(item.id),
+        //       item.mpid ? permissions.visit.includes(item.mpid) || item.mpid === '-1' : true,
+        //       item.bpid ? permissions.visit.includes(item.bpid) : true,
+        //     ]
+        //     return cases.every(_ => _)
+        //   })
+        //   console.log('menus==3', menu)
+        // }
         yield put({
           type: 'updateState',
           payload: {
@@ -96,7 +107,7 @@ export default {
         })
         if (location.pathname === '/login') {
           yield put(routerRedux.push({
-            pathname: '/dashboard',
+            pathname: '/welcome',
           }))
         }
       } else if (config.openPages && config.openPages.indexOf(locationPathname) < 0) {
@@ -112,12 +123,16 @@ export default {
     * logout({
       payload,
     }, { call, put }) {
-      const data = yield call(logout, parse(payload))   //call ajax=>  /api/v1/logout
-      if (data.success) {
-        yield put({ type: 'query' })
-      } else {
-        throw (data)
-      }
+      Cookies.remove('token');
+      yield put(routerRedux.push({
+        pathname: '/login',
+      }))
+      // const data = yield call(logout, parse(payload))   //call ajax=>  /api/v1/logout
+      // if (data.success) {
+      //   yield put({ type: 'query' })
+      // } else {
+      //   throw (data)
+      // }
     },
 
     * changeNavbar(action, { put, select }) {
