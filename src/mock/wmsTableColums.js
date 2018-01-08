@@ -1,39 +1,4 @@
 //wms
-const WmsRawMaterialReceiptsColumsComp = (props) => {
-  console.log('wmsRawMaterialReceiptsColumsComp', props)
-  return ([{
-    title: 'Id',
-    dataIndex: 'Id',
-  }, {
-    title: '单据号',
-    dataIndex: 'FormNumber',
-  }, {
-    title: '状态',
-    dataIndex: 'StateName',
-  }, {
-    title: '创建时间',
-    dataIndex: 'CreationDateTime',
-  }, {
-    title: '创建人',
-    dataIndex: 'CreatorUserName',
-  }, {
-    title: '采购单号',
-    dataIndex: 'PurchaseOrderNumber',
-  }, {
-    title: '操作',
-    key: (new Date()).valueOf(),
-    fixed: 'right',
-    width: 140,
-    render: (text, record) => (
-      <span>
-        <a onClick={props.handleChange} className="ant-dropdown-link">
-          查看
-          </a>
-      </span>
-    ),
-  }]
-  )
-}
 
 
 const wmsRawMaterialReceiptsColums = [{
@@ -428,7 +393,6 @@ const wmsPackingFlag_ProductInfoColums = [{
 }]
 export {
   //WMS系统
-  WmsRawMaterialReceiptsColumsComp,
   wmsRawMaterialReceiptsColums,
   wmsRawMaterialReceipts_DetailsColums,
   wmsRawMaterialReceipts_Details_InfoColums,

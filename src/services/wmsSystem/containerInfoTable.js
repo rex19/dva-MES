@@ -1,64 +1,38 @@
 import { request } from 'utils'
 import globalConfig from 'utils/config'
+import axios from 'axios'
+import qs from 'qs'
+
 //每个table可能不同的变量字段
 const tableName = globalConfig.api.containerInfoTable
 
+
+var options = {
+  method: 'GET',
+  url: 'http://192.168.1.252/sfmeswms/Api/Container/GetTByCondition',
+}
 //查询整表
-export async function query(params) {
-  return request({
-    url: `${tableName}/${globalConfig.crudApi.getTableInitData}`,
-    method: 'post',
-    data: params,
-  })
+export function query(params) {
+  console.log('query(params)', params)
+  axios({ options })
+    .then((response) => {
+      return response.data
+    }).then((responseData) => {
+      console.log('query', responseData)
+      return responseData
+    }).catch((error) => {
+      console.log(error)
+    })
 }
-//新增数据保存
-export async function create(params) {
-  return request({
-    url: `${tableName}/${globalConfig.crudApi.postAddData}`,
-    method: 'post',
-    data: params,
-  })
-}
-//删除数据
-export async function deleted(params) {
-  return request({
-    url: `${tableName}/${globalConfig.crudApi.postDeleteData}/${params}`,
-    method: 'delete',
-    data: params,
-  })
-}
-//修改数据
-export async function edit(params) {
-  return request({
-    url: `${tableName}/${globalConfig.crudApi.postEditData}`,
-    method: 'put',
-    data: params,
-  })
-}
-//获取新增Modal初始化数据
-export async function getAddModalData(params) {
-  return request({
-    url: `${tableName}/${globalConfig.crudApi.getAddModalInitData}`,
-    method: 'get',
-    data: params,
-  })
-}
-//获取修改Modal初始化数据
-export async function getEditModalData(params) {
-  return request({
-    url: `${tableName}/${globalConfig.crudApi.getEditModalInitData}/${params}`,
-    method: 'get',
-    data: params,
-  })
-}
-//获取详情Modal初始化数据
-export async function getDetailsModalData(params) {
-  return request({
-    url: `${tableName}/${globalConfig.crudApi.getDetailsModalInitData}/${params}`,
-    method: 'get',
-    data: params,
-  })
-}
+// export async function query(params) {
+//   return request({
+//     url: `${tableName}/${globalConfig.crudApi.getTableInitData}`,
+//     method: 'post',
+//     data: params,
+//   })
+// }
+
+
 //给数据加key
 export async function addKey(params) {
   for (let i = 0; i < params.length; i++) {
