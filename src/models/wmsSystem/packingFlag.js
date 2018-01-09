@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/wmsSystem/packingFlagTable'
+import { query, GetMovementRecordByContainer, GetPackingInformatioByContainer, addKey } from 'services/wmsSystem/packingFlagTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -10,7 +10,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'packingFlagTable'
+const TableName = 'packingFlag'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 
@@ -33,7 +33,9 @@ export default modelExtend(pageModel, {
     DetailsData: {},
     // list: []
     //每个table可能不同的变量字段
-
+    PackingFlagTableList: [],
+    PackingFlag_MoveRecordContainerInfoTableList: [],
+    PackingInformatioByContainerList: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -52,12 +54,14 @@ export default modelExtend(pageModel, {
     },
   },
 
+
   effects: {
     * query({
       payload,
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
+
       const data = yield call(query, payload)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
@@ -65,9 +69,10 @@ export default modelExtend(pageModel, {
       } else if (data.Status === 200) {
         const result = yield call(addKey, data.Data[QueryResponseDTO]) //+1
         yield put({
-          type: 'querySuccess',
+          type: 'querySuccessed',
           payload: {
-            list: result,
+            type: 'Init',
+            result: result,
             pagination: {
               PageIndex: Number(pagination.PageIndex) || 1,
               PageSize: Number(pagination.PageSize) || 10,
@@ -80,138 +85,88 @@ export default modelExtend(pageModel, {
         throw data
       }
     },
-    * create({
+
+    * GetMovementRecordByContainer({
       payload,
     }, { call, put, select }) {
-      const data = yield call(create, payload)
-      const pagination = yield select(state => state[TableName].pagination)
+
+      const data = yield call(GetMovementRecordByContainer, payload)
+      // const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
-        return errorMessage(data.ErrorMessage || '创建失败')
+        return errorMessage(data.ErrorMessage || '查询失败')
       } else if (data.Status === 200) {
-        yield put({ type: 'hideModal', payload: 'addModalVisible' })
+        const result = yield call(addKey, data.Data) //+1
+        console.log('result++', result)
         yield put({
-          type: 'query', payload: {
-            PageIndex: Number(pagination.PageIndex),
-            PageSize: Number(pagination.PageSize),
-            [QueryRequestDTO]: null
-          }
+          type: 'querySuccessed',
+          payload: {
+            type: 'GetMovementRecordByContainer',
+            PackingFlag_MoveRecordContainerInfoTableList: result,
+            // pagination: {
+            //   PageIndex: Number(pagination.PageIndex) || 1,
+            //   PageSize: Number(pagination.PageSize) || 10,
+            //   total: data.Data.RowCount,
+            // },
+          },
         })
-        return successMessage(data.ErrorMessage || '创建成功')
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else {
         throw data
       }
     },
-    * delete({
+
+    * GetPackingInformatioByContainer({
       payload,
     }, { call, put, select }) {
-      const data = yield call(deleted, payload.Id)
-      const pagination = yield select(state => state[TableName].pagination)
+
+      const data = yield call(GetPackingInformatioByContainer, payload)
+      // const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
-        return errorMessage(data.ErrorMessage || '删除失败')
+        return errorMessage(data.ErrorMessage || '查询失败')
       } else if (data.Status === 200) {
-        yield put({ type: 'hideModal', payload: 'deleteModalVisible' })
+        const result = yield call(addKey, data.Data) //+1
+
         yield put({
-          type: 'query', payload: {
-            PageIndex: Number(pagination.PageIndex),
-            PageSize: Number(pagination.PageSize),
-            [QueryRequestDTO]: null
-          }
+          type: 'querySuccessed',
+          payload: {
+            type: 'GetPackingInformatioByContainer',
+            PackingInformatioByContainerList: result,
+            // pagination: {
+            //   PageIndex: Number(pagination.PageIndex) || 1,
+            //   PageSize: Number(pagination.PageSize) || 10,
+            //   total: data.Data.RowCount,
+            // },
+          },
         })
-        return successMessage(data.ErrorMessage || '删除成功')
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else {
         throw data
-      }
-    },
-    * edit({
-      payload,
-    }, { call, put, select }) {
-      const data = yield call(edit, payload)
-      const pagination = yield select(state => state[TableName].pagination)
-      if (data.Status !== 200) {
-        return errorMessage(data.ErrorMessage || '编辑失败')
-      } if (data.Status === 200) {
-        yield put({ type: 'hideModal', payload: 'editModalVisible' })
-        yield put({
-          type: 'query', payload: {
-            PageIndex: Number(pagination.PageIndex),
-            PageSize: Number(pagination.PageSize),
-            [QueryRequestDTO]: null
-          }
-        })
-        return successMessage(data.ErrorMessage || '编辑成功')
-      } else {
-        throw data
-      }
-    },
-    * showModalAndAjax({
-      payload,
-    }, { call, put }) {
-      if (payload.modalType === 'editModalVisible') {
-        const data = yield call(getEditModalData, payload.record.Id)
-        if (data.Status === 200) {
-          yield put({ type: 'showModal', payload: payload })
-          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        } else {
-          throw data
-        }
-      } else if (payload.modalType === 'addModalVisible') {
-        const data = yield call(getAddModalData)
-        if (data.Status === 200) {
-          yield put({ type: 'showModal', payload: payload })
-          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        } else {
-          throw data
-        }
-      } else if (payload.modalType === 'detailsModalVisible') {
-        const data = yield call(getDetailsModalData, payload.record.Id)
-        if (data.Status === 200) {
-          yield put({ type: 'showModal', payload: payload })
-          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        } else {
-          throw data
-        }
       }
     },
   },
   reducers: {
-    //打开关闭Modals
-    showModal(state, { payload }) {
-      return { ...state, ...payload, [payload.modalType]: true }
-    },
-    hideModal(state, { payload }) {
-      return { ...state, ...payload, [payload]: false }
-    },
-    //Modals初始化数据   不同table可能需要修改的reducers函数
-    showModalData(state, { payload }) {
-      if (payload.modalType === 'editModalVisible') {
+    querySuccessed(state, { payload }) {
+      if (payload.type === 'Init') {
         return {
           ...state, ...payload,
-          MaterialType: eval(payload.data.MaterialType),
-          Unit: eval(payload.data.Unit),
-          ProcurementType: eval(payload.data.ProcurementType),
-          Location: eval(payload.data.Location),
-          MSL: eval(payload.data.MSL),
-          StationGroup: eval(payload.data.StationGroup),
-          Company: eval(payload.data.Company),
-          Factory: eval(payload.data.Factory),
-          EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto
+          PackingFlagTableList: payload.result,
+          PackingFlag_MoveRecordContainerInfoTableList: [],
+          PackingInformatioByContainerList: []
         }
-      } else if (payload.modalType === 'addModalVisible') {
+      } else if (payload.type === 'GetMovementRecordByContainer') {
         return {
           ...state, ...payload,
-          MaterialType: eval(payload.data.MaterialType),
-          Unit: eval(payload.data.Unit),
-          ProcurementType: eval(payload.data.ProcurementType),
-          Location: eval(payload.data.Location),
-          MSL: eval(payload.data.MSL),
-          StationGroup: eval(payload.data.StationGroup),
-          Company: eval(payload.data.Company),
-          Factory: eval(payload.data.Factory),
+          PackingFlag_MoveRecordContainerInfoTableList: payload.PackingFlag_MoveRecordContainerInfoTableList,
+
         }
-      } else if (payload.modalType === 'detailsModalVisible') {
-        return { ...state, ...payload, DetailsData: payload.data }
+      } else if (payload.type === 'GetPackingInformatioByContainer') {
+        return {
+          ...state, ...payload,
+          PackingInformatioByContainerList: payload.PackingInformatioByContainerList,
+        }
       }
     },
+
     //teble loading处理
     loadingChanger(state, { payload }) {
       if (payload === 'showLoading') {

@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, addKey } from 'services/wmsSystem/containerInfoTable'
+import { query, getContainerNumberRequestQuery, addKey } from 'services/wmsSystem/containerInfoTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -35,6 +35,9 @@ export default modelExtend(pageModel, {
     // list: []
     //每个table可能不同的变量字段
 
+    ContainerInfoTableList: [],
+    ContainerInfo_MoveRecordContainerInfoTableList: []
+
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -61,31 +64,67 @@ export default modelExtend(pageModel, {
       yield put({ type: 'tablePaginationChanger', payload: payload })
 
       const data = yield call(query, payload)
-      console.log(' data = yield call(query, payload)', data)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
       } else if (data.Status === 200) {
-        // const result = yield call(addKey, data.Data[QueryResponseDTO]) //+1
-        // yield put({
-        //   type: 'querySuccess',
-        //   payload: {
-        //     list: result,
-        //     pagination: {
-        //       PageIndex: Number(pagination.PageIndex) || 1,
-        //       PageSize: Number(pagination.PageSize) || 10,
-        //       total: data.Data.RowCount,
-        //     },
-        //   },
-        // })
-        // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+        const result = yield call(addKey, data.Data[QueryResponseDTO]) //+1
+        yield put({
+          type: 'querySuccessed',
+          payload: {
+            type: 'Init',
+            result: result,
+            pagination: {
+              PageIndex: Number(pagination.PageIndex) || 1,
+              PageSize: Number(pagination.PageSize) || 10,
+              total: data.Data.RowCount,
+            },
+          },
+        })
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+      } else {
+        throw data
+      }
+    },
+
+    * getContainerNumberRequest({
+      payload,
+    }, { call, put, select }) {
+
+      const data = yield call(getContainerNumberRequestQuery, payload)
+      // const pagination = yield select(state => state[TableName].pagination)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage || '查询失败')
+      } else if (data.Status === 200) {
+        const result = yield call(addKey, data.Data) //+1
+
+        yield put({
+          type: 'querySuccessed',
+          payload: {
+            type: 'getContainerNumberRequestQuery',
+            result: result,
+            // pagination: {
+            //   PageIndex: Number(pagination.PageIndex) || 1,
+            //   PageSize: Number(pagination.PageSize) || 10,
+            //   total: data.Data.RowCount,
+            // },
+          },
+        })
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else {
         throw data
       }
     },
   },
   reducers: {
+    querySuccessed(state, { payload }) {
+      if (payload.type === 'Init') {
+        return { ...state, ...payload, ContainerInfoTableList: payload.result }
+      } else if (payload.type === 'getContainerNumberRequestQuery') {
+        return { ...state, ...payload, ContainerInfo_MoveRecordContainerInfoTableList: payload.result }
+      }
 
+    },
 
     //teble loading处理
     loadingChanger(state, { payload }) {

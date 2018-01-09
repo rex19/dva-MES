@@ -1,11 +1,12 @@
 
-const APIV1 = 'http://localhost:3009/api'
+const APIV1 = 'http://192.168.1.127:3009/api'
 // const APIV1 = 'http://dsm.smart-flow.cn:7002/sfmes/api'
 // const APIV1 = '/api'
 // const APIV3 = '/sfmeswms/api'
 // const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
+const WMSAPI = 'http://192.168.1.127:3009/sfwms'
 
 module.exports = {
   name: 'SF-MES',
@@ -52,8 +53,8 @@ module.exports = {
     bomTable: `${APIV1}/BOM`,
     //sfwms
     rawMaterialReceiptsTable: `${APIV1}/MaterialReceiving`,
-    containerInfoTable: `${APIV1}/Container`,
-    packingFlagTable: `${APIV1}/Container`,
+    containerInfoTable: `${WMSAPI}/Container`,
+    packingFlagTable: `${WMSAPI}/PackingFlag`,
 
   },
   crudApi: {
@@ -65,6 +66,10 @@ module.exports = {
     getEditModalInitData: 'GetEditinitialize', //编辑Modals初始化数据api
     getDetailsModalInitData: 'GetTById', //详细信息Modals初始化数据api
     getTableInitData: 'GetTByCondition',//表格初始化数据api
+
+    //wms
+    GetMovementRecordByContainer: 'GetMovementRecordByContainer',
+    GetPackingInformatioByContainer: 'GetPackingInformatioByContainer'
   },
   table: {
     paginationConfig: {

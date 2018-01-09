@@ -7,30 +7,20 @@ import qs from 'qs'
 const tableName = globalConfig.api.containerInfoTable
 
 
-var options = {
-  method: 'GET',
-  url: 'http://192.168.1.252/sfmeswms/Api/Container/GetTByCondition',
+export async function query(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.getTableInitData}`,
+    method: 'post',
+    data: params,
+  })
 }
-//查询整表
-export function query(params) {
-  console.log('query(params)', params)
-  axios({ options })
-    .then((response) => {
-      return response.data
-    }).then((responseData) => {
-      console.log('query', responseData)
-      return responseData
-    }).catch((error) => {
-      console.log(error)
-    })
+
+export async function getContainerNumberRequestQuery(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetMovementRecordByContainer}`,
+    method: 'get'
+  })
 }
-// export async function query(params) {
-//   return request({
-//     url: `${tableName}/${globalConfig.crudApi.getTableInitData}`,
-//     method: 'post',
-//     data: params,
-//   })
-// }
 
 
 //给数据加key
