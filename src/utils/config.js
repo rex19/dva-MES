@@ -52,7 +52,7 @@ module.exports = {
     failureTypeTable: `${APIV1}/FailureType`,
     bomTable: `${APIV1}/BOM`,
     //sfwms
-    rawMaterialReceiptsTable: `${APIV1}/MaterialReceiving`,
+    rawMaterialReceiptsTable: `${WMSAPI}/MaterialReceiving`,
     containerInfoTable: `${WMSAPI}/Container`,
     packingFlagTable: `${WMSAPI}/PackingFlag`,
 
