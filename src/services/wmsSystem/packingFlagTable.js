@@ -16,7 +16,7 @@ export async function query(params) {
 export async function GetMovementRecordByContainer(params) {
   console.log('GetMovementRecordByContainer', params)
   return request({
-    url: `${tableName}/${globalConfig.crudApi.GetMovementRecordByContainer}?containerId=${params}`,
+    url: `${tableName}/${globalConfig.crudApi.GetMovementRecordByContainer}?containerId=${params.Id}`,
     method: 'get',
   })
 }
@@ -24,7 +24,7 @@ export async function GetMovementRecordByContainer(params) {
 //查询箱子产品
 export async function GetPackingInformatioByContainer(params) {
   return request({
-    url: `${tableName}/${globalConfig.crudApi.GetPackingInformatioByContainer}`,
+    url: `${tableName}/${globalConfig.crudApi.GetPackingInformatioByContainer}?containerId=${params.Id}`,
     method: 'get',
   })
 }

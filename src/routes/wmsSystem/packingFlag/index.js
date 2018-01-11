@@ -30,16 +30,19 @@ const PackingFlagTableComponents = ({
   console.log('PackingFlagTableComponents', packingFlag)
 
 
-  const getNumberRequest = (ContainerNumber, CustomerBoxNumber) => {
-    console.log('getNumberRequest', ContainerNumber, CustomerBoxNumber)
+  const getNumberRequest = (Id) => {
     dispatch({
       type: `${TableName}/GetMovementRecordByContainer`,
-      payload: ContainerNumber
+      payload: {
+        Id: Id,
+      },
     })
 
     dispatch({
       type: `${TableName}/GetPackingInformatioByContainer`,
-      payload: CustomerBoxNumber
+      payload: {
+        Id: Id,
+      },
     })
   }
 
@@ -53,11 +56,11 @@ const PackingFlagTableComponents = ({
   }, {
     title: '容器UID',
     dataIndex: 'ContainerNumber',
-    render: (text, record) => <a onClick={() => getNumberRequest(record.ContainerNumber, record.CustomerBoxNumber)}>{text}</a>,
+    render: (text, record) => <a onClick={() => getNumberRequest(record.ContainerId)}>{text}</a>,
   }, {
     title: '客户箱号',
     dataIndex: 'CustomerBoxNumber',
-    render: (text, record) => <a onClick={() => getNumberRequest(record.ContainerNumber, record.CustomerBoxNumber)}>{text}</a>,
+    render: (text, record) => <a onClick={() => getNumberRequest(record.ContainerId)}>{text}</a>,
   }, {
     title: '状态',
     dataIndex: 'StateName',
@@ -143,7 +146,7 @@ const PackingFlagTableComponents = ({
           tableName={TableName}
           data={PackingFlagTableList}
           columns={wmsPackingFlagColums}
-          TableWidth={1000}
+          TableWidth={1500}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -153,7 +156,7 @@ const PackingFlagTableComponents = ({
           tableName={TableName}
           data={PackingFlag_MoveRecordContainerInfoTableList}
           columns={wmsPackingFlag_MoveRecordColums}
-          TableWidth={1000}
+          TableWidth={1300}
         />
       </div>
       <div style={{ margin: '20px' }}></div>

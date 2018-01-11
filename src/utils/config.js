@@ -67,9 +67,13 @@ module.exports = {
     getDetailsModalInitData: 'GetTById', //详细信息Modals初始化数据api
     getTableInitData: 'GetTByCondition',//表格初始化数据api
 
-    //wms
+    //wms 容器
     GetMovementRecordByContainer: 'GetMovementRecordByContainer',
-    GetPackingInformatioByContainer: 'GetPackingInformatioByContainer'
+    GetPackingInformatioByContainer: 'GetPackingInformatioByContainer',
+
+    //  //wms 成品箱
+    //  GetMovementRecordByContainer: 'GetMovementRecordByContainer',
+    //  GetPackingInformatioByContainer: 'GetPackingInformatioByContainer'
   },
   table: {
     paginationConfig: {

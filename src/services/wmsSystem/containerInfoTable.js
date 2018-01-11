@@ -16,8 +16,9 @@ export async function query(params) {
 }
 
 export async function getContainerNumberRequestQuery(params) {
+
   return request({
-    url: `${tableName}/${globalConfig.crudApi.GetMovementRecordByContainer}`,
+    url: `${tableName}/${globalConfig.crudApi.GetMovementRecordByContainer}/?containerId=${params.Id}`,
     method: 'get'
   })
 }

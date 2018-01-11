@@ -120,7 +120,7 @@ const ContainerInfoTableComponents = ({
           tableName={TableName}
           data={ContainerInfoTableList}
           columns={wmsContainerInfoColums}
-          TableWidth={1000}
+          TableWidth={1600}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
