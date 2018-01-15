@@ -1,17 +1,16 @@
 import modelExtend from 'dva-model-extend'
-import { query, GetMaterialReceivingFormItemByFormIdForList, GetContainerGenerateRecordByFormItemNumberForList, addKey } from 'services/wmsSystem/rawMaterialReceiptsTable'
+import { query, GetProductionMaterialCollarOrder_DetailsRequest, GetProductionMaterialCollarOrder_Details_InfoTableList, addKey } from 'services/wmsSystem/productionMaterialCollarOrderTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
 import globalConfig from 'utils/config'
-
 /**
  * TableName 表名
  * QueryResponseDTO 查询结果DTO
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'rawMaterialReceipts'
+const TableName = 'productionMaterialCollarOrder'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 
@@ -34,10 +33,9 @@ export default modelExtend(pageModel, {
     DetailsData: {},
     // list: []
     //每个table可能不同的变量字段
-
-    rawMaterialReceiptsTableList: [],//原材料收货通知单
-    rawMaterialReceipts_DetailsTableList: [], //项目明细
-    rawMaterialReceipts_Details_InfoTableList: [] // 原材料已收货信息
+    ProductionMaterialCollarOrderTableList: [],
+    ProductionMaterialCollarOrder_DetailsTableList: [],
+    ProductionMaterialCollarOrder_Details_InfoTableList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -56,13 +54,13 @@ export default modelExtend(pageModel, {
     },
   },
 
+
   effects: {
     * query({
       payload,
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-
       const data = yield call(query, payload)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
@@ -87,21 +85,21 @@ export default modelExtend(pageModel, {
       }
     },
 
-    * GetMaterialReceivingFormItemByFormIdForList({
+    * GetProductionMaterialCollarOrder_DetailsTableList({
       payload,
     }, { call, put, select }) {
-
-      const data = yield call(GetMaterialReceivingFormItemByFormIdForList, payload)
+      const data = yield call(GetProductionMaterialCollarOrder_DetailsRequest, payload)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
       } else if (data.Status === 200) {
         const result = yield call(addKey, data.Data) //+1
+        console.log('result++', result)
         yield put({
           type: 'querySuccessed',
           payload: {
-            type: 'GetMaterialReceivingFormItemByFormIdForList',
-            rawMaterialReceipts_DetailsTableList: result,
+            type: 'ProductionMaterialCollarOrder_DetailsTableList',
+            ProductionMaterialCollarOrder_DetailsTableList: result,
             // pagination: {
             //   PageIndex: Number(pagination.PageIndex) || 1,
             //   PageSize: Number(pagination.PageSize) || 10,
@@ -115,11 +113,11 @@ export default modelExtend(pageModel, {
       }
     },
 
-    * GetContainerGenerateRecordByFormItemNumberForList({
+    * GetProductionMaterialCollarOrder_Details_InfoTableList({
       payload,
     }, { call, put, select }) {
 
-      const data = yield call(GetContainerGenerateRecordByFormItemNumberForList, payload)
+      const data = yield call(GetProductionMaterialCollarOrder_Details_InfoTableList, payload)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
@@ -129,8 +127,8 @@ export default modelExtend(pageModel, {
         yield put({
           type: 'querySuccessed',
           payload: {
-            type: 'GetContainerGenerateRecordByFormItemNumberForList',
-            rawMaterialReceipts_Details_InfoTableList: result,
+            type: 'ProductionMaterialCollarOrder_Details_InfoTableList',
+            ProductionMaterialCollarOrder_Details_InfoTableList: result,
             // pagination: {
             //   PageIndex: Number(pagination.PageIndex) || 1,
             //   PageSize: Number(pagination.PageSize) || 10,
@@ -149,16 +147,22 @@ export default modelExtend(pageModel, {
       if (payload.type === 'Init') {
         return {
           ...state, ...payload,
-          rawMaterialReceiptsTableList: payload.result,
-          rawMaterialReceipts_DetailsTableList: [],
-          rawMaterialReceipts_Details_InfoTableList: []
+          ProductionMaterialCollarOrderTableList: payload.result,
+          ProductionMaterialCollarOrder_DetailsTableList: [],
+          ProductionMaterialCollarOrder_Details_InfoTableList: []
         }
-      } else if (payload.type === 'GetMaterialReceivingFormItemByFormIdForList') {
-        return { ...state, ...payload, rawMaterialReceipts_DetailsTableList: payload.rawMaterialReceipts_DetailsTableList }
-      } else if (payload.type === 'GetContainerGenerateRecordByFormItemNumberForList') {
-        return { ...state, ...payload, rawMaterialReceipts_Details_InfoTableList: payload.rawMaterialReceipts_Details_InfoTableList }
-      }
+      } else if (payload.type === 'ProductionMaterialCollarOrder_DetailsTableList') {
+        return {
+          ...state, ...payload,
+          ProductionMaterialCollarOrder_DetailsTableList: payload.ProductionMaterialCollarOrder_DetailsTableList,
 
+        }
+      } else if (payload.type === 'ProductionMaterialCollarOrder_Details_InfoTableList') {
+        return {
+          ...state, ...payload,
+          ProductionMaterialCollarOrder_Details_InfoTableList: payload.ProductionMaterialCollarOrder_Details_InfoTableList,
+        }
+      }
     },
 
     //teble loading处理

@@ -134,6 +134,14 @@ const Routers = function ({ history, app }) {
       path: '/wmsSystem/packingFlag',
       models: () => [import('./models/wmsSystem/packingFlag')],
       component: () => import('./routes/wmsSystem/packingFlag/'),
+    }, {
+      path: '/wmsSystem/productDeliveryRequest',
+      models: () => [import('./models/wmsSystem/productDeliveryRequest')],
+      component: () => import('./routes/wmsSystem/productDeliveryRequest/'),
+    }, {
+      path: '/wmsSystem/productionMaterialCollarOrder',
+      models: () => [import('./models/wmsSystem/productionMaterialCollarOrder')],
+      component: () => import('./routes/wmsSystem/productionMaterialCollarOrder/'),
     }
   ]
 

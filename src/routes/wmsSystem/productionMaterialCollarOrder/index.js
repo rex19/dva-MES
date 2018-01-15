@@ -1,46 +1,34 @@
-// import React from 'react'
-// import { Icon } from 'antd'
-// import styles from './index.less'
-
-// const Error = () => (<div className="content-inner">
-//   <div className={styles.error}>
-//     <h1>原材料收货单 rawMaterialReceipts</h1>
-//   </div>
-// </div>)
-
-// export default Error
-
 
 import React from 'react'
 import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { WMSTableComponents } from '../../../components'
 import globalConfig from 'utils/config'
-import {
-  wmsRawMaterialReceiptsColums,
-  wmsRawMaterialReceipts_DetailsColums,
-  wmsRawMaterialReceipts_Details_InfoColums
-} from '../../../mock/wmsTableColums'
+// import {
+//   wmsProductionMaterialCollarOrderColums,
+//   wmsProductionMaterialCollarOrder_DetailsColums,
+//   wmsProductionMaterialCollarOrder_Details_InfoColums
+// } from '../../../mock/wmsTableColums'
 import moment from 'moment';
 import './index.less'
 
 
 //每个table可能不同的变量字段(1)
-const TableName = 'rawMaterialReceipts'
-const TableColumns = wmsRawMaterialReceiptsColums
+const TableName = 'productionMaterialCollarOrder'
+// const TableColumns = wmsProductionMaterialCollarOrderColums
 
-const RawMaterialReceiptsTableComponents = ({
-  rawMaterialReceipts,
+const ProductionMaterialCollarOrderTableComponents = ({
+  productionMaterialCollarOrder,
   dispatch,
   location,
   form
 }) => {
   const {
-    rawMaterialReceiptsTableList,
-    rawMaterialReceipts_DetailsTableList,
-    rawMaterialReceipts_Details_InfoTableList
-  } = rawMaterialReceipts
-  console.log('RawMaterialReceiptsTableComponents', rawMaterialReceipts)
+    ProductionMaterialCollarOrderTableList,
+    ProductionMaterialCollarOrder_DetailsTableList,
+    ProductionMaterialCollarOrder_Details_InfoTableList
+  } = productionMaterialCollarOrder
+  console.log('ProductionMaterialCollarOrderTableComponents', productionMaterialCollarOrder)
 
 
   const handleChange = () => {
@@ -49,22 +37,22 @@ const RawMaterialReceiptsTableComponents = ({
   const handleClickSearch = (Id) => {
     console.log('handleClickSearch', Id)
     dispatch({
-      type: `${TableName}/GetMaterialReceivingFormItemByFormIdForList`,
+      type: `${TableName}/GetProductionMaterialCollarOrder_DetailsTableList`,
       payload: {
         Id: Id,
       },
     })
   }
-  const getReceivingQuantityRequest = (MaterialReceivingFormId, ItemNumber) => {
+  const getScannedQuantityRequest = (WMSFormId, ItemNumber) => {
     dispatch({
-      type: `${TableName}/GetContainerGenerateRecordByFormItemNumberForList`,
+      type: `${TableName}/GetProductionMaterialCollarOrder_Details_InfoTableList`,
       payload: {
-        MaterialReceivingFormId: MaterialReceivingFormId,
+        WMSFormId: WMSFormId,
         ItemNumber: ItemNumber
       },
     })
   }
-  const wmsRawMaterialReceiptsColums = [{
+  const wmsProductionMaterialCollarOrderColums = [{
     title: 'Id',
     dataIndex: 'Id',
   }, {
@@ -80,8 +68,8 @@ const RawMaterialReceiptsTableComponents = ({
     title: '创建人',
     dataIndex: 'CreatorUserName',
   }, {
-    title: '采购单号',
-    dataIndex: 'PurchaseOrderNumber',
+    title: '工单号',
+    dataIndex: 'WorkOrderNumber',
   }, {
     title: '操作',
     key: (new Date()).valueOf(),
@@ -95,7 +83,7 @@ const RawMaterialReceiptsTableComponents = ({
       </span>
     ),
   }]
-  const wmsRawMaterialReceipts_DetailsColums = [{
+  const wmsProductionMaterialCollarOrder_DetailsColums = [{
     title: '项目号',
     dataIndex: 'ItemNumber',
   }, {
@@ -105,36 +93,18 @@ const RawMaterialReceiptsTableComponents = ({
     title: '料号',
     dataIndex: 'MaterialNumber',
   }, {
-    title: '供应商',
-    dataIndex: 'SupplierName',
+    title: '需求数量',
+    dataIndex: 'RequestQuantity',
   }, {
-    title: '批次号',
-    dataIndex: 'BatchNumber',
+    title: '实际领料数量',
+    dataIndex: 'ScannedQuantity',
+    render: (text, record) => <a onClick={() => getScannedQuantityRequest(record.WMSFormId, record.ItemNumber)}>{text}</a>,
   }, {
-    title: '单位',
-    dataIndex: 'UnitName',
-  }, {
-    title: '需要数量',
-    dataIndex: 'Quantity',
-  }, {
-    title: '实际收货数量',
-    dataIndex: 'ReceivingQuantity',
-    render: (text, record) => <a onClick={() => getReceivingQuantityRequest(record.MaterialReceivingFormId, record.ItemNumber)}>{text}</a>,
-  }, {
-    title: '收获库位',
-    dataIndex: 'ReceivingLocationNumber',
-  }, {
-    title: '收货人',
-    dataIndex: 'ReceiverUserName',
-  }, {
-    title: '制造时间',
-    dataIndex: 'ManufacturingDateTime',
-  }, {
-    title: '过期时间',
-    dataIndex: 'ExpireDateTime',
+    title: '领用库位',
+    dataIndex: 'RequestLocationNumber',
   }]
 
-  const wmsRawMaterialReceipts_Details_InfoColums = [{
+  const wmsProductionMaterialCollarOrder_Details_InfoColums = [{
     title: 'Id',
     dataIndex: 'Id',
   }, {
@@ -165,8 +135,8 @@ const RawMaterialReceiptsTableComponents = ({
       <div>
         <WMSTableComponents
           tableName={TableName}
-          data={rawMaterialReceiptsTableList}
-          columns={wmsRawMaterialReceiptsColums}
+          data={ProductionMaterialCollarOrderTableList}
+          columns={wmsProductionMaterialCollarOrderColums}
           TableWidth={1000}
         />
       </div>
@@ -175,8 +145,8 @@ const RawMaterialReceiptsTableComponents = ({
       <div>
         <WMSTableComponents
           tableName={TableName}
-          data={rawMaterialReceipts_DetailsTableList}
-          columns={wmsRawMaterialReceipts_DetailsColums}
+          data={ProductionMaterialCollarOrder_DetailsTableList}
+          columns={wmsProductionMaterialCollarOrder_DetailsColums}
           TableWidth={1000}
         />
       </div>
@@ -184,8 +154,8 @@ const RawMaterialReceiptsTableComponents = ({
       <div>
         <WMSTableComponents
           tableName={TableName}
-          data={rawMaterialReceipts_Details_InfoTableList}
-          columns={wmsRawMaterialReceipts_Details_InfoColums}
+          data={ProductionMaterialCollarOrder_Details_InfoTableList}
+          columns={wmsProductionMaterialCollarOrder_Details_InfoColums}
           TableWidth={1000}
         />
       </div>
@@ -194,5 +164,5 @@ const RawMaterialReceiptsTableComponents = ({
 }
 
 
-export default connect(({ rawMaterialReceipts }) => ({ rawMaterialReceipts }))(RawMaterialReceiptsTableComponents)
+export default connect(({ productionMaterialCollarOrder }) => ({ productionMaterialCollarOrder }))(ProductionMaterialCollarOrderTableComponents)
 

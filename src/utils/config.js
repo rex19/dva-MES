@@ -1,15 +1,20 @@
 
-const APIV1 = 'http://192.168.1.127:3009/api'
+
 // const APIV1 = 'http://dsm.smart-flow.cn:7002/sfmes/api'
 // const APIV1 = '/api'
 // const APIV3 = '/sfmeswms/api'
 // const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
-const WMSAPI = 'http://192.168.1.127:3009/sfwms'
+
+// const APIV1 = 'http://192.168.1.230:3009/api'
+// const WMSAPI = 'http://192.168.1.230:3009/sfwms'
+
+const APIV1 = 'http://localhost:3009/api'
+const WMSAPI = 'http://localhost:3009/sfwms'
 
 module.exports = {
-  name: 'SF-MES',
+  name: 'SF System',
   title: '翊流智能',
   prefix: 'smartflow',
   footerText: '翊流智能 copyright © 2017',
@@ -52,9 +57,16 @@ module.exports = {
     failureTypeTable: `${APIV1}/FailureType`,
     bomTable: `${APIV1}/BOM`,
     //sfwms
-    rawMaterialReceiptsTable: `${WMSAPI}/MaterialReceiving`,
-    containerInfoTable: `${WMSAPI}/Container`,
-    packingFlagTable: `${WMSAPI}/PackingFlag`,
+    rawMaterialReceiptsTable: `${WMSAPI}/MaterialReceiving`,//原材料收货单
+    containerInfoTable: `${WMSAPI}/Container`,//容器信息
+    packingFlagTable: `${WMSAPI}/PackingFlag`,//成品箱信息查询
+    productDeliveryRequestTable: `${WMSAPI}/ProductDeliveryRequest`, //销售出库单
+
+    productionMaterialCollarOrderTable: `${WMSAPI}/ProductionMaterialCollarOrder`,  //生产物料领用单
+    retreatingRecordsOfProductionMaterialsTable: `${WMSAPI}/RetreatingRecordsOfProductionMaterials`,//生产物料退料记录
+    putStorageOfFinishedProductTable: `${WMSAPI}/PutStorageOfFinishedProduct`,//成品入库单
+
+
 
   },
   crudApi: {
@@ -70,10 +82,23 @@ module.exports = {
     //wms 容器
     GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     GetPackingInformatioByContainer: 'GetPackingInformatioByContainer',
-
+    //销售发货单
+    GetProductDeliveryRequestFormItemByFormIdForList: 'GetProductDeliveryRequestFormItemByFormIdForListUrl',
+    GetMovementRecordProductDeliveryRequestByWMSFormId: 'GetMovementRecordProductDeliveryRequestByWMSFormIdUrl',
     //  //wms 成品箱
     //  GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     //  GetPackingInformatioByContainer: 'GetPackingInformatioByContainer'
+
+    //原材料收货单
+    GetMaterialReceivingFormItemByFormIdForList: 'GetMaterialReceivingFormItemByFormIdForList',
+    GetContainerGenerateRecordByFormItemNumberForList: 'GetContainerGenerateRecordByFormItemNumberForList',
+
+    //生产物料领用单
+    GetMaterialPickingFormItemByFormId: 'GetMaterialPickingFormItemByFormIdForList',
+    GetMovementRecordMaterialPickingByWMSFormId: 'GetMovementRecordMaterialPickingByWMSFormId',
+    //生产物料退料记录
+    //成品入库单
+
   },
   table: {
     paginationConfig: {
