@@ -1,177 +1,38 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Switch, Route, Redirect, routerRedux } from 'dva/router'
-import dynamic from 'dva/dynamic'
-import App from 'routes/app'
 
-const { ConnectedRouter } = routerRedux
+import React from 'react';
+import { Route, IndexRoute } from 'react-router';
 
-const Routers = function ({ history, app }) {
-  const error = dynamic({
-    app,
-    component: () => import('./routes/error'),
-  })
-  const routes = [
-    {
-      path: '/dashboard',
-      models: () => [import('./models/dashboard')],
-      component: () => import('./routes/dashboard/'),
-    }, {
-      path: '/welcome',
-      // models: () => [import('./models/user')],
-      component: () => import('./routes/welcome/'),
-    }, {
-      path: '/masterdata/stationTable',
-      models: () => [import('./models/stationTable')],
-      component: () => import('./routes/stationTable/'),
-    }, {
-      path: '/masterdata/stationGroupTable',
-      models: () => [import('./models/stationGroupTable')],
-      component: () => import('./routes/stationGroupTable/'),
-    }, {
-      path: '/masterdata/lineTable',
-      models: () => [import('./models/lineTable')],
-      component: () => import('./routes/lineTable/'),
-    }, {
-      path: '/masterdata/staffTable',
-      models: () => [import('./models/staffTable')],
-      component: () => import('./routes/staffTable/'),
-    }, {
-      path: '/masterdata/roleTable',
-      models: () => [import('./models/roleTable')],
-      component: () => import('./routes/roleTable/'),
-    }, {
-      path: '/masterdata/materielTable',
-      models: () => [import('./models/materielTable')],
-      component: () => import('./routes/materielTable/'),
-    }, {
-      path: '/masterdata/processTable',
-      models: () => [import('./models/processTable')],
-      component: () => import('./routes/processTable/'),
-    }, {
-      path: '/masterdata/regionTable',
-      models: () => [import('./models/regionTable')],
-      component: () => import('./routes/regionTable/'),
-    }, {
-      path: '/masterdata/supplierTable',
-      models: () => [import('./models/supplierTable')],
-      component: () => import('./routes/supplierTable/'),
-    }, {
-      path: '/masterdata/customerTable',
-      models: () => [import('./models/customerTable')],
-      component: () => import('./routes/customerTable/'),
-    }, {
-      path: '/masterdata/locationTable',
-      models: () => [import('./models/locationTable')],
-      component: () => import('./routes/locationTable/'),
-    }, {
-      path: '/masterdata/failureTypeTable',
-      models: () => [import('./models/regionTable')],
-      component: () => import('./routes/regionTable/'),
-    }, {
-      path: '/masterdata/bomTable',
-      models: () => [import('./models/bomTable')],
-      component: () => import('./routes/bomTable/'),
-    }, {
-      path: '/permissionManagement',
-      // models: () => [import('./models/user')],
-      component: () => import('./routes/permissionManagement/'),
-    }, {
-      path: '/user/:id',
-      models: () => [import('./models/user/detail')],
-      component: () => import('./routes/user/detail/'),
-    }, {
-      path: '/login',
-      models: () => [import('./models/login')],
-      component: () => import('./routes/login/'),
-    }, {
-      path: '/request',
-      component: () => import('./routes/request/'),
-    }, {
-      path: '/UIElement/iconfont',
-      component: () => import('./routes/UIElement/iconfont/'),
-    }, {
-      path: '/UIElement/search',
-      component: () => import('./routes/UIElement/search/'),
-    }, {
-      path: '/UIElement/dropOption',
-      component: () => import('./routes/UIElement/dropOption/'),
-    }, {
-      path: '/UIElement/layer',
-      component: () => import('./routes/UIElement/layer/'),
-    }, {
-      path: '/UIElement/dataTable',
-      component: () => import('./routes/UIElement/dataTable/'),
-    }, {
-      path: '/UIElement/editor',
-      component: () => import('./routes/UIElement/editor/'),
-    }, {
-      path: '/chart/lineChart',
-      component: () => import('./routes/chart/lineChart/'),
-    }, {
-      path: '/chart/barChart',
-      component: () => import('./routes/chart/barChart/'),
-    }, {
-      path: '/chart/areaChart',
-      component: () => import('./routes/chart/areaChart/'),
-    }, {
-      path: '/post',
-      models: () => [import('./models/post')],
-      component: () => import('./routes/post/'),
-    }, {
-      path: '/wmsSystem/rawMaterialReceipts',
-      models: () => [import('./models/wmsSystem/rawMaterialReceipts')],
-      component: () => import('./routes/wmsSystem/rawMaterialReceipts/'),
-    }, {
-      path: '/wmsSystem/workOrder',
-      models: () => [import('./models/wmsSystem/workOrder')],
-      component: () => import('./routes/wmsSystem/workOrder/'),
-    }, {
-      path: '/wmsSystem/containerInfo',
-      models: () => [import('./models/wmsSystem/containerInfo')],
-      component: () => import('./routes/wmsSystem/containerInfo/'),
-    }, {
-      path: '/wmsSystem/packingFlag',
-      models: () => [import('./models/wmsSystem/packingFlag')],
-      component: () => import('./routes/wmsSystem/packingFlag/'),
-    }, {
-      path: '/wmsSystem/productDeliveryRequest',
-      models: () => [import('./models/wmsSystem/productDeliveryRequest')],
-      component: () => import('./routes/wmsSystem/productDeliveryRequest/'),
-    }, {
-      path: '/wmsSystem/productionMaterialCollarOrder',
-      models: () => [import('./models/wmsSystem/productionMaterialCollarOrder')],
-      component: () => import('./routes/wmsSystem/productionMaterialCollarOrder/'),
-    }
-  ]
+import App from './containers/app/index';
+import './utils/index.js';  // 引入各种prototype辅助方法
+// import Login from './containers/login/index';
+import TableComponents from './containers/tableComponents/index';
+import Test from './containers/test/index';
+import Welcome from './containers/welcome/index';
+import NotFoundPage from './containers/notFoundPage/index';
 
-  return (
-    <ConnectedRouter history={history}>
-      <App>
-        <Switch>
-          <Route exact path="/" render={() => (<Redirect to="/welcome" />)} />
-          {
-            routes.map(({ path, ...dynamics }, key) => (
-              <Route key={key}
-                exact
-                path={path}
-                component={dynamic({
-                  app,
-                  ...dynamics,
-                })}
-              />
-            ))
-          }
-          <Route component={error} />
-        </Switch>
-      </App>
-    </ConnectedRouter>
-  )
-}
+// 将DBTable组件做成动态路由, 减小bundle size
+// 注意不要再import DBTable了, 不然就没意义了
+// 一些比较大/不常用的组件, 都可以考虑做成动态路由
+// const DBTableContainer = (location, cb) => {
+//   require.ensure([], require => {
+//     cb(null, require('./components/DBTable').default)
+//   }, 'DBTable');
+// };
 
-Routers.propTypes = {
-  history: PropTypes.object,
-  app: PropTypes.object,
-}
+export default (
+  <Route path="/" component={App}>
+    <IndexRoute component={Welcome} />
+    <Route path="welcome" component={Welcome} />
 
-export default Routers
+    <Route path="tableComponents" component={TableComponents} />
+    <Route path="test" component={Test} />
+    <Route path="*" component={NotFoundPage} />
+
+  </Route>
+)
+
+// <Route path="index">
+// <Route path="option1" tableName="test" getComponent={DBTableContainer} />
+// <Route path="option2" tableName="testSms" getComponent={DBTableContainer} />
+// <Route path="option3" tableName="testAction" getComponent={DBTableContainer} />
+// </Route>
