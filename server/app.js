@@ -9,7 +9,9 @@ var cors = require('cors');  //cors
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var newProject = require('./routes/newProject');
+var sfmes = require('./routes/sfmes');
+var sfwms = require('./routes/sfwms');
+var sfmeswms = require('./routes/sfmeswms');
 var api = require('./routes/api');
 
 var app = express();
@@ -28,16 +30,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  // res.header('Access-Control-Allow-Credentials', 'true');
-  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  // res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type , Authorization');
+  // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
 // app.use(cors());
 app.use('/', index);
 app.use('/users', users);
-app.use('/newProject', newProject);
+app.use('/sfmes', sfmes);
+app.use('/sfwms', sfwms);
+app.use('/sfmeswms', sfmeswms);
 app.use('/api', api);
 
 // catch 404 and forward to error handler

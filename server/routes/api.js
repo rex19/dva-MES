@@ -1,7 +1,11 @@
 const qs = require('qs')
 var express = require('express');
 var router = express.Router();
-
+var axios = require('axios')
+const querystring = require('querystring')
+var globalConfig = require('../utils/config.js');
+const tokenUrl = globalConfig.tokenUrl
+// var qs = require('qs')
 
 // SF-MES
 const EnumRoleType = {
@@ -41,60 +45,78 @@ const adminUsers = [
   },
 ]
 
-router.get('/v1/user', function (req, res, next) {
-  const cookie = req.headers.cookie || ''
-  const cookies = qs.parse(cookie.replace(/\s/g, ''), { delimiter: ';' })
-  const response = {}
-  const user = {}
-  if (!cookies.token) {
+router.get('/user', function (req, res, next) {
+  console.log('/user----', req.headers.authorization, typeof req.headers.authorization)
+  const authorization = req.headers.authorization
+  if (authorization == 'null') {
     res.status(200).send({ message: 'Not Login' })
     return
+  } else {
+    res.json({
+      success: true,
+      user: {
+        permissions:
+        {
+          visit: ["1", "2", "21", "23", "24", "25", "26", "27", "28"],//, "24", "25"
+          // visit: ["1", "2", "23",],
+          role: "guest"
+        },
+        username: "guest",
+      }
+    })
   }
-  const token = JSON.parse(cookies.token)
-  if (token) {
-    response.success = token.deadline > new Date().getTime()
-  }
-  if (response.success) {
-    const userItem = adminUsers.filter(_ => _.id === token.id)
-    if (userItem.length > 0) {
-      user.permissions = userItem[0].permissions
-      user.username = userItem[0].username
-      user.id = userItem[0].id
-    }
-  }
-  response.user = user
-  res.json(response)
 });
 
-router.post('/v1/user/login', function (req, res, next) {
+router.post('/user/login', function (req, res, next) {
+  console.log('/user/login', req.body)
+  console.log(res.headers);
   // res.header('Set-Cookie', 'token=%7B%22id%22%3A1%2C%22deadline%22%3A1510583603214%7D; Max-Age=900; Path=/; Expires=Sun, 12 Nov 2017 14:48:23 GMT; HttpOnly');
   // res.send({ "success": true, "message": "Ok", statusCode: 200, "other": "ok" });
   const { username, password } = req.body
-  const user = adminUsers.filter(item => item.username === username)
+  // const user = adminUsers.filter(item => item.username === username)
 
-  if (user.length > 0 && user[0].password === password) {
-    const now = new Date()
-    now.setDate(now.getDate() + 1)
-    res.cookie('token', JSON.stringify({ id: user[0].id, deadline: now.getTime() }), {
-      maxAge: 900000,
-      httpOnly: true,
-    })
-    res.json({ success: true, message: 'Ok', Other: 'rex' })
-  } else {
-    res.status(400).end()
+  // if (user.length > 0 && user[0].password === password) {
+
+  //   const now = new Date()
+  //   now.setDate(now.getDate() + 1)
+  // res.cookie('token', JSON.stringify({ id: user[0].id, deadline: now.getTime() }), {
+  //   maxAge: 900000,
+  //   httpOnly: true,
+  // })
+  var options = {
+    method: 'POST',
+    url: tokenUrl,
+    headers:
+    {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: querystring.stringify({ grant_type: 'password', UserName: username, password: password })
   }
+
+  axios(options)
+    .then((response) => {
+      return response.data
+    }).then((responseData) => {
+      res.json({
+        success: true,
+        token: responseData,
+        message: 'Ok',
+        Other: 'rex'
+      })
+    }).catch((error) => {
+      console.log(error)
+    })
 });
 
-router.get('/v1/user/logout', function (req, res, next) {
+router.get('/user/logout', function (req, res, next) {
   res.clearCookie('token')
   res.status(200).end()
 });
 
-router.get('/v1/menus', function (req, res, next) {
-  console.log('menus', )
+router.get('/menus', function (req, res, next) {
   res.send(
     [{
-      "id": "1", "icon": "laptop", "name": "欢迎", "route": "/welcome"
+      "id": "1", "bpid": null, "mpid": null, "icon": "laptop", "name": "欢迎", "route": "/welcome"
     }, {
       "id": "8", "name": "主数据管理", "icon": "database"
     }, {
@@ -106,7 +128,39 @@ router.get('/v1/menus', function (req, res, next) {
     }, {
       "id": "84", "bpid": "8", "mpid": "8", "name": "人员", "icon": "user", "route": "/masterdata/staffTable"
     }, {
-      "id": "85", "bpid": "8", "mpid": "8", "name": "角色", "icon": "role", "route": "/masterdata/roleTable"
+      "id": "85", "bpid": "8", "mpid": "8", "name": "角色", "icon": "user", "route": "/masterdata/roleTable"
+    }, {
+      "id": "86", "bpid": "8", "mpid": "8", "name": "物料", "icon": "user", "route": "/masterdata/materielTable"
+    }, {
+      "id": "87", "bpid": "8", "mpid": "8", "name": "工艺", "icon": "user", "route": "/masterdata/processTable"
+    }, {
+      "id": "88", "bpid": "8", "mpid": "8", "name": "区域", "icon": "user", "route": "/masterdata/regionTable"
+    }, {
+      "id": "89", "bpid": "8", "mpid": "8", "name": "库位", "icon": "user", "route": "/masterdata/locationTable"
+    }, {
+      "id": "90", "bpid": "8", "mpid": "8", "name": "客户信息", "icon": "user", "route": "/masterdata/customerTable"
+    }, {
+      "id": "91", "bpid": "8", "mpid": "8", "name": "供应商信息", "icon": "user", "route": "/masterdata/supplierTable"
+    }, {
+      "id": "93", "bpid": "8", "mpid": "8", "name": "BOM", "icon": "user", "route": "/masterdata/bomTable"
+    }, {
+      "id": "2", "name": "WMS系统", "icon": "code-o"
+    }, {
+      "id": "21", "bpid": "2", "mpid": "2", "name": "原材料收货单", "icon": "user", "route": "/wmsSystem/rawMaterialReceipts"
+    }, {
+      "id": "22", "bpid": "2", "mpid": "2", "name": "工单", "icon": "user", "route": "/wmsSystem/workOrder"
+    }, {
+      "id": "23", "bpid": "2", "mpid": "2", "name": "容器信息查询", "icon": "user", "route": "/wmsSystem/containerInfo"
+    }, {
+      "id": "24", "bpid": "2", "mpid": "2", "name": "成品箱信息查询", "icon": "user", "route": "/wmsSystem/packingFlag"
+    }, {
+      "id": "25", "bpid": "2", "mpid": "2", "name": "销售出库单", "icon": "user", "route": "/wmsSystem/productDeliveryRequest"
+    }, {
+      "id": "26", "bpid": "2", "mpid": "2", "name": "生产物料领用单", "icon": "user", "route": "/wmsSystem/productionMaterialCollarOrder"
+    }, {
+      "id": "27", "bpid": "2", "mpid": "2", "name": "生产物料退料记录", "icon": "user", "route": "/wmsSystem/retreatingRecordsOfProductionMaterials"
+    }, {
+      "id": "28", "bpid": "2", "mpid": "2", "name": "成品入库单", "icon": "user", "route": "/wmsSystem/putStorageOfFinishedProduct"
     }, {
       "id": "5", "name": "报表", "icon": "code-o"
     }, {
@@ -115,8 +169,6 @@ router.get('/v1/menus', function (req, res, next) {
       "id": "52", "bpid": "5", "mpid": "5", "name": "barChart", "icon": "bar-chart", "route": "/chart/barChart"
     }, {
       "id": "53", "bpid": "5", "mpid": "5", "name": "areaChart", "icon": "area-chart", "route": "/chart/areaChart"
-    }, {
-      "id": "2", "bpid": "1", "name": "工作站", "icon": "user", "route": "/masterdata/stationTable"
     }, {
       "id": "7", "bpid": "1", "name": "权限管理", "icon": "shopping-cart", "route": "/permissionManagement"
     }, {
@@ -149,8 +201,8 @@ router.get('/v1/menus', function (req, res, next) {
       "id": "622", "bpid": "62", "mpid": "62", "name": "21welcome", "route": "/welcome"
     }]);
 });
-router.post('/v1/stationTable', function (req, res, next) {
-  console.log('stationTable', req.body)
+router.post('/Station', function (req, res, next) {
+  console.log('Station', req.body)
   res.send({
     "success": true,
     "data": [{
@@ -179,7 +231,7 @@ router.post('/v1/stationTable', function (req, res, next) {
 });
 
 //staffTable
-router.post('/v1/staffTable', function (req, res, next) {
+router.post('/Staff/GetTByCondition', function (req, res, next) {
   console.log('staffTable', req.body)
   res.send({
     "Status": 200,
@@ -201,7 +253,7 @@ router.post('/v1/staffTable', function (req, res, next) {
   })
 });
 
-router.post('/v1/staffTable/create', function (req, res, next) {
+router.post('/Staff/Post', function (req, res, next) {
   console.log('staffTable/create', req.body)
   res.send({
     "success": true,
@@ -210,7 +262,7 @@ router.post('/v1/staffTable/create', function (req, res, next) {
     "ErrorMessage": '删除成功'
   })
 });
-router.post('/v1/staffTable/edit', function (req, res, next) {
+router.post('/Staff/Put', function (req, res, next) {
   console.log('staffTable/edit', req.body)
   res.send({
     "success": true,
@@ -219,7 +271,7 @@ router.post('/v1/staffTable/edit', function (req, res, next) {
     "ErrorMessage": '保存失败'
   })
 });
-router.post('/v1/staffTable/deleted', function (req, res, next) {
+router.post('/Staff/Delete/1', function (req, res, next) {
   console.log('staffTable/deleted', req.body)
   res.send({
     "success": true,
@@ -228,7 +280,7 @@ router.post('/v1/staffTable/deleted', function (req, res, next) {
     "ErrorMessage": '删除成功'
   })
 });
-router.get('/v1/staffTable/getAddModalData', function (req, res, next) {
+router.get('/Staff/GetAddInitialize', function (req, res, next) {
   console.log('staffTable/getAddModalData', req.body)
   res.send({
     "Status": 200,
@@ -251,7 +303,7 @@ router.get('/v1/staffTable/getAddModalData', function (req, res, next) {
     }
   })
 });
-router.get('/v1/staffTable/getEditModalData', function (req, res, next) {
+router.get('/Staff/GetEditinitialize/1', function (req, res, next) {
   console.log('staffTable/getEditModalData', req.body)
   res.send({
     "Status": 200,
@@ -275,7 +327,7 @@ router.get('/v1/staffTable/getEditModalData', function (req, res, next) {
     "ErrorMessage": null
   })
 });
-router.get('/v1/staffTable/getDetailsModalData', function (req, res, next) {
+router.get('/Staff/GetTById/1', function (req, res, next) {
   console.log('staffTable/getDetailsModalData', req.body)
   res.send({
     "success": true,
@@ -300,13 +352,13 @@ router.get('/v1/staffTable/getDetailsModalData', function (req, res, next) {
 });
 
 //roleTable
-router.post('/v1/roleTable', function (req, res, next) {
-  console.log('roleTable', req.body)
+router.post('/Role/GetTByCondition', function (req, res, next) {
+  console.log('Role', req.body)
   res.send({
     "success": true,
     "Status": 200,
     "Data": {
-      "RowCount": 1,
+      "RowCount": 10,
       "Roledto": [
         {
           "Id": 1,
@@ -335,8 +387,8 @@ router.post('/v1/roleTable', function (req, res, next) {
     "ErrorMessage": null
   })
 });
-router.post('/v1/roleTable/create', function (req, res, next) {
-  console.log('roleTable/create', req.body)
+router.post('/Role/Post', function (req, res, next) {
+  console.log('Role/create', req.body)
   res.send({
     "success": true,
     "Status": 200,
@@ -344,8 +396,8 @@ router.post('/v1/roleTable/create', function (req, res, next) {
     "ErrorMessage": '添加成功'
   })
 });
-router.post('/v1/roleTable/edit', function (req, res, next) {
-  console.log('roleTable/edit', req.body)
+router.put('/Role/Put', function (req, res, next) {
+  console.log('Role/edit', req.body)
   res.send({
     "success": true,
     "Status": 400,
@@ -353,8 +405,8 @@ router.post('/v1/roleTable/edit', function (req, res, next) {
     "ErrorMessage": '保存失败'
   })
 });
-router.post('/v1/roleTable/deleted', function (req, res, next) {
-  console.log('roleTable/deleted', req.body)
+router.delete('/Role/Delete/1', function (req, res, next) {
+  console.log('Role/deleted', req.body)
   res.send({
     "success": true,
     "Status": 200,
@@ -362,8 +414,8 @@ router.post('/v1/roleTable/deleted', function (req, res, next) {
     "ErrorMessage": '删除成功'
   })
 });
-router.get('/v1/roleTable/getAddModalData', function (req, res, next) {
-  console.log('roleTable/getAddModalData', req.body)
+router.get('/Role/GetAddInitialize', function (req, res, next) {
+  console.log('Role/getAddModalData', req.body)
   // res.send({ "success": true, "Data": { role: [{ key: 2, label: "testRole" }, { key: 5, label: "testRole2" }], platfrom: [{ key: 1, label: "adm管理" }] } })
   res.send({
     "success": true,
@@ -374,8 +426,8 @@ router.get('/v1/roleTable/getAddModalData', function (req, res, next) {
     }
   })
 });
-router.get('/v1/roleTable/getEditModalData', function (req, res, next) {
-  console.log('roleTable/getEditModalData', req.body)
+router.get('/Role/GetEditinitialize/1', function (req, res, next) {
+  console.log('Role/getEditModalData', req.body)
   res.send({
     "success": true,
     "Status": 200,
@@ -398,8 +450,8 @@ router.get('/v1/roleTable/getEditModalData', function (req, res, next) {
     "ErrorMessage": null
   })
 });
-router.get('/v1/roleTable/getDetailsModalData', function (req, res, next) {
-  console.log('roleTable/getDetailsModalData', req.body)
+router.get('/Role/GetTById/1', function (req, res, next) {
+  console.log('Role/getDetailsModalData', req.body)
   res.send({
     "success": true,
     "Status": 200,
@@ -418,6 +470,721 @@ router.get('/v1/roleTable/getDetailsModalData', function (req, res, next) {
   })
 });
 
+
+//lineTable
+router.post('/Cell/GetTByCondition', function (req, res, next) {
+  console.log('Cell', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "RowCount": 1,
+      "Tdto": [
+        {
+          "Id": 1,
+          "CellNumber": "sample string 2",
+          "Description": "sample string 3",
+          "State": 4,
+          "Creator": 5,
+          "CreationDateTime": "2017-12-12T16:07:43.0335875+08:00",
+          "EditDateTime": "2017-12-12T16:07:43.0335875+08:00",
+          "EditorId": 8
+        },
+        {
+          "Id": 1,
+          "CellNumber": "sample string 2",
+          "Description": "sample string 3",
+          "State": 4,
+          "Creator": 5,
+          "CreationDateTime": "2017-12-12T16:07:43.0335875+08:00",
+          "EditDateTime": "2017-12-12T16:07:43.0335875+08:00",
+          "EditorId": 8
+        }
+      ]
+    },
+    "ErrorMessage": null
+  })
+});
+router.post('/Cell/Post', function (req, res, next) {
+  console.log('Cell/create', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '添加成功'
+  })
+});
+router.post('/Cell/Put', function (req, res, next) {
+  console.log('Cell/edit', req.body)
+  res.send({
+    "success": true,
+    "Status": 400,
+    "Data": -1,
+    "ErrorMessage": '保存失败'
+  })
+});
+router.post('/Cell/Delete/1', function (req, res, next) {
+  console.log('Cell/deleted', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '删除成功'
+  })
+});
+router.get('/Cell/GetAddInitialize', function (req, res, next) {
+  console.log('Cell/getAddModalData', req.body)
+  // res.send({ "success": true, "Data": { role: [{ key: 2, label: "testRole" }, { key: 5, label: "testRole2" }], platfrom: [{ key: 1, label: "adm管理" }] } })
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "SelectedCell": "[{key:1,label:\"adm管理\"}]",
+      "TotalCell": "[{key:10,label:\"admin\"},{key:14,label:\"test1\"},{key:16,label:\"test1129\"},{key:17,label:\"test1\"},{key:18,label:\"test1\"},{key:19,label:\"test1\"},{key:20,label:\"1\"},{key:21,label:\"1\"},{key:22,label:\"'1'\"},{key:23,label:\"'1'\"}]",
+    }
+  })
+});
+router.get('/Cell/GetEditinitialize/1', function (req, res, next) {
+  console.log('Cell/getEditModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "SelectedCell": "[{key:1,label:\"adm管理\"}]",
+      "TotalCell": "[{key:10,label:\"admin\"},{key:14,label:\"test1\"},{key:16,label:\"test1129\"},{key:17,label:\"test1\"},{key:18,label:\"test1\"},{key:19,label:\"test1\"},{key:20,label:\"1\"},{key:21,label:\"1\"},{key:22,label:\"'1'\"},{key:23,label:\"'1'\"}]",
+      "TDto": {
+        "Id": 1,
+        "CellNumber": "sample string 2",
+        "Description": "sample string 3",
+        "State": 1
+      }
+    },
+    "ErrorMessage": null
+  })
+});
+router.get('/Cell/GetTById/1', function (req, res, next) {
+  console.log('Cell/getDetailsModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "Id": 1,
+      "CellNumber": "sample string 2",
+      "Description": "sample string 3",
+      "State": 1,
+      "Creator": 5,
+      "CreationDateTime": "2017-12-12T16:46:58.5435939+08:00",
+      "EditDateTime": "2017-12-12T16:46:58.5435939+08:00",
+      "EditorId": 8
+    },
+    "ErrorMessage": null
+  })
+});
+
+
+//StationGroupTable
+router.post('/StationGroup/GetTByCondition', function (req, res, next) {
+  console.log('StationGroup', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "RowCount": 1,
+      "Tdto": [
+        {
+          "Id": 1,
+          "GroupNumber": "sample string 2",
+          "Description": "sample string 3",
+          "CreateDateTime": "2017-12-18T20:26:09.0102446+08:00",
+          "EditorId": 5,
+          "Editor": "sample string 6",
+          "EditDateTime": "2017-12-18T20:26:09.0102446+08:00",
+          "FactoryId": 8,
+          "State": 9,
+          "StateName": "sample string 10",
+          "StationIdArray": [
+            1,
+            2
+          ]
+        },
+        {
+          "Id": 1,
+          "GroupNumber": "sample string 2",
+          "Description": "sample string 3",
+          "CreateDateTime": "2017-12-18T20:26:09.0102446+08:00",
+          "EditorId": 5,
+          "Editor": "sample string 6",
+          "EditDateTime": "2017-12-18T20:26:09.0102446+08:00",
+          "FactoryId": 8,
+          "State": 9,
+          "StateName": "sample string 10",
+          "StationIdArray": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "ErrorMessage": null
+  })
+});
+router.post('/StationGroup/Post', function (req, res, next) {
+  console.log('StationGroup/create', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '添加成功'
+  })
+});
+router.put('/StationGroup/Put', function (req, res, next) {
+  console.log('StationGroup/edit', req.body)
+  res.send({
+    "success": true,
+    "Status": 400,
+    "Data": -1,
+    "ErrorMessage": '保存失败'
+  })
+});
+router.delete('/StationGroup/Delete/1', function (req, res, next) {
+  console.log('StationGroup/deleted', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '删除成功'
+  })
+});
+router.get('/StationGroup/GetAddInitialize', function (req, res, next) {
+  console.log('StationGroup/getAddModalData', req.body)
+  // res.send({ "success": true, "Data": { StationGroup: [{ key: 2, label: "testStationGroup" }, { key: 5, label: "testStationGroup2" }], platfrom: [{ key: 1, label: "adm管理" }] } })
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "TotalPlatfrom": "[{key:1,label:\"adm管理\"}]",
+      "TotalUser": "[{key:10,label:\"admin\"},{key:14,label:\"test1\"},{key:16,label:\"test1129\"},{key:17,label:\"test1\"},{key:18,label:\"test1\"},{key:19,label:\"test1\"},{key:20,label:\"1\"},{key:21,label:\"1\"},{key:22,label:\"'1'\"},{key:23,label:\"'1'\"}]",
+    }
+  })
+});
+router.get('/StationGroup/GetEditinitialize/1', function (req, res, next) {
+  console.log('StationGroup/getEditModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "TotalPlatfrom": "[{key:1,label:\"adm管理\"}]",
+      "AllocatedUser": "[{key:1,label:\"adm管理\"}]",
+      "TotalUser": "[{key:1,label:\"adm管理\"}]",
+      "StationGroup": {
+        "Id": 1,
+        "StationGroupName": "sample string 2",
+        "PlatfromId": 1,
+        "PlatfromName": "sample string 4",
+        "CreationDateTime": "2017-12-11T18:44:12.9980518+08:00",
+        "CreatorId": 6,
+        "State": 1,
+        "EditorId": 8,
+        "EditDateTime": "2017-12-11T18:44:12.9980518+08:00"
+      }
+    },
+    "ErrorMessage": null
+  })
+});
+router.get('/StationGroup/GetTById/1', function (req, res, next) {
+  console.log('StationGroup/getDetailsModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "Id": 1,
+      "StationGroupName": "sample string 2",
+      "State": "sample string 3",
+      "PlatfromName": "sample string 4",
+      "CreationDateTime": "2017-12-11T18:42:46.998051+08:00",
+      "Creator": "sample string 6",
+      "EditDateTime": "2017-12-11T18:42:46.998051+08:00",
+      "Editor": "sample string 8",
+      "User": "sample string 9"
+    },
+    "ErrorMessage": null
+  })
+});
+
+
+
+//ProcessTable
+router.post('/Process/GetTByCondition', function (req, res, next) {
+  console.log('Process', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "RowCount": 1,
+      "Tdto": [
+        {
+          "Id": 1,
+          "ProcessNumber": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Factory": "sample string 4",
+          "State": "sample string 5",
+          "ValidBegin": "2017-12-23T23:24:35.3304044+08:00",
+          "ValidEnd": "2017-12-23T23:24:35.3304044+08:00",
+          "CreationDateTime": "2017-12-23T23:24:35.3304044+08:00",
+          "EditDateTime": "2017-12-23T23:24:35.3304044+08:00",
+          "Editor": "sample string 10"
+        },
+        {
+          "Id": 1,
+          "ProcessNumber": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Factory": "sample string 4",
+          "State": "sample string 5",
+          "ValidBegin": "2017-12-23T23:24:35.3304044+08:00",
+          "ValidEnd": "2017-12-23T23:24:35.3304044+08:00",
+          "CreationDateTime": "2017-12-23T23:24:35.3304044+08:00",
+          "EditDateTime": "2017-12-23T23:24:35.3304044+08:00",
+          "Editor": "sample string 10"
+        }
+      ]
+    },
+    "ErrorMessage": null
+  })
+});
+router.post('/Process/Post', function (req, res, next) {
+  console.log('Process/create', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '添加成功'
+  })
+});
+router.put('/Process/Put', function (req, res, next) {
+  console.log('Process/edit', req.body)
+  res.send({
+    "success": true,
+    "Status": 400,
+    "Data": -1,
+    "ErrorMessage": '保存失败'
+  })
+});
+router.delete('/Process/Delete/1', function (req, res, next) {
+  console.log('Process/deleted', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '删除成功'
+  })
+});
+router.get('/Process/GetAddInitialize', function (req, res, next) {
+  console.log('Process/getAddModalData', req.body)
+  // res.send({ "success": true, "Data": { StationGroup: [{ key: 2, label: "testStationGroup" }, { key: 5, label: "testStationGroup2" }], platfrom: [{ key: 1, label: "adm管理" }] } })
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "MaterialNumber": "sample string 1",
+      "StationGroup": "sample string 2",
+      "ProcessAndProcessStep": {
+        "Process": {
+          "Id": 1,
+          "ProcessNumber": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Factory": "sample string 4",
+          "State": "sample string 5",
+          "ValidBegin": "2017-12-23T23:28:41.6364027+08:00",
+          "ValidEnd": "2017-12-23T23:28:41.6364027+08:00",
+          "CreationDateTime": "2017-12-23T23:28:41.6364027+08:00",
+          "EditDateTime": "2017-12-23T23:28:41.6364027+08:00",
+          "Editor": "sample string 10"
+        },
+        "ProcessStep": [
+          {
+            "Secquence": 1,
+            "Description": "sample string 2",
+            "StationGroupName": "sample string 3",
+            "IsMandatory": "sample string 4",
+            "IsNeedSetupCheck": "sample string 5",
+            "IsBackflush": "sample string 6",
+            "Side": 7,
+            "MaximumTestCount": 8,
+            "Editor": "sample string 9",
+            "EditDateTime": "2017-12-23T23:28:41.637403+08:00"
+          },
+          {
+            "Secquence": 1,
+            "Description": "sample string 2",
+            "StationGroupName": "sample string 3",
+            "IsMandatory": "sample string 4",
+            "IsNeedSetupCheck": "sample string 5",
+            "IsBackflush": "sample string 6",
+            "Side": 7,
+            "MaximumTestCount": 8,
+            "Editor": "sample string 9",
+            "EditDateTime": "2017-12-23T23:28:41.637403+08:00"
+          }
+        ]
+      }
+    }
+  })
+});
+router.get('/Process/GetEditinitialize/1', function (req, res, next) {
+  console.log('Process/getEditModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "MaterialNumber": "sample string 1",
+      "StationGroup": "sample string 2",
+      "ProcessAndProcessStep": {
+        "Process": {
+          "Id": 1,
+          "ProcessNumber": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Factory": "sample string 4",
+          "State": "sample string 5",
+          "ValidBegin": "2017-12-23T23:29:00.4744032+08:00",
+          "ValidEnd": "2017-12-23T23:29:00.4744032+08:00",
+          "CreationDateTime": "2017-12-23T23:29:00.4744032+08:00",
+          "EditDateTime": "2017-12-23T23:29:00.4744032+08:00",
+          "Editor": "sample string 10"
+        },
+        "ProcessStep": [
+          {
+            "Secquence": 1,
+            "Description": "sample string 2",
+            "StationGroupName": "sample string 3",
+            "IsMandatory": "sample string 4",
+            "IsNeedSetupCheck": "sample string 5",
+            "IsBackflush": "sample string 6",
+            "Side": 7,
+            "MaximumTestCount": 8,
+            "Editor": "sample string 9",
+            "EditDateTime": "2017-12-23T23:29:00.4744032+08:00"
+          },
+          {
+            "Secquence": 1,
+            "Description": "sample string 2",
+            "StationGroupName": "sample string 3",
+            "IsMandatory": "sample string 4",
+            "IsNeedSetupCheck": "sample string 5",
+            "IsBackflush": "sample string 6",
+            "Side": 7,
+            "MaximumTestCount": 8,
+            "Editor": "sample string 9",
+            "EditDateTime": "2017-12-23T23:29:00.4744032+08:00"
+          }
+        ]
+      }
+    },
+    "ErrorMessage": null
+  })
+});
+router.get('/Process/GetTById/1', function (req, res, next) {
+  console.log('Process/getDetailsModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "Process": {
+        "Id": 1,
+        "ProcessNumber": "sample string 2",
+        "MaterialNumber": "sample string 3",
+        "Factory": "sample string 4",
+        "State": "sample string 5",
+        "ValidBegin": "2017-12-23T23:29:20.7134034+08:00",
+        "ValidEnd": "2017-12-23T23:29:20.7134034+08:00",
+        "CreationDateTime": "2017-12-23T23:29:20.7134034+08:00",
+        "EditDateTime": "2017-12-23T23:29:20.7134034+08:00",
+        "Editor": "sample string 10"
+      },
+      "ProcessStep": [
+        {
+          "Secquence": 1,
+          "Description": "sample string 2",
+          "StationGroupName": "sample string 3",
+          "IsMandatory": "sample string 4",
+          "IsNeedSetupCheck": "sample string 5",
+          "IsBackflush": "sample string 6",
+          "Side": 7,
+          "MaximumTestCount": 8,
+          "Editor": "sample string 9",
+          "EditDateTime": "2017-12-23T23:29:20.7134034+08:00"
+        },
+        {
+          "Secquence": 1,
+          "Description": "sample string 2",
+          "StationGroupName": "sample string 3",
+          "IsMandatory": "sample string 4",
+          "IsNeedSetupCheck": "sample string 5",
+          "IsBackflush": "sample string 6",
+          "Side": 7,
+          "MaximumTestCount": 8,
+          "Editor": "sample string 9",
+          "EditDateTime": "2017-12-23T23:29:20.7134034+08:00"
+        }
+      ]
+    },
+    "ErrorMessage": null
+  })
+});
+
+
+//BOMTable
+router.post('/BOM/GetTByCondition', function (req, res, next) {
+  console.log('BOM', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "RowCount": 1,
+      "Tdto": [
+        {
+          "Id": 1,
+          "MaterieNumber": "sample string 2",
+          "Version": 3,
+          "Name": "sample string 4",
+          "ValidBegin": "2017-12-23T23:21:15.5124401+08:00",
+          "ValidEnd": "2017-12-23T23:21:15.5124401+08:00",
+          "Creator": "sample string 7",
+          "CreationDateTime": "2017-12-23T23:21:15.5124401+08:00",
+          "Editor": "sample string 9",
+          "EditDateTime": "2017-12-23T23:21:15.5124401+08:00"
+        },
+        {
+          "Id": 1,
+          "MaterieNumber": "sample string 2",
+          "Version": 3,
+          "Name": "sample string 4",
+          "ValidBegin": "2017-12-23T23:21:15.5124401+08:00",
+          "ValidEnd": "2017-12-23T23:21:15.5124401+08:00",
+          "Creator": "sample string 7",
+          "CreationDateTime": "2017-12-23T23:21:15.5124401+08:00",
+          "Editor": "sample string 9",
+          "EditDateTime": "2017-12-23T23:21:15.5124401+08:00"
+        }
+      ]
+    },
+    "ErrorMessage": null
+  })
+});
+router.post('/BOM/Post', function (req, res, next) {
+  console.log('BOM/create', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '添加成功'
+  })
+});
+router.put('/BOM/Put', function (req, res, next) {
+  console.log('BOM/edit', req.body)
+  res.send({
+    "success": true,
+    "Status": 400,
+    "Data": -1,
+    "ErrorMessage": '保存失败'
+  })
+});
+router.delete('/BOM/Delete/1', function (req, res, next) {
+  console.log('BOM/deleted', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": 1,
+    "ErrorMessage": '删除成功'
+  })
+});
+router.get('/BOM/GetAddInitialize', function (req, res, next) {
+  console.log('BOM/getAddModalData', req.body)
+  // res.send({ "success": true, "Data": { StationGroup: [{ key: 2, label: "testStationGroup" }, { key: 5, label: "testStationGroup2" }], platfrom: [{ key: 1, label: "adm管理" }] } })
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "MaterialList": "sample string 1",
+      "MaterialItemList": [
+        {
+          "Id": 1,
+          "MaterialNumber": "sample string 2",
+          "Version": 3,
+          "Description": "sample string 4"
+        },
+        {
+          "Id": 1,
+          "MaterialNumber": "sample string 2",
+          "Version": 3,
+          "Description": "sample string 4"
+        }
+      ],
+      "StationGroup": "sample string 2",
+      "BomHeadDto": {
+        "Id": 1,
+        "MaterieNumber": "sample string 2",
+        "Version": 3,
+        "Name": "sample string 4",
+        "ValidBegin": "2017-12-23T23:21:53.5664035+08:00",
+        "ValidEnd": "2017-12-23T23:21:53.5664035+08:00",
+        "Creator": "sample string 7",
+        "CreationDateTime": "2017-12-23T23:21:53.5664035+08:00",
+        "Editor": "sample string 9",
+        "EditDateTime": "2017-12-23T23:21:53.5664035+08:00"
+      },
+      "BomItemDto": [
+        {
+          "MaterialName": "sample string 1",
+          "Version": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Designator": "sample string 4",
+          "Quantity": 5.0,
+          "StationGroup": "sample string 6",
+          "IsNeedSetupCheck": "sample string 7",
+          "Layer": "sample string 8",
+          "IsAlternative": "sample string 9"
+        },
+        {
+          "MaterialName": "sample string 1",
+          "Version": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Designator": "sample string 4",
+          "Quantity": 5.0,
+          "StationGroup": "sample string 6",
+          "IsNeedSetupCheck": "sample string 7",
+          "Layer": "sample string 8",
+          "IsAlternative": "sample string 9"
+        }
+      ]
+    }
+  })
+});
+router.get('/BOM/GetEditinitialize/1', function (req, res, next) {
+  console.log('BOM/getEditModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "MaterialList": "sample string 1",
+      "MaterialItemList": [
+        {
+          "Id": 1,
+          "MaterialNumber": "sample string 2",
+          "Version": 3,
+          "Description": "sample string 4"
+        },
+        {
+          "Id": 1,
+          "MaterialNumber": "sample string 2",
+          "Version": 3,
+          "Description": "sample string 4"
+        }
+      ],
+      "StationGroup": "sample string 2",
+      "BomHeadDto": {
+        "Id": 1,
+        "MaterieNumber": "sample string 2",
+        "Version": 3,
+        "Name": "sample string 4",
+        "ValidBegin": "2017-12-23T23:18:44.9354028+08:00",
+        "ValidEnd": "2017-12-23T23:18:44.9354028+08:00",
+        "Creator": "sample string 7",
+        "CreationDateTime": "2017-12-23T23:18:44.9354028+08:00",
+        "Editor": "sample string 9",
+        "EditDateTime": "2017-12-23T23:18:44.9354028+08:00"
+      },
+      "BomItemDto": [
+        {
+          "MaterialName": "sample string 1",
+          "Version": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Designator": "sample string 4",
+          "Quantity": 5.0,
+          "StationGroup": "sample string 6",
+          "IsNeedSetupCheck": "sample string 7",
+          "Layer": "sample string 8",
+          "IsAlternative": "sample string 9"
+        },
+        {
+          "MaterialName": "sample string 1",
+          "Version": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Designator": "sample string 4",
+          "Quantity": 5.0,
+          "StationGroup": "sample string 6",
+          "IsNeedSetupCheck": "sample string 7",
+          "Layer": "sample string 8",
+          "IsAlternative": "sample string 9"
+        }
+      ]
+    },
+    "ErrorMessage": null
+  })
+});
+router.get('/BOM/GetTById/1', function (req, res, next) {
+  console.log('BOM/getDetailsModalData', req.body)
+  res.send({
+    "success": true,
+    "Status": 200,
+    "Data": {
+      "BomHead": {
+        "Id": 1,
+        "MaterieNumber": "sample string 2",
+        "Version": 3,
+        "Name": "sample string 4",
+        "ValidBegin": "2017-12-23T23:23:00.8814033+08:00",
+        "ValidEnd": "2017-12-23T23:23:00.8814033+08:00",
+        "Creator": "sample string 7",
+        "CreationDateTime": "2017-12-23T23:23:00.8814033+08:00",
+        "Editor": "sample string 9",
+        "EditDateTime": "2017-12-23T23:23:00.8814033+08:00"
+      },
+      "BomItemList": [
+        {
+          "MaterialName": "sample string 1",
+          "Version": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Designator": "sample string 4",
+          "Quantity": 5.0,
+          "StationGroup": "sample string 6",
+          "IsNeedSetupCheck": "sample string 7",
+          "Layer": "sample string 8",
+          "IsAlternative": "sample string 9"
+        },
+        {
+          "MaterialName": "sample string 1",
+          "Version": "sample string 2",
+          "MaterialNumber": "sample string 3",
+          "Designator": "sample string 4",
+          "Quantity": 5.0,
+          "StationGroup": "sample string 6",
+          "IsNeedSetupCheck": "sample string 7",
+          "Layer": "sample string 8",
+          "IsAlternative": "sample string 9"
+        }
+      ],
+      "BomItemStatistics": [
+        {
+          "MaterialNumber": "sample string 1",
+          "MaterialName": "sample string 2",
+          "Version": "sample string 3",
+          "Quantity": 4.0,
+          "StationGroup": "sample string 5",
+          "Layer": "sample string 6"
+        },
+        {
+          "MaterialNumber": "sample string 1",
+          "MaterialName": "sample string 2",
+          "Version": "sample string 3",
+          "Quantity": 4.0,
+          "StationGroup": "sample string 5",
+          "Layer": "sample string 6"
+        }
+      ]
+    },
+    "ErrorMessage": '删除成功'
+  })
+});
 module.exports = router;
 
 
@@ -463,3 +1230,6 @@ module.exports = router;
       // { "key": 45, "disabled": false, "href": "https://ant.design", "avatar": "https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png", "no": "TradeCode 45", "title": "一个任务名称 45", "owner": "曲丽丽", "description": "这是一段描述", "callNo": 139, "status": 1, "updatedAt": "2017-07-23T00:00:00.000Z", "createdAt": "2017-07-23T00:00:00.000Z", "progress": 8 }],
 
 
+      // {
+      //   "id": "92", "bpid": "8", "mpid": "8", "name": "失效类型", "icon": "user", "route": "/masterdata/failureTypeTable"
+      // },
