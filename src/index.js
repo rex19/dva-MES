@@ -8,12 +8,6 @@ import './index.css';
 import routes from './router';
 import registerServiceWorker from './registerServiceWorker';
 
-// const store = configureStore();
-
-// let token = localStorage.getItem('token');
-// if (token !== null) {
-//     store.dispatch(loginUserSuccess(token));
-// }
 
 
 ReactDOM.render(
