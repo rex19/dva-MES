@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, hashHistory } from 'react-router';
-// import configureStore from './store/configureStore';
 import store from './store/configureStore';  // redux store
 import './index.css';
 import routes from './router';
