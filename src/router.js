@@ -10,14 +10,6 @@ import Test from './containers/test/index';
 import Welcome from './containers/welcome/index';
 import NotFoundPage from './containers/notFoundPage/index';
 
-// 将DBTable组件做成动态路由, 减小bundle size
-// 注意不要再import DBTable了, 不然就没意义了
-// 一些比较大/不常用的组件, 都可以考虑做成动态路由
-// const DBTableContainer = (location, cb) => {
-//   require.ensure([], require => {
-//     cb(null, require('./components/DBTable').default)
-//   }, 'DBTable');
-// };
 
 export default (
   <Route path="/" component={App}>
