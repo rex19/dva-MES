@@ -22,9 +22,3 @@ export default (
 
   </Route>
 )
-
-// <Route path="index">
-// <Route path="option1" tableName="test" getComponent={DBTableContainer} />
-// <Route path="option2" tableName="testSms" getComponent={DBTableContainer} />
-// <Route path="option3" tableName="testAction" getComponent={DBTableContainer} />
-// </Route>
