@@ -10,7 +10,7 @@ import Test from './containers/test/index';
 import Welcome from './containers/welcome/index';
 import NotFoundPage from './containers/notFoundPage/index';
 
-//github
+//github update
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={Welcome} />
