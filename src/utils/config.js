@@ -6,7 +6,7 @@ module.exports = {
   logo: require('../assets/img/sflogo1.png'),
   footer: '<a target="_blank" href="http://www.smart-flow.cn">翊流智能&nbsp;&nbsp;</a>版权所有 © 2017-2099',  // footer中显示的字, 可以嵌入html标签
 
-  
+
   api: {  // 对后端请求的相关配置
     host: 'http://localhost:12345',  // 调用ajax接口的地址, 默认值空, 如果是跨域的, 服务端要支持CORS
     path: '/api',  // ajax请求的路径
@@ -20,12 +20,10 @@ module.exports = {
     allowDuplicate: true,  // 同一个菜单项只允许一个tab
   },
 
-
   login: {  // 登录相关配置
     getCurrentUser: '/getCurrentUser',  // 后端必须要提供接口校验当前用户的身份, 如果拿不到用户信息, 才会尝试登录
 
     // 登录有两种情况:
-
     // 1. 使用sso登录, 直接跳转就可以了
     sso: '',  // 是否使用单点登录? 是的话我会把地址encode后加到后面, 然后跳转, 如果这个是空字符串, 说明不使用单点登录
     // 2. 不使用sso, 使用我提供的一个登录界面
