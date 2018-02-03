@@ -1,5 +1,5 @@
 /**
- * 全局配置
+ * dva-mes全局配置
  */
 module.exports = {
   name: ' React-Mes',
