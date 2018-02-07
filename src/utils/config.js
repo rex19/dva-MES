@@ -14,7 +14,7 @@ module.exports = {
   },
 
   debug: true,
-
+  //tab标签模式
   tabMode: {  // tab模式相关配置
     enable: true,  // 是否开启tab模式
     allowDuplicate: true,  // 同一个菜单项只允许一个tab
