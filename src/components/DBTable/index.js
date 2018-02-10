@@ -11,7 +11,6 @@ import Utils from '../../utils/index';
 import globalConfig from '../../utils/config.js';
 import QueryForm from './components/queryForm'
 // import Logger from '../../utils/Logger';
-
 // const logger = Logger.getLogger('DBTable');
 
 /**
