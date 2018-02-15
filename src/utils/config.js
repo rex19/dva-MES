@@ -1,5 +1,6 @@
 /**
  * dva-mes全局配置
+ * 新的一年新的开始，不在再懈怠了
  */
 module.exports = {
   name: ' React-Mes',
