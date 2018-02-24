@@ -1,18 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router, hashHistory } from 'react-router';
-import store from './store/configureStore';  // redux store
-import './index.css';
-import routes from './router';
-import registerServiceWorker from './registerServiceWorker';
+import { message } from 'antd'
+import dva from 'dva'
+import createLoading from 'dva-loading'
+import createHistory from 'history/createBrowserHistory'
+import 'babel-polyfill'
+import Perf from 'react-addons-perf'
+window.Perf = Perf //React性能检测工具 挂载到全局变量方便使用
 
+// 1. Initialize
+const app = dva({
+  ...createLoading({
+    effects: true,
+  }),
+  history: createHistory(),
+  onError(error) {
+    message.error(error.message)
+  },
+})
 
+// 2. Model
+app.model(require('./models/app'))
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={hashHistory} routes={routes} />
-  </Provider>,
-  document.getElementById('root')
-);
-registerServiceWorker();
+// 3. Router
+app.router(require('./router'))
+
+// 4. Start
+app.start('#root')
