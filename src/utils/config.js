@@ -4,6 +4,7 @@
 // const APIV1 = '/api'
 // const APIV3 = '/sfmeswms/api'
 // const APIV1 = '/api/v1'
+//2/26更新
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
 
