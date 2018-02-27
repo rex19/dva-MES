@@ -16,7 +16,7 @@ const APIV1 = 'http://localhost:3009/api'
 const ADMAPI = 'http://192.168.1.252/SFMES/api'
 const WMSAPI = 'http://localhost:3009/sfwms'
 const SFPFSFIS = 'http://localhost:3009/sfpfsfis'
-
+//哒哒哒哒哒
 
 module.exports = {
   name: '翊流智能',
