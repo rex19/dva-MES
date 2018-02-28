@@ -1,12 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import {
-  query, InitialQuery,
-  GetLineListAndShiftListForCreateWorkOrder,
-  GetPartInformationListForCreateWorkOrder,
-  GetProcessListForCreateWorkOrder,
-  CreateWorkOrder,
-  getAddModalData, getEditModalData, getDetailsModalData, addKey
-} from 'services/PFS_FIS_System/workOrderTableListTable'
+import { query, addKey } from 'services/PFS_FIS_System/workOrderActivationTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -17,7 +10,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'workOrderTableList'
+const TableName = 'workOrderActivation'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -55,58 +48,35 @@ export default modelExtend(pageModel, {
     //每个table可能不同的变量字段
     list: [],
     AreaList: [],
-
-    LineNames: [],
-    ShiftNames: [],
-    addModalLineNames: [],
-    addModalShiftNames: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === `/PFS_FIS_System/${TableName}`) {
           dispatch({
-            type: 'InitialQuery',
+            type: 'query',
+            payload: {
+              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
+              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
+              [QueryRequestDTO]: null
+            }
           })
-          // dispatch({
-          //   type: 'query',
-          //   payload: {
-          //     PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-          //     PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-          //     [QueryRequestDTO]: null
-          //   }
-          // })
         }
       })
     },
   },
 
   effects: {
-    * InitialQuery({
-      payload,
-    }, { call, put, select }) {
-
-      const data = yield call(InitialQuery, payload)
-      console.log('data---', data)
-      console.log('InitialQuery', data)
-      yield put({
-        type: 'showModalData',
-        payload: {
-          Data: data.Data,
-          modalType: 'InitialQueryData'
-        },
-      })
-    },
     * query({
       payload,
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-
       const data = yield call(query, payload)
-      console.log('SearchTableList-query', payload, data)
+
       const pagination = yield select(state => state[TableName].pagination)
-      const result = yield call(addKey, data.Data.WorkOrderList) //+1
+      const result = yield call(addKey, data.Data) //+1
+      console.log('result', result)
       yield put({
         type: 'querySuccess',
         payload: {
@@ -198,15 +168,10 @@ export default modelExtend(pageModel, {
         //   throw data
         // }
       } else if (payload.modalType === 'addModalVisible') {
-        const data = yield call(GetLineListAndShiftListForCreateWorkOrder)
+        // const data = yield call(getAddModalData)
         // if (data.Status === 200) {
         yield put({ type: 'showModal', payload: payload })
-        yield put({
-          type: 'showModalData', payload: {
-            modalType: payload.modalType,
-            Data: data.Data
-          }
-        })
+        // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         // } else {
         //   throw data
         // }
@@ -218,9 +183,6 @@ export default modelExtend(pageModel, {
         // } else {
         //   throw data
         // }
-      } else if (payload.modalType === 'SearchGetPartInformationListForCreateWorkOrder') {
-        const data = yield call(GetPartInformationListForCreateWorkOrder, payload.params)
-        console.log('SearchGetPartInformationListForCreateWorkOrder', data)
       }
     },
   },
@@ -232,21 +194,15 @@ export default modelExtend(pageModel, {
     hideModal(state, { payload }) {
       return { ...state, ...payload, [payload]: false }
     },
-
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
-      if (payload.modalType === 'InitialQueryData') {
-        return { ...state, ...payload, LineNames: eval(payload.Data.LineNames), ShiftNames: eval(payload.Data.ShiftNames) }
+      if (payload.modalType === 'editModalVisible') {
+        return { ...state, ...payload, AreaList: eval(payload.data.AreaList), EditData: payload.data.locationDto == null ? state.EditData : payload.data.locationDto }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, addModalLineNames: eval(payload.Data.LineNames), addModalShiftNames: eval(payload.Data.ShiftNames) }
+        return { ...state, ...payload, AreaList: eval(payload.data.AreaList) }
+      } else if (payload.modalType === 'detailsModalVisible') {
+        return { ...state, ...payload, DetailsData: payload.data }
       }
-      // if (payload.modalType === 'editModalVisible') {
-      //   return { ...state, ...payload, AreaList: eval(payload.data.AreaList), EditData: payload.data.locationDto == null ? state.EditData : payload.data.locationDto }
-      // } else if (payload.modalType === 'addModalVisible') {
-      //   return { ...state, ...payload, AreaList: eval(payload.data.AreaList) }
-      // } else if (payload.modalType === 'detailsModalVisible') {
-      //   return { ...state, ...payload, DetailsData: payload.data }
-      // }
     },
     //teble loading处理
     loadingChanger(state, { payload }) {

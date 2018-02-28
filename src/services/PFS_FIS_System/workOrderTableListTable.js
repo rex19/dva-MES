@@ -3,6 +3,13 @@ import globalConfig from 'utils/config'
 //每个table可能不同的变量字段
 const tableName = globalConfig.api.workOrder
 
+//获取初始化数据-查询条件
+export async function InitialQuery() {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetWorkOrderListInitial}`,
+    method: 'get',
+  })
+}
 //查询整表
 export async function query(params) {
   return request({
@@ -11,6 +18,40 @@ export async function query(params) {
     data: params,
   })
 }
+
+//创建工单界面  获取初始化数据
+export async function GetLineListAndShiftListForCreateWorkOrder(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetLineListAndShiftListForCreateWorkOrder}`,
+    method: 'get',
+    data: params,
+  })
+}
+//创建工单界面  通过输入物料号和版本号查询获取部件列表
+export async function GetPartInformationListForCreateWorkOrder(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetPartInformationListForCreateWorkOrder}`,
+    method: 'post',
+    data: params,
+  })
+}
+//创建工单页面-通过部件Id找到工艺列表
+export async function GetProcessListForCreateWorkOrder(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetProcessListForCreateWorkOrder}`,
+    method: 'post',
+    data: params,
+  })
+}
+//创建工单页面-创建工单
+export async function CreateWorkOrder(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.CreateWorkOrder}`,
+    method: 'post',
+    data: params,
+  })
+}
+
 //新增数据保存
 export async function create(params) {
   return request({

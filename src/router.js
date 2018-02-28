@@ -157,8 +157,11 @@ const Routers = function ({ history, app }) {
     }, {
       path: '/PFS_FIS_System/workOrderTableList',
       models: () => [import('./models/PFS_FIS_System/workOrderTableList')],
-      // models: () => [import('./models/locationTable')],
       component: () => import('./routes/PFS_FIS_System/workOrderTableList/'),
+    }, {
+      path: '/PFS_FIS_System/workOrderActivation',
+      models: () => [import('./models/PFS_FIS_System/workOrderActivation')],
+      component: () => import('./routes/PFS_FIS_System/workOrderActivation/'),
     }
   ]
 

@@ -1,18 +1,16 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, DatePicker, Select, Checkbox } from 'antd'
+import { Form, Input, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
-import FormComponents from '../components/FormComponents'
-import TableComponents from '../components/TableComponents'
+import FormComponents from '../components/workOrderActivationFormComponent'
+import TableComponents from '../components/workOrderActivationTableComponent'
 import globalConfig from 'utils/config'
 import './index.less'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
-const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-const CheckboxGroup = Checkbox.Group;
 //每个table可能不同的变量字段(1)
-const TableName = 'workOrderTableList'
+const TableName = 'workOrderActivation'
 const AddFormLayout = [
   'AddLocationNumber',
   'AddDescription',
@@ -32,45 +30,48 @@ const EditFormLayout = [
   'EditState']
 
 
-const workOrderListColums = [{
-  title: '工单号',
-  dataIndex: 'WorkOrderNumber',
+const workOrderActivationColums = [{
+  title: '状态',
+  dataIndex: 'State',
 }, {
-  title: '料号',
+  title: '工站编号',
+  dataIndex: 'StationNr',
+}, {
+  title: '物料号',
+  dataIndex: 'Layer',
+}, {
+  title: '物料描述',
+  dataIndex: 'StationDescription',
+}, {
+  title: '产品位置',
   dataIndex: 'MaterialNumber',
 }, {
-  title: '产品描述',
-  dataIndex: 'MaterialDescription',
+  title: '料道位置',
+  dataIndex: 'FeederLocation',
 }, {
-  title: '计划数量',
-  dataIndex: 'PlannedQuantity',
+  title: '物料容器号',
+  dataIndex: 'MaterialContainerNumber',
 }, {
-  title: '已完成数量',
-  dataIndex: 'FinishedQuantity',
+  title: '供应商',
+  dataIndex: 'SupplierName',
 }, {
-  title: '工单备注',
-  dataIndex: 'WorkOrderComment',
+  title: '供应商料号',
+  dataIndex: 'SupplierMaterialNumber',
 }, {
-  title: '工单状态',
-  dataIndex: 'WorkOrderState',
+  title: '批次号',
+  dataIndex: 'BatchNumber',
 }, {
-  title: '班别',
-  dataIndex: 'ShiftName',
+  title: '数量',
+  dataIndex: 'MaterialQuantity',
 }, {
-  title: '总线体',
-  dataIndex: 'LineName',
+  title: '上料时间',
+  dataIndex: 'ScannedDateTime',
 }, {
-  title: '计划生产时间',
-  dataIndex: 'PlannedStartDateTime',
+  title: '上料员工号',
+  dataIndex: 'OperatorNumber',
 }, {
-  title: '实际生产时间',
-  dataIndex: 'ActualStartDateTime',
-}, {
-  title: '计划完成时间',
-  dataIndex: 'PlannedEndDateTime',
-}, {
-  title: '实际完成时间',
-  dataIndex: 'ActualEndDateTime',
+  title: '上料员姓名',
+  dataIndex: 'OperatorName',
 }]
 // , {
 //   title: '操作',
@@ -85,25 +86,17 @@ const workOrderListColums = [{
 //     </span>
 //   ),
 // }
-
-function onChange(checkedValues) {
-  console.log('checked = ', checkedValues);
-}
-
-const plainOptions = ['已计划', '开始生产', '已完成', '已关闭'];
-
-const WorkOrderListComponent = ({
-  workOrderTableList,
+const WorkOrderActivationComponent = ({
+  workOrderActivation,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = workOrderTableList
+  const TableModelsData = workOrderActivation
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, LineNames, ShiftNames, addModalLineNames, addModalShiftNames,
-    pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList } = TableModelsData
 
   console.log('WorkOrderListComponent-WorkOrderList ', TableModelsData)
   /**
@@ -135,13 +128,6 @@ const WorkOrderListComponent = ({
     }
   }
 
-
-  const SearchTableList = (payload) => {
-    dispatch({
-      type: `${TableName}/query`,
-      payload: payload,
-    })
-  }
   /**
    * modal 开关
    */
@@ -169,65 +155,29 @@ const WorkOrderListComponent = ({
             </FormItem>
           </Col>
           <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`计划开始`}>
+            <FormItem {...formItemLayout} label={`生产线`}>
               {getFieldDecorator(`field2`)(
-                <DatePicker
-                  placeholder="计划开始"
-                  showTime format="YYYY-MM-DD HH:mm:ss" />
+                <Select
+                  style={{ width: 200 }}
+                  onChange={handleChange}
+                >
+                  <Option value="jack">Jack</Option>
+                  <Option value="lucy">Lucy</Option>
+                </Select>
               )}
             </FormItem>
           </Col>
           <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`计划结束`}>
+            <FormItem {...formItemLayout} label={`站位`}>
               {getFieldDecorator(`field3`)(
-                <DatePicker
-                  placeholder="计划结束"
-                  showTime format="YYYY-MM-DD HH:mm:ss" />
+                <Select
+                  style={{ width: 200 }}
+                  onChange={handleChange}
+                >
+                  <Option value="jack">Jack</Option>
+                  <Option value="lucy">Lucy</Option>
+                </Select>
               )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={40}>
-          <Col span={8} key={1} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`班别`}>
-              {getFieldDecorator(`field4`, {
-                initialValue: '',
-              })(
-                <Select
-                  style={{ width: 200 }}
-                  onChange={handleChange}
-                >
-                  {ShiftNames.map(function (item, index) {
-                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`线体`}>
-              {getFieldDecorator(`field5`, {
-                initialValue: '',
-              })(
-                <Select
-                  style={{ width: 200 }}
-                  onChange={handleChange}
-                >
-                  {LineNames.map(function (item, index) {
-                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`工单状态`}>
-              {getFieldDecorator(`field6`, {
-                initialValue: '',
-              })(
-                <CheckboxGroup options={plainOptions} onChange={onChange} />
-                )}
-
             </FormItem>
           </Col>
         </Row>
@@ -496,10 +446,7 @@ const WorkOrderListComponent = ({
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
         <FormComponents
-          LineNames={LineNames}
-          ShiftNames={ShiftNames}
-          SearchTableList={SearchTableList}
-        // formComponentsValue={formComponentsValue()}
+          formComponentsValue={formComponentsValue()}
         />
       </div>
       <div>
@@ -508,7 +455,7 @@ const WorkOrderListComponent = ({
           data={list}
           tableLoading={tableLoading}
           pagination={pagination}
-          columns={workOrderListColums}
+          columns={workOrderActivationColums}
           TableWidth={1800}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
@@ -522,6 +469,6 @@ const WorkOrderListComponent = ({
 }
 
 
-export default connect(({ workOrderTableList }) => ({ workOrderTableList }))(Form.create()(WorkOrderListComponent))
+export default connect(({ workOrderActivation }) => ({ workOrderActivation }))(Form.create()(WorkOrderActivationComponent))
 
 

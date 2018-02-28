@@ -4,7 +4,6 @@
 // const APIV1 = '/api'
 // const APIV3 = '/sfmeswms/api'
 // const APIV1 = '/api/v1'
-//2/26更新
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
 
@@ -16,7 +15,7 @@ const APIV1 = 'http://localhost:3009/api'
 const ADMAPI = 'http://192.168.1.252/SFMES/api'
 const WMSAPI = 'http://localhost:3009/sfwms'
 const SFPFSFIS = 'http://localhost:3009/sfpfsfis'
-//哒哒哒哒哒
+
 
 module.exports = {
   name: '翊流智能',
@@ -78,6 +77,7 @@ module.exports = {
 
     //SF-PFS-FIS
     workOrder: `${SFPFSFIS}/workOrder`,
+    workOrderActivation: `${SFPFSFIS}/workOrderActivation`,
   },
   crudApi: {
     postAddData: 'Post',  //新增
@@ -117,7 +117,16 @@ module.exports = {
     //SF-PFS-FIS  工单新增，修改，查询，设置 api
     workOrderCreator: '',
     workOrderEditor: '',
+    //工单列表
+    GetWorkOrderListInitial: 'GetWorkOrderListInitial',
     workOrderGetAll: 'GetTListByCondition',
+    //工单创建
+    GetLineListAndShiftListForCreateWorkOrder: 'GetLineListAndShiftListForCreateWorkOrder',
+    GetPartInformationListForCreateWorkOrder: 'GetPartInformationListForCreateWorkOrder',
+    GetProcessListForCreateWorkOrder: 'GetProcessListForCreateWorkOrder',
+    CreateWorkOrder: 'CreateWorkOrder',
+    //工单激活
+    GetSetupActivationInformationByWorkOrderAndStationNumber: 'GetSetupActivationInformationByWorkOrderAndStationNumber',
     workOrderConfig: ''
     //SF-PFS-Trace
   },
