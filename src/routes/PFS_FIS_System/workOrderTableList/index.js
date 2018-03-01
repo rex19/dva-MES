@@ -102,7 +102,7 @@ const WorkOrderListComponent = ({
   const TableModelsData = workOrderTableList
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, LineNames, ShiftNames, addModalLineNames, addModalShiftNames,
+  const { list, LineNames, ShiftNames, addModalLineNames, addModalShiftNames, VMPartInformation, VMProcessInformation, CycleTimeInTheory, OEEInTheory,
     pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList } = TableModelsData
 
   console.log('WorkOrderListComponent-WorkOrderList ', TableModelsData)
@@ -504,6 +504,12 @@ const WorkOrderListComponent = ({
       </div>
       <div>
         <TableComponents
+          addModalLineNames={addModalLineNames}
+          addModalShiftNames={addModalShiftNames}
+          VMPartInformation={VMPartInformation}
+          VMProcessInformation={VMProcessInformation}
+          CycleTimeInTheory={CycleTimeInTheory}
+          OEEInTheory={OEEInTheory}
           tableName={TableName}
           data={list}
           tableLoading={tableLoading}

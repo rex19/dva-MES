@@ -1,10 +1,12 @@
 import modelExtend from 'dva-model-extend'
 import {
-  query, InitialQuery,
+  query,
+  InitialQuery,
   GetLineListAndShiftListForCreateWorkOrder,
   GetPartInformationListForCreateWorkOrder,
   GetProcessListForCreateWorkOrder,
   CreateWorkOrder,
+  GetBaseLineInformation,
   getAddModalData, getEditModalData, getDetailsModalData, addKey
 } from 'services/PFS_FIS_System/workOrderTableListTable'
 import { pageModel } from 'models/common'
@@ -60,6 +62,10 @@ export default modelExtend(pageModel, {
     ShiftNames: [],
     addModalLineNames: [],
     addModalShiftNames: [],
+    VMPartInformation: [],
+    VMProcessInformation: [],
+    CycleTimeInTheory: 0,
+    OEEInTheory: 0
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -122,27 +128,29 @@ export default modelExtend(pageModel, {
 
     },
 
-    // * create({
-    //   payload,
-    // }, { call, put, select }) {
-    //   const data = yield call(create, payload)
-    //   const pagination = yield select(state => state[TableName].pagination)
-    //   if (data.Status !== 200) {
-    //     return errorMessage(data.ErrorMessage || '创建失败')
-    //   } else if (data.Status === 200) {
-    //     yield put({ type: 'hideModal', payload: 'addModalVisible' })
-    //     yield put({
-    //       type: 'query', payload: {
-    //         PageIndex: Number(pagination.PageIndex),
-    //         PageSize: Number(pagination.PageSize),
-    //         [QueryRequestDTO]: null
-    //       }
-    //     })
-    //     return successMessage(data.ErrorMessage || '创建成功')
-    //   } else {
-    //     throw data
-    //   }
-    // },
+    * create({
+      payload,
+    }, { call, put, select }) {
+
+      const data = yield call(CreateWorkOrder, payload)
+      console.log('create----', payload, data)
+      // const pagination = yield select(state => state[TableName].pagination)
+      if (data.ReturnCode !== 0) {
+        return errorMessage(data.ErrorMessage || '创建失败')
+      } else if (data.ReturnCode === 0) {
+        yield put({ type: 'hideModal', payload: 'addModalVisible' })
+        // yield put({
+        //   type: 'query', payload: {
+        //     PageIndex: Number(pagination.PageIndex),
+        //     PageSize: Number(pagination.PageSize),
+        //     [QueryRequestDTO]: null
+        //   }
+        // })
+        return successMessage(data.ErrorMessage || '创建成功')
+      } else {
+        throw data
+      }
+    },
     // * delete({
     //   payload,
     // }, { call, put, select }) {
@@ -218,9 +226,34 @@ export default modelExtend(pageModel, {
         // } else {
         //   throw data
         // }
+        //根据成品半成品料号查询成品半成品列表的下拉菜单数据
       } else if (payload.modalType === 'SearchGetPartInformationListForCreateWorkOrder') {
         const data = yield call(GetPartInformationListForCreateWorkOrder, payload.params)
         console.log('SearchGetPartInformationListForCreateWorkOrder', data)
+        yield put({
+          type: 'showModalData', payload: {
+            modalType: payload.modalType,
+            Data: data.Data
+          }
+        })
+      } else if (payload.modalType === 'SearchGetProcessListForCreateWorkOrder') {
+        const data = yield call(GetProcessListForCreateWorkOrder, payload.params)
+        console.log('SearchGetProcessListForCreateWorkOrder', data)
+        yield put({
+          type: 'showModalData', payload: {
+            modalType: payload.modalType,
+            Data: data.Data
+          }
+        })
+      } else if (payload.modalType === 'SearchGetBaseLineInformation') {
+        const data = yield call(GetBaseLineInformation, payload.params)
+        console.log('SearchGetBaseLineInformation', data)
+        yield put({
+          type: 'showModalData', payload: {
+            modalType: payload.modalType,
+            Data: data.Data
+          }
+        })
       }
     },
   },
@@ -239,6 +272,13 @@ export default modelExtend(pageModel, {
         return { ...state, ...payload, LineNames: eval(payload.Data.LineNames), ShiftNames: eval(payload.Data.ShiftNames) }
       } else if (payload.modalType === 'addModalVisible') {
         return { ...state, ...payload, addModalLineNames: eval(payload.Data.LineNames), addModalShiftNames: eval(payload.Data.ShiftNames) }
+      } else if (payload.modalType === 'SearchGetPartInformationListForCreateWorkOrder') {
+        return { ...state, ...payload, VMPartInformation: eval(payload.Data.VMPartInformation) }
+      } else if (payload.modalType === 'SearchGetProcessListForCreateWorkOrder') {
+        return { ...state, ...payload, VMProcessInformation: eval(payload.Data.VMProcessInformation) }
+      } else if (payload.modalType === 'SearchGetBaseLineInformation') {
+        console.log('SearchGetBaseLineInformation', payload)
+        return { ...state, ...payload, CycleTimeInTheory: payload.Data.CycleTimeInTheory, OEEInTheory: payload.Data.OEEInTheory }
       }
       // if (payload.modalType === 'editModalVisible') {
       //   return { ...state, ...payload, AreaList: eval(payload.data.AreaList), EditData: payload.data.locationDto == null ? state.EditData : payload.data.locationDto }

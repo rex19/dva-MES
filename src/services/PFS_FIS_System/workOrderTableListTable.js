@@ -51,6 +51,15 @@ export async function CreateWorkOrder(params) {
     data: params,
   })
 }
+//创建工单页面-创建工单
+export async function GetBaseLineInformation(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetBaseLineInformation}`,
+    method: 'post',
+    data: params,
+  })
+}
+
 
 //新增数据保存
 export async function create(params) {

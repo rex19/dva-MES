@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Modal, Input, Row, Col, Button, Select, DatePicker, Table } from 'antd'
+import moment from 'moment';
 import './index.less'
 
 const InputGroup = Input.Group;
@@ -44,6 +45,19 @@ const ProcessData = [{
 const GetPartInformationListForCreateWorkOrderLayout = [
   'MaterialNumberDecorator',
   'VersionDecorator']
+const CreateWorkOrderLayout = [
+  'PartIdDecorator',
+  'ProcessIdDecorator',
+  'WorkOrderNumberDecorator',
+  'QuantityDecorator',
+  'LineNameDecorator',
+  'ShiftNameDecorator',
+  'CycleTimeInTheoryDecorator',
+  'OEEInTheoryDecorator',
+  'PlanStartDateTimeDecorator',
+  'PlanEndDateTimeDecorator',
+  'CommentDecorator',
+]
 
 
 export class Modals extends React.Component {
@@ -70,6 +84,39 @@ export class Modals extends React.Component {
     })
   }
 
+  handleVMPartInformationChange = (Params) => {
+    console.log('handleVMPartInformationChange', Params)
+    this.props.SearchGetProcessListForCreateWorkOrder(Params)
+  }
+  handleAddModalLineNamesChange = (Params) => {
+    console.log('handleAddModalLineNamesChange', Params)
+    this.props.SearchGetBaseLineInformation(Params)
+  }
+
+  handleOk = (modalType) => {
+    // this.props.handleAdd(modalType)
+    this.props.form.validateFields(CreateWorkOrderLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          PartId: payload.PartIdDecorator,
+          ProcessId: payload.ProcessIdDecorator,
+          WorkOrderNumber: payload.WorkOrderNumberDecorator,
+          Quantity: payload.QuantityDecorator,
+          LineName: payload.LineNameDecorator,
+          ShiftName: payload.ShiftNameDecorator,
+          CycleTimeInTheory: payload.CycleTimeInTheoryDecorator,
+          OEEInTheory: payload.OEEInTheoryDecorator,
+          PlanStartDateTime: moment(payload.PlanStartDateTimeDecorator).format(),
+          PlanEndDateTime: moment(payload.PlanEndDateTimeDecorator).format(),
+          Comment: payload.CommentDecorator,
+          CreatorId: 1
+        }
+        console.log('handleOk-', Params)
+        this.props.handleAdd(Params, modalType)
+      }
+    })
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const {
@@ -81,11 +128,17 @@ export class Modals extends React.Component {
       detailsModalVisible,
       deleteModalVisible,
       detailsModalValue,
-      handleAdd,
-      ModalWidth } = this.props
-    const handleOk = (modalType) => {
-      handleAdd(modalType)
-    }
+      // handleAdd,
+      ModalWidth,
+      addModalLineNames,
+      addModalShiftNames,
+      VMPartInformation,
+      VMProcessInformation,
+      CycleTimeInTheory,
+      OEEInTheory } = this.props
+    // const handleOk = (modalType) => {
+    //   handleAdd(modalType)
+    // }
 
     const handleChange = (value) => {
       console.log(`selected ${value}`);
@@ -104,7 +157,7 @@ export class Modals extends React.Component {
           title="新建"
           visible={addModalVisible}
           width={ModalWidth || 820}
-          onOk={() => handleOk('create')}
+          onOk={() => this.handleOk('create')}
           onCancel={() => handleModalClose('addModalVisible')}
         >
           <Form
@@ -138,9 +191,10 @@ export class Modals extends React.Component {
                 <FormItem {...formItemLayout} label={`成品半成品列表`}>
                   {getFieldDecorator(`PartIdDecorator`, {
                     initialValue: '',
-                  })(<Select >
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
+                  })(<Select onChange={this.handleVMPartInformationChange}>
+                    {VMPartInformation.map(function (item, index) {
+                      return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                    })}
                   </Select>)}
                 </FormItem>
               </Col>
@@ -151,8 +205,9 @@ export class Modals extends React.Component {
                   {getFieldDecorator(`ProcessIdDecorator`, {
                     initialValue: '',
                   })(<Select >
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
+                    {VMProcessInformation.map(function (item, index) {
+                      return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                    })}
                   </Select>)}
                 </FormItem>
               </Col>
@@ -160,7 +215,7 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`工单号`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
+                  {getFieldDecorator(`WorkOrderNumberDecorator`, {
                     initialValue: '',
                   })(<Input />)}
                 </FormItem>
@@ -169,7 +224,7 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`数量`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
+                  {getFieldDecorator(`QuantityDecorator`, {
                     initialValue: '',
                   })(<Input />)}
                 </FormItem>
@@ -178,11 +233,12 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`总线体`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
+                  {getFieldDecorator(`LineNameDecorator`, {
                     initialValue: '',
-                  })(<Select >
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
+                  })(<Select onChange={this.handleAddModalLineNamesChange}>
+                    {addModalLineNames.map(function (item, index) {
+                      return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                    })}
                   </Select>)}
                 </FormItem>
               </Col>
@@ -190,11 +246,12 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`班别`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
+                  {getFieldDecorator(`ShiftNameDecorator`, {
                     initialValue: '',
                   })(<Select >
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
+                    {addModalShiftNames.map(function (item, index) {
+                      return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                    })}
                   </Select>)}
                 </FormItem>
               </Col>
@@ -202,8 +259,8 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`节拍时间`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
-                    initialValue: '',
+                  {getFieldDecorator(`CycleTimeInTheoryDecorator`, {
+                    initialValue: CycleTimeInTheory,
                   })(<Input />)}
                 </FormItem>
               </Col>
@@ -211,8 +268,8 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`目标稼动率`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
-                    initialValue: '',
+                  {getFieldDecorator(`OEEInTheoryDecorator`, {
+                    initialValue: OEEInTheory,
                   })(<Input />)}
                 </FormItem>
               </Col>
@@ -220,7 +277,7 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`计划开始`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
+                  {getFieldDecorator(`PlanStartDateTimeDecorator`, {
                     initialValue: '',
                   })(<DatePicker
                     placeholder="计划开始"
@@ -231,7 +288,7 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`计划结束`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
+                  {getFieldDecorator(`PlanEndDateTimeDecorator`, {
                     initialValue: '',
                   })(<DatePicker
                     placeholder="计划结束"
@@ -242,7 +299,7 @@ export class Modals extends React.Component {
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`工单备注`}>
-                  {getFieldDecorator(`ProcessIdDecorator`, {
+                  {getFieldDecorator(`CommentDecorator`, {
                     initialValue: '',
                   })(<TextArea rows={4} />)}
                 </FormItem>

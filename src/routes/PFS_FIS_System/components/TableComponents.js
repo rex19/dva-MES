@@ -18,8 +18,13 @@ const TableComponents = ({
   addModalValue,
   editModalValue,
   detailsModalValue,
-  handleAdd,
-  tableLoading
+  tableLoading,
+  addModalLineNames,
+  addModalShiftNames,
+  VMPartInformation,
+  VMProcessInformation,
+  CycleTimeInTheory,
+  OEEInTheory
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -103,6 +108,40 @@ const TableComponents = ({
       },
     });
   }
+  const SearchGetProcessListForCreateWorkOrder = (params) => {
+    dispatch({
+      type: `${tableName}/showModalAndAjax`,
+      payload: {
+        modalType: 'SearchGetProcessListForCreateWorkOrder',
+        params: params
+      },
+    });
+  }
+  const SearchGetBaseLineInformation = (params) => {
+    dispatch({
+      type: `${tableName}/showModalAndAjax`,
+      payload: {
+        modalType: 'SearchGetBaseLineInformation',
+        params: params
+      },
+    });
+  }
+  const handleAdd = (Params, modalType) => {
+    console.log('handleAdd', Params, modalType)
+    if (modalType === 'create') {
+      dispatch({
+        type: `${tableName}/${modalType}`,
+        payload: Params,
+      })
+    }
+    // dispatch({
+    //   type: `${tableName}/showModalAndAjax`,
+    //   payload: {
+    //     modalType: 'SearchGetBaseLineInformation',
+    //     params: params
+    //   },
+    // });
+  }
 
   return (
     <div>
@@ -137,6 +176,12 @@ const TableComponents = ({
         </Col>
       </Row>
       <ModalComponents
+        addModalLineNames={addModalLineNames}
+        addModalShiftNames={addModalShiftNames}
+        VMPartInformation={VMPartInformation}
+        VMProcessInformation={VMProcessInformation}
+        CycleTimeInTheory={CycleTimeInTheory}
+        OEEInTheory={OEEInTheory}
         ModalWidth={ModalWidth}
         addModalVisible={addModalVisible}
         editModalVisible={editModalVisible}
@@ -148,6 +193,8 @@ const TableComponents = ({
         detailsModalValue={detailsModalValue}
         handleAdd={handleAdd}
         SearchGetPartInformationListForCreateWorkOrder={SearchGetPartInformationListForCreateWorkOrder}
+        SearchGetProcessListForCreateWorkOrder={SearchGetProcessListForCreateWorkOrder}
+        SearchGetBaseLineInformation={SearchGetBaseLineInformation}
       />
     </div>
   )

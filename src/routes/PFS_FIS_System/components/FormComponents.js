@@ -36,10 +36,8 @@ class Forms extends React.Component {
       if (!err) {
         const Params = {
           WorkOrderNumber: payload.WorkOrderNumberFieldDecorator,
-          PlannedStartDateTime: '1',
-          PlannedEndDateTime: '2',
-          // PlannedStartDateTime: payload.PlannedStartDateTimeFieldDecorator,
-          // PlannedEndDateTime: payload.PlannedEndDateTimeFieldDecorator,
+          PlannedStartDateTime: moment(payload.PlannedStartDateTimeFieldDecorator).format(),
+          PlannedEndDateTime: moment(payload.PlannedEndDateTimeFieldDecorator).format(),
           ShiftName: payload.ShiftNameFieldDecorator,
           LineName: payload.LineNameFieldDecorator,
           WorkOrderState: 8

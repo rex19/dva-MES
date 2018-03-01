@@ -125,6 +125,7 @@ module.exports = {
     GetPartInformationListForCreateWorkOrder: 'GetPartInformationListForCreateWorkOrder',
     GetProcessListForCreateWorkOrder: 'GetProcessListForCreateWorkOrder',
     CreateWorkOrder: 'CreateWorkOrder',
+    GetBaseLineInformation: 'GetBaseLineInformation',
     //工单激活
     GetSetupActivationInformationByWorkOrderAndStationNumber: 'GetSetupActivationInformationByWorkOrderAndStationNumber',
     workOrderConfig: ''
