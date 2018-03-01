@@ -57,7 +57,11 @@ router.get('/user', function (req, res, next) {
       user: {
         permissions:
         {
-          visit: ["1", "2", "21", "23", "24", "25", "26", "27", "28"],//, "24", "25"
+          //wms
+          // visit: ["1", "2", "21", "23", "24", "25", "26", "27", "28", "4", "41"],//, "24", "25"
+          //adm+wms
+          visit: ["1", "8", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "2", "21", "23", "24", "25", "26", "27", "28",
+            "4", "41", "42"],
           // visit: ["1", "2", "23",],
           role: "guest"
         },
@@ -172,23 +176,11 @@ router.get('/menus', function (req, res, next) {
     }, {
       "id": "7", "bpid": "1", "name": "权限管理", "icon": "shopping-cart", "route": "/permissionManagement"
     }, {
-      "id": "21", "mpid": "-1", "bpid": "2", "name": "4welcome", "route": "/welcome"
+      "id": "4", "name": "工单管理", "icon": "camera-o"
     }, {
-      "id": "3", "bpid": "1", "name": "5welcome", "icon": "api", "route": "/welcome"
+      "id": "41", "bpid": "4", "mpid": "4", "name": "工单列表", "icon": "heart-o", "route": "/PFS_FIS_System/workOrderTableList"
     }, {
-      "id": "4", "bpid": "1", "name": "6welcome", "icon": "camera-o"
-    }, {
-      "id": "41", "bpid": "4", "mpid": "4", "name": "7welcome", "icon": "heart-o", "route": "welcome"
-    }, {
-      "id": "42", "bpid": "4", "mpid": "4", "name": "8welcome", "icon": "database", "route": "/welcome"
-    }, {
-      "id": "43", "bpid": "4", "mpid": "4", "name": "9welcome", "icon": "bars", "route": "/welcome"
-    }, {
-      "id": "44", "bpid": "4", "mpid": "4", "name": "10welcome", "icon": "search", "route": "/welcome"
-    }, {
-      "id": "45", "bpid": "4", "mpid": "4", "name": "11welcome", "icon": "edit", "route": "/welcome"
-    }, {
-      "id": "46", "bpid": "4", "mpid": "4", "name": "12welcome", "icon": "credit-card", "route": "/welcome"
+      "id": "42", "bpid": "4", "mpid": "4", "name": "工单激活", "icon": "heart-o", "route": "/PFS_FIS_System/workOrderActivation"
     }, {
       "id": "6", "bpid": "1", "name": "17welcome", "icon": "setting"
     }, {

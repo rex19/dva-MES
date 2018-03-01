@@ -12,6 +12,7 @@ var users = require('./routes/users');
 var sfmes = require('./routes/sfmes');
 var sfwms = require('./routes/sfwms');
 var sfmeswms = require('./routes/sfmeswms');
+var sfpfsfis = require('./routes/sfpfsfis');
 var api = require('./routes/api');
 
 var app = express();
@@ -43,6 +44,7 @@ app.use('/users', users);
 app.use('/sfmes', sfmes);
 app.use('/sfwms', sfwms);
 app.use('/sfmeswms', sfmeswms);
+app.use('/sfpfsfis', sfpfsfis);
 app.use('/api', api);
 
 // catch 404 and forward to error handler
