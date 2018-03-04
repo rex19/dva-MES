@@ -6,7 +6,7 @@
 // const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
-
+//ceshi
 // const APIV1 = 'http://192.168.1.230:3009/api'
 // const ADMAPI = 'http://192.168.1.230/SFMES/api'
 // const WMSAPI = 'http://192.168.1.230:3009/sfwms'
