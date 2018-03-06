@@ -1,5 +1,12 @@
 import modelExtend from 'dva-model-extend'
-import { query, addKey } from 'services/PFS_FIS_System/workOrderActivationTable'
+import {
+  GetAllLineNamesForActiveWorkOrderCombox,
+  GetActivedWorkOrderListOfLine,
+  GetWorkOrderListForActive,
+  GetSetupActivationInformationByWorkOrderAndStationNumber,
+  GetStationInformationForSetupInformation,
+  addKey
+} from 'services/PFS_FIS_System/workOrderActivationTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -48,11 +55,18 @@ export default modelExtend(pageModel, {
     //每个table可能不同的变量字段
     list: [],
     AreaList: [],
+
+    GetAllLineNamesInitData: [],
+    GetStationInformationInitData: [],
+
+    TableComponentsValueToActivatedWorkOrder: [],
+    TableComponentsValueToOptionalWorkOrder: [],
+    TableComponentsValueToWorkOrderSettingState: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/PFS_FIS_System/${TableName}`) {
+        if (location.pathname === `/PFS_FIS_System/workOrderActivation` || location.pathname === `/PFS_FIS_System/workOrderSetting`) {
           dispatch({
             type: 'query',
             payload: {
@@ -70,27 +84,63 @@ export default modelExtend(pageModel, {
     * query({
       payload,
     }, { call, put, select }) {
-      yield put({ type: 'loadingChanger', payload: 'showLoading' })
-      yield put({ type: 'tablePaginationChanger', payload: payload })
-      const data = yield call(query, payload)
-
-      const pagination = yield select(state => state[TableName].pagination)
-      const result = yield call(addKey, data.Data) //+1
-      console.log('result', result)
+      // yield put({ type: 'loadingChanger', payload: 'showLoading' })
+      // yield put({ type: 'tablePaginationChanger', payload: payload })
+      const GetAllLineNamesForActiveWorkOrderComboxData = yield call(GetAllLineNamesForActiveWorkOrderCombox)
+      const GetStationInformationForSetupInformationData = yield call(GetStationInformationForSetupInformation)
+      console.log('workOrderActivation-model', GetAllLineNamesForActiveWorkOrderComboxData, GetStationInformationForSetupInformationData)
       yield put({
-        type: 'querySuccess',
-        payload: {
-          list: result,
-          pagination: {
-            PageIndex: Number(pagination.PageIndex) || 1,
-            PageSize: Number(pagination.PageSize) || 10,
-            total: data.Data.RowCount,
-          },
-        },
+        type: 'showFormData', payload: {
+          modalType: 'InitWorkOrderFormData',
+          GetAllLineNamesForActiveWorkOrderComboxData: GetAllLineNamesForActiveWorkOrderComboxData.Data,
+          GetStationInformationForSetupInformationData: GetStationInformationForSetupInformationData.Data,
+        }
       })
-      yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+
+
+      // const pagination = yield select(state => state[TableName].pagination)
+      // const result = yield call(addKey, data.Data) //+1
+      // console.log('result', result)
+      // yield put({
+      //   type: 'querySuccess',
+      //   payload: {
+      //     list: result,
+      //     pagination: {
+      //       PageIndex: Number(pagination.PageIndex) || 1,
+      //       PageSize: Number(pagination.PageSize) || 10,
+      //       total: data.Data.RowCount,
+      //     },
+      //   },
+      // })
+      // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
 
     },
+
+
+    // * query({
+    //   payload,
+    // }, { call, put, select }) {
+    //   yield put({ type: 'loadingChanger', payload: 'showLoading' })
+    //   yield put({ type: 'tablePaginationChanger', payload: payload })
+    //   const data = yield call(query, payload)
+
+    //   const pagination = yield select(state => state[TableName].pagination)
+    //   const result = yield call(addKey, data.Data) //+1
+    //   console.log('result', result)
+    //   yield put({
+    //     type: 'querySuccess',
+    //     payload: {
+    //       list: result,
+    //       pagination: {
+    //         PageIndex: Number(pagination.PageIndex) || 1,
+    //         PageSize: Number(pagination.PageSize) || 10,
+    //         total: data.Data.RowCount,
+    //       },
+    //     },
+    //   })
+    //   yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+
+    // },
 
     // * create({
     //   payload,
@@ -185,6 +235,38 @@ export default modelExtend(pageModel, {
         // }
       }
     },
+
+
+    * handleSearchFormComponents({
+      payload,
+    }, { call, put }) {
+      if (payload.modalType === 'formComponentsValueToActivatedWorkOrder') {
+
+        const data = yield call(GetActivedWorkOrderListOfLine, payload.Params)
+        console.log('payload.modalType === formComponentsValueToActivatedWorkOrder', data)
+        yield put({ type: 'showTableData', payload: { modalType: payload.modalType, data: data.Data } })
+      } else if (payload.modalType === 'formComponentsValueToOptionalWorkOrder') {
+        const data = yield call(GetWorkOrderListForActive, payload.Params)
+        console.log('payload.modalType === formComponentsValueToOptionalWorkOrder', data)
+        yield put({ type: 'showTableData', payload: { modalType: payload.modalType, data: data.Data } })
+      } else if (payload.modalType === 'formComponentsValueToSettingState') {
+        const data = yield call(GetSetupActivationInformationByWorkOrderAndStationNumber, payload.Params)
+        yield put({ type: 'showTableData', payload: { modalType: payload.modalType, data: data.Data } })
+      } else {
+        throw data
+      }
+
+      // }
+      // else if (payload.modalType === 'addModalVisible') {
+      //   // const data = yield call(getAddModalData)
+      //   // if (data.Status === 200) {
+      //   yield put({ type: 'showModal', payload: payload })
+      //   // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+      //   // } else {
+      //   //   throw data
+      //   // }
+      // }
+    },
   },
   reducers: {
     //打开关闭Modals
@@ -194,6 +276,18 @@ export default modelExtend(pageModel, {
     hideModal(state, { payload }) {
       return { ...state, ...payload, [payload]: false }
     },
+
+    //Form初始化数据
+    showFormData(state, { payload }) {
+      if (payload.modalType === 'InitWorkOrderFormData') {
+        return {
+          ...state,
+          ...payload,
+          GetAllLineNamesInitData: eval(payload.GetAllLineNamesForActiveWorkOrderComboxData.LineName),
+          GetStationInformationInitData: eval(payload.GetStationInformationForSetupInformationData.StationInformation)
+        }
+      }
+    },
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
@@ -202,6 +296,16 @@ export default modelExtend(pageModel, {
         return { ...state, ...payload, AreaList: eval(payload.data.AreaList) }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
+      }
+    },
+    //Tables初始化数据
+    showTableData(state, { payload }) {
+      if (payload.modalType === 'formComponentsValueToActivatedWorkOrder') {
+        return { ...state, ...payload, TableComponentsValueToActivatedWorkOrder: payload.data }
+      } else if (payload.modalType === 'formComponentsValueToOptionalWorkOrder') {
+        return { ...state, ...payload, TableComponentsValueToOptionalWorkOrder: payload.data }
+      } else if (payload.modalType === 'formComponentsValueToSettingState') {
+        return { ...state, ...payload, TableComponentsValueToWorkOrderSettingState: payload.data }
       }
     },
     //teble loading处理

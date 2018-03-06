@@ -7,6 +7,8 @@ import {
   GetProcessListForCreateWorkOrder,
   CreateWorkOrder,
   GetBaseLineInformation,
+  GetWorkOrderInformationForEdit,//修改modal初始化数据
+  ActiveWorkOrderToGetWorkOrderPerformanceDataLine,
   getAddModalData, getEditModalData, getDetailsModalData, addKey
 } from 'services/PFS_FIS_System/workOrderTableListTable'
 import { pageModel } from 'models/common'
@@ -23,20 +25,41 @@ const TableName = 'workOrderTableList'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "Id": 7,
-  "LocationNumber": "test001",
-  "Description": "Y001",
-  "Area": "电子仓库",
-  "X": 1,
-  "Y": 2,
-  "Z": 3,
-  "State": "正常",
-  "CreateDateTime": "2017-12-14T00:00:00",
-  "Creator": "admin",
-  "Editor": null,
-  "EditDateTime": "0001-01-01T00:00:00"
+  "PartId": 0,
+  "PartNumber": "0",
+  "Version": 0,
+  "WorkOrderNumber": "000",
+  "WorkOrderState": "[\"已计划\"]",
+  "Quantity": 0,
+  "LineCode": "0",
+  "LineName": "0",
+  "ShiftCode": "0",
+  "ShiftName": "0",
+  "PlanStartDateTime": "0",
+  "PlanEndDateTime": "0",
+  "Comment": "000"
 }
-
+const DetailsData = {
+  "WorkOrderState": "",
+  "PartNumber": "",
+  "PartDescription": "",
+  "ProcessNumber": "",
+  "PlannedQuantity": 0,
+  "LineName": "",
+  "ShiftName": "",
+  "PlanStartDateTime": "",
+  "PlanEndDateTime": "",
+  "ActualStartDateTime": "",
+  "ActualEndDateTime": "",
+  "Comment": "备注",
+  "CycleTimeInTheory": 0,
+  "ActualCycleTime": 0,
+  "OEEInTheory": 0,
+  "ActualOEE": 0,
+  "FPY": 0,
+  "GoodRate": 0,
+  "EachStationPerformanceData": []
+}
 export default modelExtend(pageModel, {
 
   namespace: TableName,
@@ -52,8 +75,8 @@ export default modelExtend(pageModel, {
       PageSize: Number(globalConfig.table.paginationConfig.PageSize) || 10,// 表格每页显示多少条数据
       Total: Number(globalConfig.table.paginationConfig.Total) || 10,  //总条数
     },
-    EditData: EditData,
-    DetailsData: {},
+
+    DetailsData: DetailsData,
     //每个table可能不同的变量字段
     list: [],
     AreaList: [],
@@ -65,7 +88,12 @@ export default modelExtend(pageModel, {
     VMPartInformation: [],
     VMProcessInformation: [],
     CycleTimeInTheory: 0,
-    OEEInTheory: 0
+    OEEInTheory: 0,
+
+    EditAllLineNames: [],
+    EditAllShiftNames: [],
+    EditAllWorkOrderStates: [],
+    EditData: EditData,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -197,11 +225,11 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
-        // const data = yield call(getEditModalData, payload.record.Id)
+        const data = yield call(GetWorkOrderInformationForEdit, payload.record.Id)
         // if (data.Status === 200) {
-        //   console.log('showModalAndAjax-edit', data)
+        console.log('showModalAndAjax-edit', data)
         yield put({ type: 'showModal', payload: payload })
-        //   yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         // } else {
         //   throw data
         // }
@@ -215,17 +243,12 @@ export default modelExtend(pageModel, {
             Data: data.Data
           }
         })
-        // } else {
-        //   throw data
-        // }
       } else if (payload.modalType === 'detailsModalVisible') {
-        // const data = yield call(getDetailsModalData, payload.record.Id)
-        // if (data.Status === 200) {
+        const data = yield call(ActiveWorkOrderToGetWorkOrderPerformanceDataLine, payload.record.WorkOrderNumber)
+        console.log('showModalAndAjax-details', data, payload)
         yield put({ type: 'showModal', payload: payload })
-        //   yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        // } else {
-        //   throw data
-        // }
+        yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+
         //根据成品半成品料号查询成品半成品列表的下拉菜单数据
       } else if (payload.modalType === 'SearchGetPartInformationListForCreateWorkOrder') {
         const data = yield call(GetPartInformationListForCreateWorkOrder, payload.params)
@@ -277,8 +300,24 @@ export default modelExtend(pageModel, {
       } else if (payload.modalType === 'SearchGetProcessListForCreateWorkOrder') {
         return { ...state, ...payload, VMProcessInformation: eval(payload.Data.VMProcessInformation) }
       } else if (payload.modalType === 'SearchGetBaseLineInformation') {
-        console.log('SearchGetBaseLineInformation', payload)
         return { ...state, ...payload, CycleTimeInTheory: payload.Data.CycleTimeInTheory, OEEInTheory: payload.Data.OEEInTheory }
+      }
+      //edit modal初始化数据
+      else if (payload.modalType === 'editModalVisible') {
+        console.log('payload.modalType === editModalVisible', payload)
+        return {
+          ...state, ...payload,
+          EditAllLineNames: payload.data.AllLineNames,
+          EditAllShiftNames: payload.data.AllShiftNames,
+          EditAllWorkOrderStates: payload.data.AllWorkOrderStates,
+          EditData: payload.data == null ? state.EditData : payload.data.EditableData
+        }
+      } else if (payload.modalType === 'detailsModalVisible') {
+        console.log('payload.modalType === detailsModalVisible', payload)
+        return {
+          ...state, ...payload,
+          DetailsData: payload.data,
+        }
       }
       // if (payload.modalType === 'editModalVisible') {
       //   return { ...state, ...payload, AreaList: eval(payload.data.AreaList), EditData: payload.data.locationDto == null ? state.EditData : payload.data.locationDto }

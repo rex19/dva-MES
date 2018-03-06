@@ -162,6 +162,10 @@ const Routers = function ({ history, app }) {
       path: '/PFS_FIS_System/workOrderActivation',
       models: () => [import('./models/PFS_FIS_System/workOrderActivation')],
       component: () => import('./routes/PFS_FIS_System/workOrderActivation/'),
+    }, {
+      path: '/PFS_FIS_System/workOrderSetting',
+      models: () => [import('./models/PFS_FIS_System/workOrderActivation')],
+      component: () => import('./routes/PFS_FIS_System/workOrderSetting/'),
     }
   ]
 
