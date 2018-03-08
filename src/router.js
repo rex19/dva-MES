@@ -166,6 +166,70 @@ const Routers = function ({ history, app }) {
       path: '/PFS_FIS_System/workOrderSetting',
       models: () => [import('./models/PFS_FIS_System/workOrderActivation')],
       component: () => import('./routes/PFS_FIS_System/workOrderSetting/'),
+    }, {  //SF_PFS_Trace
+      path: '/SF_PFS_Trace/TracePartByStation',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TracePartByStation/'),
+    }, {
+      path: '/SF_PFS_Trace/OverStationRecordOfPart', //工件过站记录
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/OverStationRecordOfPart/'),
+    }, {
+      path: '/SF_PFS_Trace/FailureRecordOfPart',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/FailureRecordOfPart/'),
+    }, {
+      path: '/SF_PFS_Trace/MaintenanceRecordOfPart',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/MaintenanceRecordOfPart/'),
+    }, {
+      path: '/SF_PFS_Trace/AssemblyRecordOfPart',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/AssemblyRecordOfPart/'),
+    }, {
+      path: '/SF_PFS_Trace/AttributeRecordOfPart',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/AttributeRecordOfPart/'),
+    }, {
+      path: '/SF_PFS_Trace/MaterialRecordOfPart',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/MaterialRecordOfPart/'),
+    }, {
+      path: '/SF_PFS_Trace/TracePartByMaterial',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TracePartByMaterial/'),
+    }, {
+      path: '/SF_PFS_Trace/TraceByBoxNumber',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TraceByBoxNumber/'),
+    }, {
+      path: '/SF_PFS_Trace/TraceByWorkOrder',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TraceByWorkOrder/'),
+    }, { //通过属性追溯
+      path: '/SF_PFS_Trace/TraceabilityByPartAttribute',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TraceabilityByPartAttribute/'),
+    }, {
+      path: '/SF_PFS_Trace/TraceabilityByWorkOrderAttribute',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TraceabilityByWorkOrderAttribute/'),
+    }, {
+      path: '/SF_PFS_Trace/TraceabilityByContainerAttribute',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TraceabilityByContainerAttribute/'),
+    }, {
+      path: '/SF_PFS_Trace/TraceabilityByInvoice',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/TraceabilityByInvoice/'),
+    }, {
+      path: '/SF_PFS_Trace/AbnormalQueryOfStation',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/AbnormalQueryOfStation/'),
+    }, {
+      path: '/SF_PFS_Trace/QueryRecordByFeeding',
+      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      component: () => import('./routes/SF_PFS_Trace/QueryRecordByFeeding/'),
     }
   ]
 

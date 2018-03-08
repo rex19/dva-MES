@@ -63,6 +63,20 @@ const CreateWorkOrderLayout = [
   'PlanEndDateTimeDecorator',
   'CommentDecorator',
 ]
+const EditWorkOrderLayout = [
+  'PartIdEditDecorator',
+  'PartNumberEditDecorator',
+  'MaterialNumberEditDecorator',
+  'VersionEditDecorator',
+  'WorkOrderStateEditDecorator',
+  'WorkOrderNumberEditDecorator',
+  'QuantityEditDecorator',
+  'LineNameEditDecorator',
+  'ShiftNameEditDecorator',
+  'PlanStartDateTimeEditDecorator',
+  'PlanEndDateTimeEditDecorator',
+  'CommentEditDecorator',
+]
 
 
 export class Modals extends React.Component {
@@ -100,26 +114,48 @@ export class Modals extends React.Component {
 
   handleOk = (modalType) => {
     // this.props.handleAdd(modalType)
-    this.props.form.validateFields(CreateWorkOrderLayout, (err, payload) => {
-      if (!err) {
-        const Params = {
-          PartId: payload.PartIdDecorator,
-          ProcessId: payload.ProcessIdDecorator,
-          WorkOrderNumber: payload.WorkOrderNumberDecorator,
-          Quantity: payload.QuantityDecorator,
-          LineName: payload.LineNameDecorator,
-          ShiftName: payload.ShiftNameDecorator,
-          CycleTimeInTheory: payload.CycleTimeInTheoryDecorator,
-          OEEInTheory: payload.OEEInTheoryDecorator,
-          PlanStartDateTime: moment(payload.PlanStartDateTimeDecorator).format(),
-          PlanEndDateTime: moment(payload.PlanEndDateTimeDecorator).format(),
-          Comment: payload.CommentDecorator,
-          CreatorId: 1
+    if (modalType === 'create') {
+      this.props.form.validateFields(CreateWorkOrderLayout, (err, payload) => {
+        if (!err) {
+          const Params = {
+            PartId: payload.PartIdDecorator,
+            ProcessId: payload.ProcessIdDecorator,
+            WorkOrderNumber: payload.WorkOrderNumberDecorator,
+            Quantity: payload.QuantityDecorator,
+            LineName: payload.LineNameDecorator,
+            ShiftName: payload.ShiftNameDecorator,
+            CycleTimeInTheory: payload.CycleTimeInTheoryDecorator,
+            OEEInTheory: payload.OEEInTheoryDecorator,
+            PlanStartDateTime: moment(payload.PlanStartDateTimeDecorator).format(),
+            PlanEndDateTime: moment(payload.PlanEndDateTimeDecorator).format(),
+            Comment: payload.CommentDecorator,
+            CreatorId: 1
+          }
+          this.props.handleAdd(Params, modalType)
         }
-        console.log('handleOk-', Params)
-        this.props.handleAdd(Params, modalType)
-      }
-    })
+      })
+    } else if (modalType === 'edit') {
+      this.props.form.validateFields(EditWorkOrderLayout, (err, payload) => {
+        if (!err) {
+          const Params = {
+            PartId: payload.PartIdEditDecorator,
+            PartNumber: payload.PartNumberEditDecorator,
+            Version: payload.VersionEditDecorator,
+            WorkOrderNumber: payload.WorkOrderNumberEditDecorator,
+            WorkOrderState: payload.WorkOrderStateEditDecorator,
+            Quantity: payload.QuantityEditDecorator,
+            LineName: payload.LineNameEditDecorator,
+            ShiftName: payload.ShiftNameEditDecorator,
+            PlanStartDateTime: moment(payload.PlanStartDateTimeEditDecorator).format(),
+            PlanEndDateTime: moment(payload.PlanEndDateTimeEditDecorator).format(),
+            Comment: payload.CommentEditDecorator,
+            CreatorId: 1
+          }
+          // console.log('else if (modalType === edit', Params)
+          this.props.handleAdd(Params, modalType)
+        }
+      })
+    }
   }
 
   render() {
@@ -321,7 +357,7 @@ export class Modals extends React.Component {
           title="修改"
           visible={editModalVisible}
           width={ModalWidth || 820}
-          onOk={() => handleOk('edit')}
+          onOk={() => this.handleOk('edit')}
           onCancel={() => handleModalClose('editModalVisible')}
         >
           <div style={{ marginBottom: 16 }}>
@@ -331,9 +367,8 @@ export class Modals extends React.Component {
             >
               <Row gutter={30}>
                 <Col span={10} key={1} style={{ display: 'block' }}>
-
                   <FormItem {...formItemLayout} label={`成品/半成品料号`}>
-                    {getFieldDecorator(`MaterialNumberEditDecorator`, {
+                    {getFieldDecorator(`PartNumberEditDecorator`, {
                       initialValue: this.props.EditData.PartNumber,
                     })(
                       <Input />
@@ -344,6 +379,15 @@ export class Modals extends React.Component {
                   <FormItem {...formItemLayout} label={`版本号`}>
                     {getFieldDecorator(`VersionEditDecorator`, {
                       initialValue: this.props.EditData.Version,
+                    })(<Input />)}
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row gutter={30}>
+                <Col span={10} key={1} style={{ display: 'block' }}>
+                  <FormItem {...formItemLayout} label={`成品/半成品ID`}>
+                    {getFieldDecorator(`PartIdEditDecorator`, {
+                      initialValue: this.props.EditData.PartId,
                     })(<Input />)}
                   </FormItem>
                 </Col>

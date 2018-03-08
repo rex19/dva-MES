@@ -42,10 +42,6 @@ const TableComponents = ({
       <span>
         <a onClick={() => handleModalShow('editModalVisible', record)}>编辑</a>
         <span className="ant-divider" />
-        <Popconfirm title="确定删除吗?" onConfirm={() => deleteHandler(record)}>
-          <a >删除</a>
-        </Popconfirm>
-        <span className="ant-divider" />
         <a onClick={() => handleModalShow('detailsModalVisible', record)} className="ant-dropdown-link">
           详情 <Icon type="down" />
         </a>
@@ -134,6 +130,11 @@ const TableComponents = ({
   const handleAdd = (Params, modalType) => {
     console.log('handleAdd', Params, modalType)
     if (modalType === 'create') {
+      dispatch({
+        type: `${tableName}/${modalType}`,
+        payload: Params,
+      })
+    } else if (modalType === 'edit') {
       dispatch({
         type: `${tableName}/${modalType}`,
         payload: Params,

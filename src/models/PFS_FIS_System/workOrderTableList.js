@@ -8,6 +8,7 @@ import {
   CreateWorkOrder,
   GetBaseLineInformation,
   GetWorkOrderInformationForEdit,//修改modal初始化数据
+  EditWorkOrder,
   ActiveWorkOrderToGetWorkOrderPerformanceDataLine,
   getAddModalData, getEditModalData, getDetailsModalData, addKey
 } from 'services/PFS_FIS_System/workOrderTableListTable'
@@ -179,6 +180,29 @@ export default modelExtend(pageModel, {
         throw data
       }
     },
+
+    * edit({
+        payload,
+      }, { call, put, select }) {
+      const data = yield call(EditWorkOrder, payload)
+      console.log('edit----', payload, data)
+      // const pagination = yield select(state => state[TableName].pagination)
+      if (data.ReturnCode !== 0) {
+        return errorMessage(data.ErrorMessage || '编辑失败')
+      } else if (data.ReturnCode === 0) {
+        yield put({ type: 'hideModal', payload: 'editModalVisible' })
+        // yield put({
+        //   type: 'query', payload: {
+        //     PageIndex: Number(pagination.PageIndex),
+        //     PageSize: Number(pagination.PageSize),
+        //     [QueryRequestDTO]: null
+        //   }
+        // })
+        return successMessage(data.ErrorMessage || '编辑成功')
+      } else {
+        throw data
+      }
+    },
     // * delete({
     //   payload,
     // }, { call, put, select }) {
@@ -319,13 +343,6 @@ export default modelExtend(pageModel, {
           DetailsData: payload.data,
         }
       }
-      // if (payload.modalType === 'editModalVisible') {
-      //   return { ...state, ...payload, AreaList: eval(payload.data.AreaList), EditData: payload.data.locationDto == null ? state.EditData : payload.data.locationDto }
-      // } else if (payload.modalType === 'addModalVisible') {
-      //   return { ...state, ...payload, AreaList: eval(payload.data.AreaList) }
-      // } else if (payload.modalType === 'detailsModalVisible') {
-      //   return { ...state, ...payload, DetailsData: payload.data }
-      // }
     },
     //teble loading处理
     loadingChanger(state, { payload }) {
