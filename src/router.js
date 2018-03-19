@@ -168,7 +168,8 @@ const Routers = function ({ history, app }) {
       component: () => import('./routes/PFS_FIS_System/workOrderSetting/'),
     }, {  //SF_PFS_Trace
       path: '/SF_PFS_Trace/TracePartByStation',
-      // models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
+      // models: () => [import('./models/stationTable')],
+      models: () => [import('./models/SF_PFS_Trace/TracePartByStation')],
       component: () => import('./routes/SF_PFS_Trace/TracePartByStation/'),
     }, {
       path: '/SF_PFS_Trace/OverStationRecordOfPart', //工件过站记录
