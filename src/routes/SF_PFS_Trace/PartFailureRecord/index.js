@@ -18,124 +18,106 @@ const { TextArea } = Input;
 
 
 //每个table可能不同的变量字段(1)
-const TableName = 'tracePartByMaterial'
+const TableName = 'partFailureRecord'
 const Decorator = 'Decorator'
 
-const TracePartByMaterialComponents = ({
-  tracePartByMaterial,
+const PartFailureRecordComponents = ({
+  partFailureRecord,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = tracePartByMaterial
+  const TableModelsData = partFailureRecord
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible,
-    deleteModalVisible, EditData, DetailsData, TableData2
+    deleteModalVisible, EditData, DetailsData,
+    WorkOrderNumber,
+    WorkOrderPlannedQuantity,
+    PartPartNumber,
+    PartState,
+    PartDescription,
+    PartDrawingNumber,
+    CustomerPartNumber,
+
+    TextAreaValue,
   } = TableModelsData
 
-  console.log('TableComponents-tracePartByMaterial ', TableModelsData)
-
+  console.log('TableComponents-partFailureRecord ', TableModelsData)
   const getRequest = (id) => {
     console.log('getRequest ID', id)
     dispatch({
-      type: `${TableName}/GetPartInformationListByContainerNumber`,
+      type: `${TableName}/GetFailureSlipByProcessRecordId`,
       payload: {
-        RepairRecordId: id
+        ProcessRecordId: id
       },
     })
   }
 
-  //通过物料追溯工件
-  const TracePartByMaterialColums1 = [{
-    title: '容器号',
-    dataIndex: 'ContainerNumber',
-    render: (text, record) => <a onClick={() => getRequest(record.ContainerNumber)}>{text}</a>,
-  }, {
-    title: '容器状态',
-    dataIndex: 'ContainerState',
-  }, {
-    title: '物料号',
-    dataIndex: 'MaterialPartNumber',
-  }, {
-    title: '供应商料号',
-    dataIndex: 'SupplierMaterialPartNumber',
-  }, {
-    title: '供应商代码',
-    dataIndex: 'SupplierName',
-  }, {
-    title: '供应商名',
-    dataIndex: 'StationName',
-  }, {
-    title: '物料批次号',
-    dataIndex: 'BatchNumber',
-  }, {
-    title: '货运单号',
-    dataIndex: 'DeliveryNoteFormNumber',
-  }, {
-    title: '收货单号',
-    dataIndex: 'GoodReceivingFormNumber',
-  }, {
-    title: '到货时间',
-    AssigneeCode: 'ArrivalDateTime',
-  }, {
-    title: '收货时间',
-    dataIndex: 'ReceivingDateTime',
-  }, {
-    title: '注册时间',
-    dataIndex: 'RegisterDateTime',
-  }, {
-    title: '注册员工号',
-    dataIndex: 'RegisterOperatorCode',
-  }, {
-    title: '注册员工姓名',
-    AssigneeCode: 'RegisterOperatorName',
-  }]
 
-
-
-  const TracePartByMaterialColums2 = [{
-    title: '序列号',
+  const Colums = [{
+    title: '过站记录',
+    dataIndex: 'ProcessRecordId',
+    render: (text, record) => <a onClick={() => getRequest(record.ProcessRecordId)}>{text}</a>,
+  }, {
+    title: '工件序列号',
     dataIndex: 'PartSerialNumber',
   }, {
-    title: '序列号状态',
-    dataIndex: 'PartState',
+    title: '位置',
+    dataIndex: 'Position',
   }, {
-    title: '成品序列号',
-    dataIndex: 'FinishGoodSerialNumber',
+    title: '工站号',
+    dataIndex: 'StationNumber',
+  }, {
+    title: '工站名',
+    dataIndex: 'StationName',
+  }, {
+    title: '维修站点',
+    dataIndex: 'RepairStationNumber',
+  }, {
+    title: '工单号',
+    dataIndex: 'WorkOrder',
   }, {
     title: '料号',
     dataIndex: 'PartPartNumber',
   }, {
-    title: '客户料号',
-    dataIndex: 'CustomerPartNumber',
+    title: '元件料号',
+    dataIndex: 'MaterialPartNumber',
   }, {
-    title: '描述',
-    dataIndex: 'PartDescription',
+    title: '失效点位',
+    dataIndex: 'Designator',
   }, {
-    title: '成品箱号',
-    dataIndex: 'FinishBoxNumber',
+    title: '失效类型',
+    dataIndex: 'FailureTypeName',
   }, {
-    title: '货运单号',
-    dataIndex: 'DeliveryNoteFormNumber',
+    title: '失效原因',
+    dataIndex: 'FailureCauseName',
   }, {
-    title: '发货时间',
-    dataIndex: 'DeliveryDateTime',
+    title: '维修动作',
+    dataIndex: 'RepairActionName',
+  }, {
+    title: '是否设备误判',
+    dataIndex: 'IsMachineFalseReject',
+  }, {
+    title: '是否维修',
+    dataIndex: 'IsRepaired',
+  }, {
+    title: '测试时间',
+    dataIndex: 'PartProcessCompleteDateTime',
+  }, {
+    title: '上传时间',
+    dataIndex: 'UploadingDateTime',
+  }, {
+    title: '结果',
+    dataIndex: 'PartState',
   }, {
     title: '操作员工号',
-    AssigneeCode: 'OperatorCode',
+    dataIndex: 'OperatorNumber',
   }, {
     title: '操作员姓名',
     dataIndex: 'OperatorName',
-  }, {
-    title: '发货员工号',
-    dataIndex: 'DeliveryOperatorCode',
-  }, {
-    title: '发货员工姓名',
-    dataIndex: 'DeliveryOperatorName',
   }]
-
 
 
   /**
@@ -197,23 +179,16 @@ const TracePartByMaterialComponents = ({
     validateFields((err, values) => {
       if (!err) {
         const Params = {
-          ContainerNumber: values.ContainerNumberDecorator,
-          MaterialPartNumber: values.MaterialPartNumberDecorator,
-          SupplierCode: values.SupplierCodeDecorator,
-          BatchNumber: values.BatchNumberDecorator,
-          DeliveryNoteFormCode: values.DeliveryNoteFormCodeDecorator,
-          ReceivingFormCode: values.ReceivingFormCodeDecorator,
-          SupplierMaterialPartNumber: values.SupplierMaterialPartNumberDecorator,
-          PageIndex: 8,
-          PageSize: 9
+          PartSerialNumber: values.PartSerialNumberDecorator,
         }
         console.log('-Params', Params)
         dispatch({
-          type: `${TableName}/GetMaterialContainerByCondition`,
+          type: `${TableName}/GetPartFailureRecordByPartSerialNumber`,
           payload: Params,
         })
       }
     });
+
   }
 
 
@@ -234,65 +209,75 @@ const TracePartByMaterialComponents = ({
         >
 
           <Row gutter={40}>
-            <Col span={8} key={1} style={{ display: 'block' }}>
-              <FormItem {...formItemLayout} label={`物料容器号`}>
-                {getFieldDecorator(`ContainerNumber${Decorator}`, {
-                  initialValue: '',
-                })(<Input />)}
-              </FormItem>
-            </Col>
-            <Col span={8} key={2} style={{ display: 'block' }}>
-              <FormItem {...formItemLayout} label={`物料料号`}>
-                {getFieldDecorator(`MaterialPartNumber${Decorator}`, {
-                  initialValue: '',
-                })(<Input />)}
-              </FormItem>
-            </Col>
             <Col span={8} key={3} style={{ display: 'block' }}>
-              <FormItem {...formItemLayout} label={`供应商编号`}>
-                {getFieldDecorator(`SupplierCode${Decorator}`, {
+              <FormItem {...formItemLayout} label={`工件序列号`}>
+                {getFieldDecorator(`PartSerialNumber${Decorator}`, {
                   initialValue: '',
-                })(<Input />)}
+                })(
+                  <Input />
+                  )}
               </FormItem>
             </Col>
-          </Row>
-          <Row gutter={40}>
-            <Col span={8} key={1} style={{ display: 'block' }}>
-              <FormItem {...formItemLayout} label={`物料批次号`}>
-                {getFieldDecorator(`BatchNumber${Decorator}`, {
-                  initialValue: '',
-                })(<Input />)}
-              </FormItem>
-            </Col>
-            <Col span={8} key={2} style={{ display: 'block' }}>
-              <FormItem {...formItemLayout} label={`货运单号`}>
-                {getFieldDecorator(`DeliveryNoteFormCode${Decorator}`, {
-                  initialValue: '',
-                })(<Input />)}
-              </FormItem>
-            </Col>
-            <Col span={8} key={3} style={{ display: 'block' }}>
-              <FormItem {...formItemLayout} label={`收货单号`}>
-                {getFieldDecorator(`ReceivingFormCode${Decorator}`, {
-                  initialValue: '',
-                })(<Input />)}
-              </FormItem>
-            </Col>
-          </Row>
-          <Row gutter={40}>
-            <Col span={8} key={1} style={{ display: 'block' }}>
-              <FormItem {...formItemLayout} label={`供应商料号`}>
-                {getFieldDecorator(`SupplierMaterialPartNumber${Decorator}`, {
-                  initialValue: '',
-                })(<Input />)}
-              </FormItem>
-            </Col>
-
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
             </Col>
+          </Row>
+          <Row gutter={40} style={{ marginTop: '20px' }}>
+            <Col span={8} key={1} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`工单号`}>
+                {getFieldDecorator(`WorkOrderNumber${Decorator}`, {
+                  initialValue: WorkOrderNumber,
+                })(<Input />)}
+              </FormItem>
+            </Col>
+            <Col span={8} key={2} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`工单数量`}>
+                {getFieldDecorator(`WorkOrderPlannedQuantity${Decorator}`, {
+                  initialValue: WorkOrderPlannedQuantity,
+                })(<Input />)}
+              </FormItem>
+            </Col>
+            <Col span={8} key={3} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`料号`}>
+                {getFieldDecorator(`PartPartNumber${Decorator}`, {
+                  initialValue: PartPartNumber,
+                })(<Input />)}
+              </FormItem>
+            </Col>
+
+          </Row>
+          <Row gutter={40}>
+            <Col span={8} key={1} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`状态`}>
+                {getFieldDecorator(`PartState${Decorator}`, {
+                  initialValue: PartState,
+                })(<Input />)}
+              </FormItem>
+            </Col>
+            <Col span={8} key={2} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`描述`}>
+                {getFieldDecorator(`PartDescription${Decorator}`, {
+                  initialValue: PartDescription,
+                })(<Input />)}
+              </FormItem>
+            </Col>
+            <Col span={8} key={3} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`图号`}>
+                {getFieldDecorator(`PartDrawingNumber${Decorator}`, {
+                  initialValue: PartDrawingNumber,
+                })(<Input />)}
+              </FormItem>
+            </Col>
+            <Col span={8} key={4} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`客户料号`}>
+                {getFieldDecorator(`CustomerPartNumber${Decorator}`, {
+                  initialValue: CustomerPartNumber,
+                })(<Input />)}
+              </FormItem>
+            </Col>
+
           </Row>
         </Form>
       </div>
@@ -303,7 +288,7 @@ const TracePartByMaterialComponents = ({
           // data={dataTest}
           tableLoading={tableLoading}
           pagination={pagination}
-          columns={TracePartByMaterialColums1}
+          columns={Colums}
           TableWidth={1300}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
@@ -312,28 +297,17 @@ const TracePartByMaterialComponents = ({
           tableModels={TableModelsData}
         />
       </div>
-      <div style={{ marginTop: '15px' }}>
-        <TableComponents
-          tableName={TableName}
-          data={TableData2}
-          // data={dataTest}
-          tableLoading={tableLoading}
-          pagination={pagination}
-          columns={TracePartByMaterialColums2}
-          TableWidth={1300}
-          addModalValue={addModalValue()}
-          editModalValue={editModalValue()}
-          detailsModalValue={detailsModalValue()}
-          handleAdd={handleAdd}
-          tableModels={TableModelsData}
-        />
+
+      <div style={{ marginTop: '25px' }}>
+        <h2>失效备注:</h2>
+        <TextArea rows={7} value={TextAreaValue} />
       </div>
     </div>
   )
 }
 
 
-export default connect(({ tracePartByMaterial }) => ({ tracePartByMaterial }))(Form.create()(TracePartByMaterialComponents))
+export default connect(({ partFailureRecord }) => ({ partFailureRecord }))(Form.create()(PartFailureRecordComponents))
 
 
 

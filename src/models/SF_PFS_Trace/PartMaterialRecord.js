@@ -1,6 +1,6 @@
 import modelExtend from 'dva-model-extend'
 // import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/stationTable'
-import { GetPageInit, GetTracePartByStation, addKey } from 'services/SF_PFS_Trace/TracePartByStation'
+import { GetPartMaterialRecordByPartSerialNumber, addKey } from 'services/SF_PFS_Trace/PartMaterialRecord'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -11,7 +11,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'tracePartByStation'
+const TableName = 'partMaterialRecord'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -38,20 +38,52 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    StationIdSelectData: []
+
+    WorkOrderNumber: '',
+    WorkOrderPlannedQuantity: '',
+    PartPartNumber: '',
+    PartState: '',
+    PartDescription: '',
+    PartDrawingNumber: '',
+    CustomerPartNumber: '',
+
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/SF_PFS_Trace/TracePartByStation`) {
-          console.log('/SF_PFS_Trace/${TableName}')
+        if (location.pathname === `/SF_PFS_Trace/PartMaterialRecord`) {
+          console.log('/SF_PFS_Trace/${PartMaterialRecord}')
+          // dispatch({
+          //   type: 'InitQuery',
+          // payload: {
+          //   PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
+          //   PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
+          //   [QueryRequestDTO]: null
+          // }
+          // })
           dispatch({
-            type: 'InitQuery',
-            // payload: {
-            //   PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-            //   PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-            //   [QueryRequestDTO]: null
-            // }
+            type: 'querySuccess',
+            payload: {
+              list: [],
+              // pagination: {
+              //   PageIndex: Number(pagination.PageIndex) || 1,
+              //   PageSize: Number(pagination.PageSize) || 10,
+              //   total: data.Data.RowCount || 0,
+              // },
+            },
+          })
+          dispatch({
+            type: 'InitQueryReducers',
+            payload: {
+              type: 'GetPartMaterialRecordByPartSerialNumber',
+              WorkOrderNumber: '',
+              WorkOrderPlannedQuantity: '',
+              PartPartNumber: '',
+              PartState: '',
+              PartDescription: '',
+              PartDrawingNumber: '',
+              CustomerPartNumber: '',
+            },
           })
         }
       })
@@ -62,56 +94,49 @@ export default modelExtend(pageModel, {
     * InitQuery({
       payload,
     }, { call, put, select }) {
-      const data = yield call(GetPageInit, payload)
-      console.log('tracePartByStation-query', data)
+      console.log('InitQuery', data)
+    },
+
+    * GetPartMaterialRecordByPartSerialNumber({
+      payload,
+    }, { call, put, select }) {
+      // yield put({ type: 'loadingChanger', payload: 'showLoading' })
+      // yield put({ type: 'tablePaginationChanger', payload: payload })
+      const data = yield call(GetPartMaterialRecordByPartSerialNumber, payload)
+      console.log('GetPartMaterialRecordByPartSerialNumber-query', data, payload)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {
-        console.log('+++++++++++++++')
         return errorMessage(data.Message || '查询失败')
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else if (data.ReturnCode === 0) {
-        console.log('-------------------')
+        const result = yield call(addKey, data.PartMaterialRecordRowData) //+1
+        console.log('GetPartMaterialRecordByPartSerialNumber-query', data, payload)
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            list: result,
+          },
+        })
         yield put({
           type: 'InitQueryReducers',
           payload: {
-            StationIdSelectData: data.Data,
-            type: 'InitQuery'
+            type: 'GetPartMaterialRecordByPartSerialNumber',
+            WorkOrderNumber: data.WorkOrderNumber,
+            WorkOrderPlannedQuantity: data.WorkOrderPlannedQuantity,
+            PartPartNumber: data.PartPartNumber,
+            PartState: data.PartState,
+            PartDescription: data.PartDescription,
+            PartDrawingNumber: data.PartDrawingNumber,
+            CustomerPartNumber: data.CustomerPartNumber,
           },
         })
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else {
         throw data
       }
     },
 
-    * GetTracePartByStationQuery({
-      payload,
-    }, { call, put, select }) {
-      yield put({ type: 'loadingChanger', payload: 'showLoading' })
-      yield put({ type: 'tablePaginationChanger', payload: payload })
-      console.log('GetTracePartByStation-query1', payload)
-      const data = yield call(GetTracePartByStation, payload)
-      console.log('GetTracePartByStation-query2', data)
-      // const pagination = yield select(state => state[TableName].pagination)
-      if (data.ReturnCode !== 0) {
-        return errorMessage(data.Message || '查询失败')
-        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
-      } else if (data.ReturnCode === 0) {
-        const result = yield call(addKey, data.Data) //+1
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            list: result,
-            // pagination: {
-            //   PageIndex: Number(pagination.PageIndex) || 1,
-            //   PageSize: Number(pagination.PageSize) || 10,
-            //   total: data.Data.RowCount,
-            // },
-          },
-        })
-        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
-      } else {
-        throw data
-      }
-    },
+
 
   },
   reducers: {
@@ -141,9 +166,17 @@ export default modelExtend(pageModel, {
       }
     },
     InitQueryReducers(state, { payload }) {
-      if (payload.type === 'InitQuery') {
-        console.log('InitQueryReducers--+', payload)
-        return { ...state, ...payload, StationIdSelectData: payload.StationIdSelectData }
+      if (payload.type === 'GetPartMaterialRecordByPartSerialNumber') {
+        return {
+          ...state, ...payload,
+          WorkOrderNumber: payload.WorkOrderNumber,
+          WorkOrderPlannedQuantity: payload.WorkOrderPlannedQuantity,
+          PartPartNumber: payload.PartPartNumber,
+          PartState: payload.PartState,
+          PartDescription: payload.PartDescription,
+          PartDrawingNumber: payload.PartDrawingNumber,
+          CustomerPartNumber: payload.CustomerPartNumber,
+        }
       }
     },
     //改变table pageIndex pageSize

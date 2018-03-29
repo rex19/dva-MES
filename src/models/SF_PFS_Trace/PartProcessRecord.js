@@ -1,6 +1,6 @@
 import modelExtend from 'dva-model-extend'
 // import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/stationTable'
-import { GetPageInit, GetTracePartByStation, addKey } from 'services/SF_PFS_Trace/TracePartByStation'
+import { PartProcessRecordGetPageInit, GetPartProcessRecordByStation, addKey } from 'services/SF_PFS_Trace/PartProcessRecord'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -11,7 +11,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'tracePartByStation'
+const TableName = 'partProcessRecord'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -38,12 +38,19 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    StationIdSelectData: []
+    SelectInitData: [],
+    WorkOrderNumber: '',
+    WorkOrderPlannedQuantity: '',
+    PartPartNumber: '',
+    PartState: '',
+    PartDescription: '',
+    PartDrawingNumber: '',
+    CustomerPartNumber: '',
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/SF_PFS_Trace/TracePartByStation`) {
+        if (location.pathname === `/SF_PFS_Trace/PartProcessRecord`) {
           console.log('/SF_PFS_Trace/${TableName}')
           dispatch({
             type: 'InitQuery',
@@ -52,6 +59,30 @@ export default modelExtend(pageModel, {
             //   PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
             //   [QueryRequestDTO]: null
             // }
+          })
+          dispatch({
+            type: 'querySuccess',
+            payload: {
+              list: [],
+              // pagination: {
+              //   PageIndex: Number(pagination.PageIndex) || 1,
+              //   PageSize: Number(pagination.PageSize) || 10,
+              //   total: data.Data.RowCount || 0,
+              // },
+            },
+          })
+          dispatch({
+            type: 'InitQueryReducers',
+            payload: {
+              type: 'OtherParams',
+              WorkOrderNumber: '',
+              WorkOrderPlannedQuantity: '',
+              PartPartNumber: '',
+              PartState: '',
+              PartDescription: '',
+              PartDrawingNumber: '',
+              CustomerPartNumber: '',
+            },
           })
         }
       })
@@ -62,18 +93,16 @@ export default modelExtend(pageModel, {
     * InitQuery({
       payload,
     }, { call, put, select }) {
-      const data = yield call(GetPageInit, payload)
-      console.log('tracePartByStation-query', data)
+      const data = yield call(PartProcessRecordGetPageInit, payload)
+      console.log('-query', data)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {
-        console.log('+++++++++++++++')
         return errorMessage(data.Message || '查询失败')
       } else if (data.ReturnCode === 0) {
-        console.log('-------------------')
         yield put({
           type: 'InitQueryReducers',
           payload: {
-            StationIdSelectData: data.Data,
+            SelectInitData: data.Data,
             type: 'InitQuery'
           },
         })
@@ -82,20 +111,19 @@ export default modelExtend(pageModel, {
       }
     },
 
-    * GetTracePartByStationQuery({
+    * GetPartProcessRecordByStation({
       payload,
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-      console.log('GetTracePartByStation-query1', payload)
-      const data = yield call(GetTracePartByStation, payload)
-      console.log('GetTracePartByStation-query2', data)
+      const data = yield call(GetPartProcessRecordByStation, payload)
+      console.log('GetPartProcessRecordByStation-query', data)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {
         return errorMessage(data.Message || '查询失败')
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else if (data.ReturnCode === 0) {
-        const result = yield call(addKey, data.Data) //+1
+        const result = yield call(addKey, data.PartProcessRecordsData) //+1
         yield put({
           type: 'querySuccess',
           payload: {
@@ -103,10 +131,24 @@ export default modelExtend(pageModel, {
             // pagination: {
             //   PageIndex: Number(pagination.PageIndex) || 1,
             //   PageSize: Number(pagination.PageSize) || 10,
-            //   total: data.Data.RowCount,
+            //   total: data.Data.RowCount || 0,
             // },
           },
         })
+        yield put({
+          type: 'InitQueryReducers',
+          payload: {
+            type: 'OtherParams',
+            WorkOrderNumber: data.WorkOrderNumber,
+            WorkOrderPlannedQuantity: data.WorkOrderPlannedQuantity,
+            PartPartNumber: data.PartPartNumber,
+            PartState: data.PartState,
+            PartDescription: data.PartDescription,
+            PartDrawingNumber: data.PartDrawingNumber,
+            CustomerPartNumber: data.CustomerPartNumber,
+          },
+        })
+
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else {
         throw data
@@ -140,10 +182,21 @@ export default modelExtend(pageModel, {
         return { ...state, ...payload, tableLoading: false }
       }
     },
+
     InitQueryReducers(state, { payload }) {
       if (payload.type === 'InitQuery') {
-        console.log('InitQueryReducers--+', payload)
-        return { ...state, ...payload, StationIdSelectData: payload.StationIdSelectData }
+        return { ...state, ...payload, SelectInitData: payload.SelectInitData }
+      } else if (payload.type === 'OtherParams') {
+        return {
+          ...state, ...payload,
+          WorkOrderNumber: payload.WorkOrderNumber,
+          WorkOrderPlannedQuantity: payload.WorkOrderPlannedQuantity,
+          PartPartNumber: payload.PartPartNumber,
+          PartState: payload.PartState,
+          PartDescription: payload.PartDescription,
+          PartDrawingNumber: payload.PartDrawingNumber,
+          CustomerPartNumber: payload.CustomerPartNumber,
+        }
       }
     },
     //改变table pageIndex pageSize

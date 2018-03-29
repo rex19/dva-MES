@@ -1,9 +1,11 @@
+
+
 import React from 'react'
 import { Form, Input, Row, Col, Radio, Select, Button, DatePicker, Switch, Icon } from 'antd'
 import { connect } from 'dva'
 import moment from 'moment';
 // import { FormComponents, TableComponents } from '../../../components'
-// import FormComponents from '../Components/TracePartByStationFromComponents'
+import FormComponents from '../Components/TracePartByStationFromComponents'
 import TableComponents from '../Components/TracePartByStationTableComponents'
 import globalConfig from 'utils/config'
 // import './index.less'
@@ -12,56 +14,72 @@ const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 const { RangePicker } = DatePicker;
+const { TextArea } = Input;
+
 
 //每个table可能不同的变量字段(1)
-const TableName = 'traceabilityByPartAttribute'
+const TableName = 'tracePartByFinishGoodBoxNumber'
+const Decorator = 'Decorator'
 
-const TraceabilityByPartAttributeComponents = ({
-  traceabilityByPartAttribute,
+const TracePartByFinishGoodBoxNumberComponents = ({
+  tracePartByFinishGoodBoxNumber,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = traceabilityByPartAttribute
+  const TableModelsData = tracePartByFinishGoodBoxNumber
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, SelectInitData } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible,
+    deleteModalVisible, EditData, DetailsData,
+  } = TableModelsData
 
-  console.log('TableComponents-traceabilityByPartAttribute ', TableModelsData)
-
+  console.log('TableComponents-tracePartByFinishGoodBoxNumber ', TableModelsData)
 
 
   const Colums = [{
-    title: '属性类别',
-    dataIndex: 'AttributeType',
-  }, {
-    title: '属性编号',
-    dataIndex: 'AttributeCode',
-  }, {
-    title: '属性值',
-    dataIndex: 'AttributeValue',
-  }, {
-    title: '属性分配时间',
-    dataIndex: 'AssignedDateTime',
-  }, {
-    title: '属性分配站位',
-    dataIndex: 'AssignedStationNumber',
-  }, {
-    title: '工单号',
-    dataIndex: 'WorkOrderNumber',
-  }, {
     title: '序列号',
     dataIndex: 'PartSerialNumber',
   }, {
     title: '序列号状态',
     dataIndex: 'PartState',
   }, {
+    title: '成品序列号',
+    dataIndex: 'FinishGoodSerialNumber',
+  }, {
     title: '料号',
     dataIndex: 'PartPartNumber',
   }, {
+    title: '客户料号',
+    dataIndex: 'CustomerMaterialPartNumber',
+  }, {
     title: '描述',
-    AssigneeCode: 'PartDescription',
+    dataIndex: 'Description',
+  }, {
+    title: '成品箱号',
+    dataIndex: 'FinishGoodBoxNumber',
+  }, {
+    title: '货运单号',
+    dataIndex: 'DeliveryNoteFormNumber',
+  }, {
+    title: '装箱时间',
+    AssigneeCode: 'PackingDateTime',
+  }, {
+    title: '发货时间',
+    dataIndex: 'DeliveryDateTime',
+  }, {
+    title: '操作员工号',
+    dataIndex: 'OperatorCode',
+  }, {
+    title: '操作员姓名',
+    AssigneeCode: 'OperatorName',
+  }, {
+    title: '发货员工号',
+    dataIndex: 'DeliveryOperatorCode',
+  }, {
+    title: '发货员姓名',
+    dataIndex: 'DeliveryOperatorName',
   }]
 
   /**
@@ -123,15 +141,11 @@ const TraceabilityByPartAttributeComponents = ({
     validateFields((err, values) => {
       if (!err) {
         const Params = {
-          AttributeCode: values.AttributeCodeDecorator,
-          AttributeValue: values.AttributeValueDecorator,
-          PageIndex: 5,
-          PageSize: 6
+          FinishGoodBoxNumber: values.PartSerialNumberDecorator,
         }
-        console.log('handleSearch-Params', Params)
-        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
+        console.log('-Params', Params)
         dispatch({
-          type: `${TableName}/GetTraceabilityByPartAttributeQuery`,
+          type: `${TableName}/GetPartInformationByCondition`,
           payload: Params,
         })
       }
@@ -155,40 +169,18 @@ const TraceabilityByPartAttributeComponents = ({
           className="ant-advanced-search-form"
           onSubmit={handleSearch}
         >
-          <Form>
-            <Row gutter={40}>
-              <Col span={8} key={3} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`属性编号`}>
-                  {getFieldDecorator(`AttributeCodeDecorator`, {
-                    initialValue: '请选择',
-                  })(
-                    <Select
-                      style={{ width: 200 }}
-                      onChange={SelectChange}
-                    >
-                      {SelectInitData.map(function (item, index) {
-                        return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-                      })}
-                    </Select>
-                    )}
-                </FormItem>
-              </Col>
 
-            </Row>
-            <Row gutter={40}>
-              <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`属性值`}>
-                  {getFieldDecorator(`AttributeValueDecorator`, {
-                    initialValue: '',
-                  })(
-                    <input />
-                    )}
-                </FormItem>
-              </Col>
-            </Row>
-
-          </Form>
-
+          <Row gutter={40}>
+            <Col span={8} key={3} style={{ display: 'block' }}>
+              <FormItem {...formItemLayout} label={`成品箱号`}>
+                {getFieldDecorator(`FinishGoodBoxNumber${Decorator}`, {
+                  initialValue: '',
+                })(
+                  <Input />
+                  )}
+              </FormItem>
+            </Col>
+          </Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
@@ -212,11 +204,15 @@ const TraceabilityByPartAttributeComponents = ({
           tableModels={TableModelsData}
         />
       </div>
+
     </div>
   )
 }
 
 
-export default connect(({ traceabilityByPartAttribute }) => ({ traceabilityByPartAttribute }))(Form.create()(TraceabilityByPartAttributeComponents))
+export default connect(({ tracePartByFinishGoodBoxNumber }) => ({ tracePartByFinishGoodBoxNumber }))(Form.create()(TracePartByFinishGoodBoxNumberComponents))
+
+
+
 
 

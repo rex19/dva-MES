@@ -1,6 +1,6 @@
 import modelExtend from 'dva-model-extend'
 // import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/stationTable'
-import { GetPageInit, GetTracePartByStation, addKey } from 'services/SF_PFS_Trace/TracePartByStation'
+import { GetBoxInformationByDeliveryNote, addKey } from 'services/SF_PFS_Trace/TraceBoxByDeliveryNote'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -11,7 +11,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'tracePartByStation'
+const TableName = 'traceBoxByDeliveryNote'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -38,20 +38,26 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    StationIdSelectData: []
+
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/SF_PFS_Trace/TracePartByStation`) {
-          console.log('/SF_PFS_Trace/${TableName}')
+        if (location.pathname === `/SF_PFS_Trace/TraceBoxByDeliveryNote`) {
+          console.log('/SF_PFS_Trace/${TraceBoxByDeliveryNote}')
+          // dispatch({
+          //   type: 'InitQuery',
+          // payload: {
+          //   PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
+          //   PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
+          //   [QueryRequestDTO]: null
+          // }
+          // })
           dispatch({
-            type: 'InitQuery',
-            // payload: {
-            //   PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-            //   PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-            //   [QueryRequestDTO]: null
-            // }
+            type: 'querySuccess',
+            payload: {
+              list: [],
+            },
           })
         }
       })
@@ -62,49 +68,27 @@ export default modelExtend(pageModel, {
     * InitQuery({
       payload,
     }, { call, put, select }) {
-      const data = yield call(GetPageInit, payload)
-      console.log('tracePartByStation-query', data)
-      // const pagination = yield select(state => state[TableName].pagination)
-      if (data.ReturnCode !== 0) {
-        console.log('+++++++++++++++')
-        return errorMessage(data.Message || '查询失败')
-      } else if (data.ReturnCode === 0) {
-        console.log('-------------------')
-        yield put({
-          type: 'InitQueryReducers',
-          payload: {
-            StationIdSelectData: data.Data,
-            type: 'InitQuery'
-          },
-        })
-      } else {
-        throw data
-      }
+      console.log('InitQuery', data)
     },
 
-    * GetTracePartByStationQuery({
+    * GetBoxInformationByDeliveryNote({
       payload,
     }, { call, put, select }) {
-      yield put({ type: 'loadingChanger', payload: 'showLoading' })
-      yield put({ type: 'tablePaginationChanger', payload: payload })
-      console.log('GetTracePartByStation-query1', payload)
-      const data = yield call(GetTracePartByStation, payload)
-      console.log('GetTracePartByStation-query2', data)
+      // yield put({ type: 'loadingChanger', payload: 'showLoading' })
+      // yield put({ type: 'tablePaginationChanger', payload: payload })
+      const data = yield call(GetBoxInformationByDeliveryNote, payload)
+      console.log('GetBoxInformationByDeliveryNote-query', data, payload)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {
         return errorMessage(data.Message || '查询失败')
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else if (data.ReturnCode === 0) {
         const result = yield call(addKey, data.Data) //+1
+        console.log('GetBoxInformationByDeliveryNote-query', data, payload)
         yield put({
           type: 'querySuccess',
           payload: {
             list: result,
-            // pagination: {
-            //   PageIndex: Number(pagination.PageIndex) || 1,
-            //   PageSize: Number(pagination.PageSize) || 10,
-            //   total: data.Data.RowCount,
-            // },
           },
         })
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
@@ -112,6 +96,8 @@ export default modelExtend(pageModel, {
         throw data
       }
     },
+
+
 
   },
   reducers: {
@@ -140,12 +126,7 @@ export default modelExtend(pageModel, {
         return { ...state, ...payload, tableLoading: false }
       }
     },
-    InitQueryReducers(state, { payload }) {
-      if (payload.type === 'InitQuery') {
-        console.log('InitQueryReducers--+', payload)
-        return { ...state, ...payload, StationIdSelectData: payload.StationIdSelectData }
-      }
-    },
+
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }

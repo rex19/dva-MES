@@ -2,9 +2,9 @@ import React from 'react'
 import { Form, Input, Row, Col, Radio, Select, Button, DatePicker, Switch, Icon } from 'antd'
 import { connect } from 'dva'
 import moment from 'moment';
-// import { FormComponents, TableComponents } from '../../../components'
-// import FormComponents from '../Components/TracePartByStationFromComponents'
+import FormComponents from '../Components/TracePartByStationFromComponents'
 import TableComponents from '../Components/TracePartByStationTableComponents'
+// import TableComponents from '../Components/TraceMachineAbnormalRecordTableComponents'
 import globalConfig from 'utils/config'
 // import './index.less'
 
@@ -14,56 +14,47 @@ const FormItem = Form.Item
 const { RangePicker } = DatePicker;
 
 //每个table可能不同的变量字段(1)
-const TableName = 'tracePartByStation'
+const TableName = 'traceMachineAbnormalRecord'
 
-const TracePartByStationComponents = ({
-  tracePartByStation,
+const TraceMachineAbnormalRecordComponents = ({
+  traceMachineAbnormalRecord,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = tracePartByStation
+  const TableModelsData = traceMachineAbnormalRecord
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, StationIdSelectData } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, SelectInitData } = TableModelsData
 
-  console.log('TableComponents-tracePartByStation ', TableModelsData)
-
-
-  const TracePartByStationColums = [{
-    title: '工件序列号',
-    dataIndex: 'PartSerialNumber',
+  console.log('TableComponents-traceMachineAbnormalRecord ', TableModelsData)
+  //工站异常查询
+  const Colums = [{
+    title: '工站编号',
+    dataIndex: 'StationNumber',
   }, {
-    title: '工站号',
-    dataIndex: 'StationCode',
+    title: '工站描述',
+    dataIndex: 'StationName',
   }, {
-    title: '工单号',
-    dataIndex: 'WorkOrderNumber',
+    title: '发生问题前一个产品序列号',
+    dataIndex: 'SerialNumberOfIssueHappened',
   }, {
-    title: '物料号',
-    dataIndex: 'PartPartNumber',
+    title: '问题解决后一个产品序列号',
+    dataIndex: 'SerialNumberOfIssueFixed',
   }, {
-    title: '测试时间',
-    dataIndex: 'ProductionFinishedDateTime',
+    title: '异常代码',
+    dataIndex: 'ErrorCode',
   }, {
-    title: '上传时间',
-    dataIndex: 'UploadDateTime',
+    title: '异常描述',
+    dataIndex: 'ErrorDescription',
   }, {
-    title: '结果',
-    dataIndex: 'PartState',
+    title: '发生时间',
+    dataIndex: 'IssueHappenedDateTime',
   }, {
-    title: '操作员工号',
-    dataIndex: 'OperatorCode',
-  }, {
-    title: '操作员姓名',
-    dataIndex: 'OperatorName',
-  }, {
-    title: '成品箱号',
-    dataIndex: 'FinishBoxNumber',
+    title: '结束时间',
+    dataIndex: 'IssueFixedDateTIme',
   }]
-
-
   /**
    * crud modal
    */
@@ -126,14 +117,13 @@ const TracePartByStationComponents = ({
           StationId: values.StationIdDecorator,
           StartDateTime: moment(values.StartDateTimeFieldDecorator[0]).format(),
           EndDateTime: moment(values.StartDateTimeFieldDecorator[1]).format(),
-          IsOnlyShowFinalResult: values.IsOnlyShowFinalResultFieldDecorator,
           PageIndex: 5,
           PageSize: 6
         }
         console.log('handleSearch-Params', Params)
         // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
         dispatch({
-          type: `${TableName}/GetTracePartByStationQuery`,
+          type: `${TableName}/GetMachineAbnormalRecord`,
           payload: Params,
         })
       }
@@ -142,9 +132,6 @@ const TracePartByStationComponents = ({
   }
 
 
-  const SelectChange = (checkedValues) => {
-    console.log('checked = ', checkedValues);
-  }
 
   const CheckedOnChange = (checked) => {
     console.log(`switch to ${checked}`);
@@ -159,24 +146,21 @@ const TracePartByStationComponents = ({
         >
           <Form>
             <Row gutter={40}>
-              <Col span={8} key={3} style={{ display: 'block' }}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`工站选择`}>
                   {getFieldDecorator(`StationIdDecorator`, {
                     initialValue: '请选择',
                   })(
                     <Select
                       style={{ width: 200 }}
-                      onChange={SelectChange}
                     >
-                      {StationIdSelectData.map(function (item, index) {
+                      {SelectInitData.map(function (item, index) {
                         return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                       })}
                     </Select>
                     )}
                 </FormItem>
               </Col>
-            </Row>
-            <Row gutter={40}>
               <Col span={8} key={2} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`时间选择`}>
                   {getFieldDecorator(`StartDateTimeFieldDecorator`, {
@@ -191,17 +175,7 @@ const TracePartByStationComponents = ({
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={40}>
-              <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`只显示结果`}>
-                  {getFieldDecorator(`IsOnlyShowFinalResultFieldDecorator`, {
-                    initialValue: false,
-                  })(
-                    <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} onChange={CheckedOnChange} />
-                    )}
-                </FormItem>
-              </Col>
-            </Row>
+
           </Form>
 
           <Row>
@@ -218,7 +192,7 @@ const TracePartByStationComponents = ({
           // data={dataTest}
           tableLoading={tableLoading}
           pagination={pagination}
-          columns={TracePartByStationColums}
+          columns={Colums}
           TableWidth={1300}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
@@ -232,31 +206,9 @@ const TracePartByStationComponents = ({
 }
 
 
-export default connect(({ tracePartByStation }) => ({ tracePartByStation }))(Form.create()(TracePartByStationComponents))
+export default connect(({ traceMachineAbnormalRecord }) => ({ traceMachineAbnormalRecord }))(Form.create()(TraceMachineAbnormalRecordComponents))
 
 
-
-// {this.props.GetStationInformationInitData.map(function (item, index) {
-//   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-// })}
-
-// <FormComponents
-// formComponentsValue={formComponentsValue()}
-// />
-
-// import React from 'react'
-// import { Row, Col, Tabs } from 'antd'
-
-
-
-// const TracePartByStation = () => (
-//   <Row>
-//     <h1 style={{ textAlign: 'center' }}>TracePartByStation</h1>
-//     <div>
-//     </div>
-//   </Row>)
-
-// export default TracePartByStation
 
 
 

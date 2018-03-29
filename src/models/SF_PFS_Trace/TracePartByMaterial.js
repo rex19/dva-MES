@@ -1,6 +1,6 @@
 import modelExtend from 'dva-model-extend'
 // import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/stationTable'
-import { GetPageInit, GetTracePartByStation, addKey } from 'services/SF_PFS_Trace/TracePartByStation'
+import { GetMaterialContainerByCondition, GetPartInformationListByContainerNumber, addKey } from 'services/SF_PFS_Trace/TracePartByMaterial'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -11,7 +11,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'tracePartByStation'
+const TableName = 'tracePartByMaterial'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -38,20 +38,40 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    StationIdSelectData: []
+    TableData2: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/SF_PFS_Trace/TracePartByStation`) {
-          console.log('/SF_PFS_Trace/${TableName}')
+        if (location.pathname === `/SF_PFS_Trace/TracePartByMaterial`) {
+          console.log('/SF_PFS_Trace/${TracePartByMaterial}')
+          // dispatch({
+          //   type: 'InitQuery',
+          // payload: {
+          //   PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
+          //   PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
+          //   [QueryRequestDTO]: null
+          // }
+          // })
+
           dispatch({
-            type: 'InitQuery',
-            // payload: {
-            //   PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-            //   PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-            //   [QueryRequestDTO]: null
-            // }
+            type: 'querySuccess',
+            payload: {
+              list: [],
+              // pagination: {
+              //   PageIndex: Number(pagination.PageIndex) || 1,
+              //   PageSize: Number(pagination.PageSize) || 10,
+              //   total: data.Data.RowCount || 0,
+              // },
+            },
+          })
+
+          dispatch({
+            type: 'InitQueryReducers',
+            payload: {
+              type: 'getPartInformationData',
+              data: [],
+            },
           })
         }
       })
@@ -63,13 +83,11 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put, select }) {
       const data = yield call(GetPageInit, payload)
-      console.log('tracePartByStation-query', data)
+      console.log('tracePartByMaterial-query', data)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {
-        console.log('+++++++++++++++')
         return errorMessage(data.Message || '查询失败')
       } else if (data.ReturnCode === 0) {
-        console.log('-------------------')
         yield put({
           type: 'InitQueryReducers',
           payload: {
@@ -82,20 +100,19 @@ export default modelExtend(pageModel, {
       }
     },
 
-    * GetTracePartByStationQuery({
+    * GetMaterialContainerByCondition({
       payload,
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-      console.log('GetTracePartByStation-query1', payload)
-      const data = yield call(GetTracePartByStation, payload)
-      console.log('GetTracePartByStation-query2', data)
+      const data = yield call(GetMaterialContainerByCondition, payload)
+      console.log('GetMaterialContainerByCondition-query', data)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {
         return errorMessage(data.Message || '查询失败')
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else if (data.ReturnCode === 0) {
-        const result = yield call(addKey, data.Data) //+1
+        const result = yield call(addKey, data.ContainerListData) //+1
         yield put({
           type: 'querySuccess',
           payload: {
@@ -113,6 +130,36 @@ export default modelExtend(pageModel, {
       }
     },
 
+    * GetPartInformationListByContainerNumber({
+      payload,
+    }, { call, put, select }) {
+      yield put({ type: 'loadingChanger', payload: 'showLoading' })
+      yield put({ type: 'tablePaginationChanger', payload: payload })
+      const data = yield call(GetPartInformationListByContainerNumber, payload.ContainerNumber)
+      console.log('GetPartInformationListByContainerNumber-query', data)
+      // const pagination = yield select(state => state[TableName].pagination)
+      if (data.ReturnCode !== 0) {
+        return errorMessage(data.Message || '查询失败')
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+      } else if (data.ReturnCode === 0) {
+        const result = yield call(addKey, data.PartInformationData) //+1
+        yield put({
+          type: 'InitQueryReducers',
+          payload: {
+            type: 'getPartInformationData',
+            data: result,
+            // pagination: {
+            //   PageIndex: Number(pagination.PageIndex) || 1,
+            //   PageSize: Number(pagination.PageSize) || 10,
+            //   total: data.Data.RowCount,
+            // },
+          },
+        })
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+      } else {
+        throw data
+      }
+    },
   },
   reducers: {
     //打开关闭Modals
@@ -141,9 +188,11 @@ export default modelExtend(pageModel, {
       }
     },
     InitQueryReducers(state, { payload }) {
-      if (payload.type === 'InitQuery') {
-        console.log('InitQueryReducers--+', payload)
-        return { ...state, ...payload, StationIdSelectData: payload.StationIdSelectData }
+      if (payload.type === 'getPartInformationData') {
+        return {
+          ...state, ...payload,
+          TableData2: payload.data
+        }
       }
     },
     //改变table pageIndex pageSize

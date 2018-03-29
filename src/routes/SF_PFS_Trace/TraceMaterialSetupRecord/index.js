@@ -2,9 +2,9 @@ import React from 'react'
 import { Form, Input, Row, Col, Radio, Select, Button, DatePicker, Switch, Icon } from 'antd'
 import { connect } from 'dva'
 import moment from 'moment';
-// import { FormComponents, TableComponents } from '../../../components'
-// import FormComponents from '../Components/TracePartByStationFromComponents'
+import FormComponents from '../Components/TracePartByStationFromComponents'
 import TableComponents from '../Components/TracePartByStationTableComponents'
+// import TableComponents from '../Components/TraceMaterialSetupRecordTableComponents'
 import globalConfig from 'utils/config'
 // import './index.less'
 
@@ -14,55 +14,78 @@ const FormItem = Form.Item
 const { RangePicker } = DatePicker;
 
 //每个table可能不同的变量字段(1)
-const TableName = 'tracePartByStation'
+const TableName = 'traceMaterialSetupRecord'
 
-const TracePartByStationComponents = ({
-  tracePartByStation,
+const TraceMaterialSetupRecordComponents = ({
+  traceMaterialSetupRecord,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = tracePartByStation
+  const TableModelsData = traceMaterialSetupRecord
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, StationIdSelectData } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, SelectInitData } = TableModelsData
 
-  console.log('TableComponents-tracePartByStation ', TableModelsData)
+  console.log('TableComponents-traceMaterialSetupRecord ', TableModelsData)
 
-
-  const TracePartByStationColums = [{
-    title: '工件序列号',
-    dataIndex: 'PartSerialNumber',
+  //上料记录查询
+  const Colums = [{
+    title: '上料动作类型',
+    dataIndex: 'SetupActionType',
   }, {
-    title: '工站号',
-    dataIndex: 'StationCode',
+    title: '上料动作描述',
+    dataIndex: 'SetupActionName',
   }, {
-    title: '工单号',
-    dataIndex: 'WorkOrderNumber',
+    title: '结果代码',
+    dataIndex: 'SetupResult',
+  }, {
+    title: '错误描述',
+    dataIndex: 'ResultMessage',
+  }, {
+    title: '工站编号',
+    dataIndex: 'StationNumber',
+  }, {
+    title: '工站描述',
+    dataIndex: 'StationName',
   }, {
     title: '物料号',
-    dataIndex: 'PartPartNumber',
+    dataIndex: 'MaterialPartNumber',
   }, {
-    title: '测试时间',
-    dataIndex: 'ProductionFinishedDateTime',
+    title: '物料描述',
+    dataIndex: 'MaterialDescription',
   }, {
-    title: '上传时间',
-    dataIndex: 'UploadDateTime',
+    title: '产品位置',
+    dataIndex: 'Designator',
   }, {
-    title: '结果',
-    dataIndex: 'PartState',
+    title: '料道位置',
+    AssigneeCode: 'FeederLocation',
   }, {
-    title: '操作员工号',
+    title: '物料容器号',
+    dataIndex: 'ContainerNumber',
+  }, {
+    title: '供应商',
+    dataIndex: 'SupplierName',
+  }, {
+    title: '供应商料号',
+    dataIndex: 'SupplierMaterialPartNumber',
+  }, {
+    title: '批次号',
+    AssigneeCode: 'BatchNumber',
+  }, {
+    title: '数量',
+    dataIndex: 'Quantity',
+  }, {
+    title: '上料时间',
+    dataIndex: 'SetupDateTime',
+  }, {
+    title: '上料员工号',
     dataIndex: 'OperatorCode',
   }, {
-    title: '操作员姓名',
+    title: '上料员姓名',
     dataIndex: 'OperatorName',
-  }, {
-    title: '成品箱号',
-    dataIndex: 'FinishBoxNumber',
   }]
-
 
   /**
    * crud modal
@@ -126,14 +149,15 @@ const TracePartByStationComponents = ({
           StationId: values.StationIdDecorator,
           StartDateTime: moment(values.StartDateTimeFieldDecorator[0]).format(),
           EndDateTime: moment(values.StartDateTimeFieldDecorator[1]).format(),
-          IsOnlyShowFinalResult: values.IsOnlyShowFinalResultFieldDecorator,
+          OperatorCode: values.OperatorCodeDecorator,
+          OperatorName: values.OperatorNameDecorator,
           PageIndex: 5,
           PageSize: 6
         }
         console.log('handleSearch-Params', Params)
         // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
         dispatch({
-          type: `${TableName}/GetTracePartByStationQuery`,
+          type: `${TableName}/GetMaterialSetupRecordByCondition`,
           payload: Params,
         })
       }
@@ -168,15 +192,13 @@ const TracePartByStationComponents = ({
                       style={{ width: 200 }}
                       onChange={SelectChange}
                     >
-                      {StationIdSelectData.map(function (item, index) {
+                      {SelectInitData.map(function (item, index) {
                         return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                       })}
                     </Select>
                     )}
                 </FormItem>
               </Col>
-            </Row>
-            <Row gutter={40}>
               <Col span={8} key={2} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`时间选择`}>
                   {getFieldDecorator(`StartDateTimeFieldDecorator`, {
@@ -191,13 +213,23 @@ const TracePartByStationComponents = ({
                 </FormItem>
               </Col>
             </Row>
+
             <Row gutter={40}>
-              <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`只显示结果`}>
-                  {getFieldDecorator(`IsOnlyShowFinalResultFieldDecorator`, {
-                    initialValue: false,
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`员工号`}>
+                  {getFieldDecorator(`OperatorCodeDecorator`, {
+                    initialValue: '',
                   })(
-                    <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} onChange={CheckedOnChange} />
+                    <Input />
+                    )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`姓名`}>
+                  {getFieldDecorator(`OperatorNameDecorator`, {
+                    initialValue: '',
+                  })(
+                    <Input />
                     )}
                 </FormItem>
               </Col>
@@ -218,7 +250,7 @@ const TracePartByStationComponents = ({
           // data={dataTest}
           tableLoading={tableLoading}
           pagination={pagination}
-          columns={TracePartByStationColums}
+          columns={Colums}
           TableWidth={1300}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
@@ -232,31 +264,9 @@ const TracePartByStationComponents = ({
 }
 
 
-export default connect(({ tracePartByStation }) => ({ tracePartByStation }))(Form.create()(TracePartByStationComponents))
+export default connect(({ traceMaterialSetupRecord }) => ({ traceMaterialSetupRecord }))(Form.create()(TraceMaterialSetupRecordComponents))
 
 
-
-// {this.props.GetStationInformationInitData.map(function (item, index) {
-//   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-// })}
-
-// <FormComponents
-// formComponentsValue={formComponentsValue()}
-// />
-
-// import React from 'react'
-// import { Row, Col, Tabs } from 'antd'
-
-
-
-// const TracePartByStation = () => (
-//   <Row>
-//     <h1 style={{ textAlign: 'center' }}>TracePartByStation</h1>
-//     <div>
-//     </div>
-//   </Row>)
-
-// export default TracePartByStation
 
 
 

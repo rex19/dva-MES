@@ -6,7 +6,7 @@
 // const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
-//sfpfs-fis
+
 // const APIV1 = 'http://192.168.1.230:3009/api'
 // const ADMAPI = 'http://192.168.1.230/SFMES/api'
 // const WMSAPI = 'http://192.168.1.230:3009/sfwms'
@@ -15,7 +15,7 @@ const APIV1 = 'http://localhost:3009/api'
 const ADMAPI = 'http://192.168.1.252/SFMES/api'
 const WMSAPI = 'http://localhost:3009/sfwms'
 const SFPFSFIS = 'http://localhost:3009/sfpfsfis'
-
+const SFPFSTrace = 'http://localhost:3009/SFPFSTrace'
 
 module.exports = {
   name: '翊流智能',
@@ -78,6 +78,27 @@ module.exports = {
     //SF-PFS-FIS
     workOrder: `${SFPFSFIS}/workOrder`,
     workOrderActivation: `${SFPFSFIS}/workOrderActivation`,
+
+    //SF-PFS-Trace
+    TracePartByStation: `${SFPFSTrace}/TracePartByStation`,
+
+    PartProcessRecord: `${SFPFSTrace}/PartProcessRecord`,
+    PartFailureRecord: `${SFPFSTrace}/PartFailureRecord`,
+    PartRepairRecord: `${SFPFSTrace}/PartRepairRecord`,
+    PartMergeRecord: `${SFPFSTrace}/PartMergeRecord`,
+    PartAttributeRecord: `${SFPFSTrace}/PartAttributeRecord`,
+    PartMaterialRecord: `${SFPFSTrace}/PartMaterialRecord`,
+
+    TracePartByMaterial: `${SFPFSTrace}/TracePartByMaterial`,
+    TracePartByFinishGoodBoxNumber: `${SFPFSTrace}/TracePartByFinishGoodBoxNumber`,
+    TracePartByWorkOrder: `${SFPFSTrace}/TracePartByWorkOrder`,
+
+    TraceByAttribute: `${SFPFSTrace}/TraceByAttribute`,
+
+    TraceBoxByDeliveryNote: `${SFPFSTrace}/TraceBoxByDeliveryNote`,
+    TraceMachineAbnormalRecord: `${SFPFSTrace}/TraceMachineAbnormalRecord`,
+    TraceMaterialSetupRecord: `${SFPFSTrace}/TraceMaterialSetupRecord`,
+
   },
   crudApi: {
     postAddData: 'Post',  //新增
@@ -113,8 +134,10 @@ module.exports = {
     GetMovementRecordProductInStockingByWMSFormIdRequest: 'GetMovementRecordProductInStockingByWMSFormId',
 
 
-
-    //SF-PFS-FIS  工单新增，修改，查询，设置 api
+    /**
+     * SF-PFS-FIS
+     */
+    // 工单新增，修改，查询，设置 api
     workOrderCreator: '',
     workOrderEditor: '',
     //工单列表
@@ -141,8 +164,55 @@ module.exports = {
     ActiveWorkOrderToGetWorkOrderPerformanceDataLine: 'GetWorkOrderPerformanceData',
     //工单激活
     GetSetupActivationInformationByWorkOrderAndStationNumber: 'GetSetupActivationInformationByWorkOrderAndStationNumber',
-    workOrderConfig: ''
-    //SF-PFS-Trace
+    workOrderConfig: '',
+
+    /**
+     * SF-PFS-Trace
+     */
+    //TracePartByStation 通过工站追溯工件
+    GetPageInit: 'GetPageInit',
+    GetTracePartByStation: 'GetTracePartByStation',
+
+    //PartProcessRecord
+    PartProcessRecordGetPageInit: 'PartProcessRecordGetPageInit',   //通过工站追溯工件页面-获得工站选择下拉列表
+    GetPartProcessRecordByStation: 'GetPartProcessRecordByStation',  //通过工站追溯工件页面-通过选择的站点和时间日期限定查询工件序列号
+
+    //PartFailureRecord
+    GetPartFailureRecordByPartSerialNumber: 'GetPartFailureRecordByPartSerialNumber', //工件失效记录页面-获取失效信息
+    GetFailureSlipByProcessRecordId: 'GetFailureSlipByProcessRecordId', //工件失效记录页面-获取失效备注信息
+    //PartRepairRecord
+    GetPartRepairRecordByPartSerialNumber: 'GetPartRepairRecordByPartSerialNumber', //工件维修记录页面-获取维修记录信息
+    GetPartRepairDetailByRepairRecordId: 'GetPartRepairDetailByRepairRecordId', //工件维修记录页面-获取维修详情
+    //PartMergeRecord
+    GetPartMergeRecordByPartSerialNumber: 'GetPartMergeRecordByPartSerialNumber', //工件装配记录页面-获取装配记录信息
+    //PartAttributeRecord
+    GetPartAttributeRecordByPartSerialNumber: 'GetPartAttributeRecordByPartSerialNumber', //工件装配记录页面-获取装配记录信息
+    //PartMaterialRecord
+    GetPartMaterialRecordByPartSerialNumber: 'GetPartMaterialRecordByPartSerialNumber', //工件装配记录页面-获取装配记录信息
+
+
+    //通过物料追溯工件页面
+    GetMaterialContainerByCondition: `GetMaterialContainerByCondition`,
+    GetPartInformationListByContainerNumber: `GetPartInformationListByContainerNumber`,
+    //通过成品箱号追溯页面
+    GetPartInformationByCondition: `GetPartInformationByCondition`,
+    //通过工单追溯工件页面-
+    GetPartByWorkOrder: `GetPartByWorkOrder`,
+    //通过属性追溯工件页面-TraceByAttribute
+    GetPartAttributeList: `GetPartAttributeList`,
+    GetWorkOrderAttributeList: `GetWorkOrderAttributeList`,
+    GetContainerAttributeList: `GetContainerAttributeList`,
+    GetPartInformationByAttribute: `GetPartInformationByAttribute`,
+    GetWorkOrderInformationByAttribute: `GetWorkOrderInformationByAttribute`,
+    GetContainerInformationByAttribute: `GetContainerInformationByAttribute`,
+    //通过发货单追溯工件页面-
+    GetBoxInformationByDeliveryNote: `GetBoxInformationByDeliveryNote`,
+    //工站异常页面
+    GetStationListForCombox: `GetStationListForCombox`,
+    GetMachineAbnormalRecord: `GetMachineAbnormalRecord`,
+    //上料记录查询页面
+    GetStationList: `GetStationList`,
+    GetMaterialSetupRecordByCondition: `GetMaterialSetupRecordByCondition`,
   },
   table: {
     paginationConfig: {

@@ -96,13 +96,9 @@ const TableComponents = ({
   return (
     <div>
       <Row>
-        <Col span={24} style={{ textAlign: 'left', marginBottom: '5px' }}>
-          <Button type="primary" onClick={() => handleModalShow('addModalVisible')}><Icon type="plus-circle-o" /> 新增</Button>
-        </Col>
-      </Row>
-      <Row>
         <Table
-          columns={columnFunc(column, columns, ActionColumn)}
+          // columns={columnFunc(column, columns, ActionColumn)}
+          columns={columns}
           dataSource={data}
           scroll={{ x: TableWidth }}
           pagination={false}
@@ -110,21 +106,7 @@ const TableComponents = ({
           loading={tableLoading}
         />
       </Row>
-      <Row >
-        <Col span={24} style={{ textAlign: 'center', marginTop: '10px' }}>
-          <Pagination
-            showQuickJumper//是否可以快速跳转至某页
-            // current={pagination.current}
-            onChange={onPaginationChange}//页码改变的回调，参数是改变后的页码及每页条数
-            // showSizeChanger={this.props.showSizeChanger}//是否可以改变 pageSize
-            onShowSizeChange={onShowSizeChange}//pageSize 变化的回调
-            defaultCurrent={1}//默认的当前页数
-            total={pagination.total}//数据总数
-            showTotal={(total, range) => `每页${pagination.PageSize}条,共${total}条`}
-          // current={this.props.currentPage}  //当前页数
-          />
-        </Col>
-      </Row>
+
       <ModalComponents
         ModalWidth={ModalWidth}
         addModalVisible={addModalVisible}
@@ -141,3 +123,19 @@ const TableComponents = ({
   )
 }
 export default connect(({ dispatch }) => ({ dispatch }))(TableComponents)
+
+// <Row >
+// <Col span={24} style={{ textAlign: 'center', marginTop: '10px' }}>
+//   <Pagination
+//     showQuickJumper//是否可以快速跳转至某页
+//     // current={pagination.current}
+//     onChange={onPaginationChange}//页码改变的回调，参数是改变后的页码及每页条数
+//     // showSizeChanger={this.props.showSizeChanger}//是否可以改变 pageSize
+//     onShowSizeChange={onShowSizeChange}//pageSize 变化的回调
+//     defaultCurrent={1}//默认的当前页数
+//     total={pagination.total}//数据总数
+//     showTotal={(total, range) => `每页${pagination.PageSize}条,共${total}条`}
+//   // current={this.props.currentPage}  //当前页数
+//   />
+// </Col>
+// </Row>
