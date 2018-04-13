@@ -169,7 +169,7 @@ module.exports = {
     workOrderConfig: '',
 
     /**
-     * SF-PFS-Trace
+     * SF-PFS-Trace  trace
      */
     //TracePartByStation 通过工站追溯工件
     GetPageInit: 'GetPageInit',
