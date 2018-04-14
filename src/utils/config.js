@@ -234,6 +234,10 @@ module.exports = {
 
     // //刀具管理
     getInitDataQuery: 'GetKeyLableListForToolType',
+
+    // ProgramToolSetting
+    GetKeyLableForStation: 'GetKeyLableForStation',
+
     // postAddData: 'Post',  //新增
     // postEditData: 'Put',  //编辑
     // postDeleteData: 'Delete',   //删除

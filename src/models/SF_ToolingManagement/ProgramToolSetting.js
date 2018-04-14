@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getInitDataQuery, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/SF_ToolingManagement/ProgramToolSetting'
+import { query, create, deleted, edit, GetKeyLableForStation, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/SF_ToolingManagement/ProgramToolSetting'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -10,7 +10,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'lineTable'
+const TableName = 'programToolSetting'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -43,7 +43,8 @@ export default modelExtend(pageModel, {
     AllocatedMultiselectData: [],
     platform: [],
     //刀具
-    InitData: [],
+    ProductType: [],
+    Station: [],
     ToolTypeSelectData: [],
 
   },
@@ -64,26 +65,14 @@ export default modelExtend(pageModel, {
     * InitDataQuery({
       payload,
     }, { call, put, select }) {
-
-      const data = yield call(getInitDataQuery, payload)
-      console.log('effects-query123', payload, data)
+      const data = yield call(GetKeyLableForStation)
+      console.log('effects-query1111', payload, data)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
       } else if (data.Status === 200) {
         yield put({ type: 'showModalData', payload: { modalType: 'InitDataQuery', data: data.Data } })
-        // yield put({
-        //   type: 'querySuccess',
-        //   payload: {
-        //     list: result,
-        //     pagination: {
-        //       PageIndex: Number(pagination.PageIndex) || 1,
-        //       PageSize: Number(pagination.PageSize) || 10,
-        //       total: data.Data.RowCount,
-        //     },
-        //   },
-        // })
-        // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+
       } else {
         throw data
       }
@@ -243,7 +232,11 @@ export default modelExtend(pageModel, {
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       } else if (payload.modalType === 'InitDataQuery') {
-        return { ...state, ...payload, InitData: payload.data }
+        return {
+          ...state, ...payload,
+          ProductType: payload.data.ProductType,
+          Station: payload.data.Station
+        }
       }
     },
     //teble loading处理

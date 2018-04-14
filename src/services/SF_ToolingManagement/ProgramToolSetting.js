@@ -6,9 +6,9 @@ const tableName = globalConfig.api.ProgramToolSetting
 
 
 //初始数据
-export async function getInitDataQuery(params) {
+export async function GetKeyLableForStation(params) {
   return request({
-    url: `${globalConfig.api.ToolingType}/${globalConfig.crudApi.getInitDataQuery}`,
+    url: `${tableName}/${globalConfig.crudApi.GetKeyLableForStation}`,
     method: 'get',
     data: params,
   })

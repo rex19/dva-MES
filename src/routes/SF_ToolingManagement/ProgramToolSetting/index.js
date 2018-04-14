@@ -10,7 +10,7 @@ const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'lineTable'
+const TableName = 'programToolSetting'
 const AddFormLayout = ['AddToolingCode', 'AddToolingTypeId']
 const EditFormLayout = ['EditId', 'EditToolingCode', 'EditToolingTypeId']
 const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
@@ -19,57 +19,45 @@ const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
 let SpecificationData = ''
 let LifeRuleData = ''
 
-const LineTableComponents = ({
-  lineTable,
+const ProgramToolSettingComponents = ({
+  programToolSetting,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = lineTable
+  const TableModelsData = programToolSetting
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
     TotalMultiselectData, AllocatedMultiselectData,
-    InitData,
+    ProductType, Station,
     ToolTypeSelectData } = TableModelsData
 
-  console.log('TableComponents-lineTable ', TableModelsData)
+  console.log('TableComponents-programToolSetting ', TableModelsData)
 
 
   const Colums = [{
-    title: '刀具号',
+    title: '程序名',
     dataIndex: 'ToolingCode',
   }, {
-    title: '刀具状态',
+    title: '版本号',
     dataIndex: 'ToolingState',
   }, {
-    title: '刀具类型',
+    title: '面',
     dataIndex: 'ToolingTypeName',
   }, {
-    title: '类型描述',
+    title: '状态',
     dataIndex: 'ToolingTypeSpecification',
   }, {
-    title: '寿命规则号',
+    title: '工站号',
     dataIndex: 'LifeRuleCode',
   }, {
-    title: '当前刀具寿命',
+    title: '产品类型',
     dataIndex: 'CurrentLife',
   }, {
-    title: '寿命警告阀值',
+    title: '注册结束时间',
     dataIndex: 'WarningLifeThreshold',
-  }, {
-    title: '寿命限定阀值',
-    dataIndex: 'ExpirationLifeThreshold',
-  }, {
-    title: '寿命状态',
-    dataIndex: 'LifeState',
-  }, {
-    title: '当前位置',
-    AssigneeCode: 'CurrentLocation',
-  }, {
-    title: '注册时间',
-    dataIndex: 'CreateDateTime',
   }]
 
   /**
@@ -212,55 +200,6 @@ const LineTableComponents = ({
             })(<Input />)}
           </FormItem>
 
-          <FormItem
-            {...formItemLayout}
-            label="类别"
-          >
-            <div>
-              {getFieldDecorator('AddToolingTypeId', {
-                initialValue: '',
-                rules: [
-                  {
-                    required: true, message: '请选择类别',
-                  },
-                ],
-              })(
-                <Select onChange={ToolTypeSelectDataChange}>
-                  {ToolTypeSelectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="类别描述"
-            hasFeedback
-          >
-            {getFieldDecorator('AddSpecification', {
-              initialValue: SpecificationData,
-              rules: [
-                {
-                  required: true, message: '请输入类别描述',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="分配寿命规则"
-            hasFeedback
-          >
-            {getFieldDecorator('AddLifeRule', {
-              initialValue: LifeRuleData,
-              rules: [
-                {
-                  required: true, message: '请输入类别描述',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
         </Form>
       </div>
     )
@@ -349,17 +288,17 @@ const LineTableComponents = ({
           <Form>
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`刀具编号`}>
+                <FormItem {...formItemLayout} label={`程序号`}>
                   {getFieldDecorator(`FormToolingCode`)(
                     <Input placeholder="placeholder" />
                   )}
                 </FormItem>
               </Col>
               <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`刀具类型`}>
-                  {getFieldDecorator(`FormToolingTypeId`)(
+                <FormItem {...formItemLayout} label={`工站`}>
+                  {getFieldDecorator(`FormStation`)(
                     <Select>
-                      {InitData.map(function (item, index) {
+                      {Station.map(function (item, index) {
                         return <Option key={index} value={item.key}>{item.label}</Option>
                       })}
                     </Select>
@@ -367,11 +306,12 @@ const LineTableComponents = ({
                 </FormItem>
               </Col>
               <Col span={8} key={3} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`刀具状态`}>
-                  {getFieldDecorator(`FormState`)(
+                <FormItem {...formItemLayout} label={`产品种类`}>
+                  {getFieldDecorator(`FormProductType`)(
                     <Select>
-                      <Option key={0} value='0'>正常</Option>
-                      <Option key={1} value='1'>失效</Option>
+                      {ProductType.map(function (item, index) {
+                        return <Option key={index} value={item.key}>{item.label}</Option>
+                      })}
                     </Select>
                   )}
                 </FormItem>
@@ -405,6 +345,9 @@ const LineTableComponents = ({
 }
 
 
-export default connect(({ lineTable }) => ({ lineTable }))(Form.create()(LineTableComponents))
+export default connect(({ programToolSetting }) => ({ programToolSetting }))(Form.create()(ProgramToolSettingComponents))
 
 
+// {InitData.map(function (item, index) {
+//   return <Option key={index} value={item.key}>{item.label}</Option>
+// })}
