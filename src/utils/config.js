@@ -7,18 +7,24 @@
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
 
-
-
 // const APIV1 = 'http://192.168.1.230:3009/api'
 // const ADMAPI = 'http://192.168.1.230/SFMES/api'
 // const WMSAPI = 'http://192.168.1.230:3009/sfwms'
 
-const APIV1 = 'http://localhost:3009/api'
-const ADMAPI = 'http://192.168.1.252/SFMES/api'
-const WMSAPI = 'http://localhost:3009/sfwms'
-const SFPFSFIS = 'http://localhost:3009/sfpfsfis'
-const SFPFSTrace = 'http://localhost:3009/SFPFSTrace'
+// const APIV1 = 'http://localhost:3009/api'
+// const ADMAPI = 'http://192.168.1.252/SFMES/api'
+// const WMSAPI = 'http://localhost:3009/sfwms'
+// const SFPFSFIS = 'http://localhost:3009/sfpfsfis'
+// const SFPFSTrace = 'http://localhost:3009/SFPFSTrace'
+// const SFToolManager = 'http://localhost:3009/sfTooling'
 
+const APIV1 = 'http://192.168.1.114:3009/api'
+const ADMAPI = 'http://192.168.1.252/SFMES/api'
+const WMSAPI = 'http://192.168.1.114:3009/sfwms'
+const SFPFSFIS = 'http://192.168.1.114:3009/sfpfsfis'
+const SFPFSTrace = 'http://192.168.1.114:3009/SFPFSTrace'
+const SFToolManager = 'http://192.168.1.114:3009/ToolManager'
+// const SFToolManager = 'http://192.168.1.252/ToolManager/api'
 module.exports = {
   name: '翊流智能',
   title: '翊流智能',
@@ -101,6 +107,15 @@ module.exports = {
     TraceMachineAbnormalRecord: `${SFPFSTrace}/TraceMachineAbnormalRecord`,
     TraceMaterialSetupRecord: `${SFPFSTrace}/TraceMaterialSetupRecord`,
 
+    //SF-ToolManager  web
+    ToolingInfo: `${SFToolManager}/Tooling`,
+    ProgramToolSetting: `${SFToolManager}/ProgramToolSetting`,
+    LifeRule: `${SFToolManager}/LifeRule`,
+    ToolingType: `${SFToolManager}/ToolingType`,
+    //pda
+    // UpperTool: `${SFToolManager}/UpperTool`,
+    // Feeding: `${SFToolManager}/Feeding`,
+
   },
   crudApi: {
     postAddData: 'Post',  //新增
@@ -118,7 +133,7 @@ module.exports = {
     //销售发货单
     GetProductDeliveryRequestFormItemByFormIdForList: 'GetProductDeliveryRequestFormItemByFormIdForListUrl',
     GetMovementRecordProductDeliveryRequestByWMSFormId: 'GetMovementRecordProductDeliveryRequestByWMSFormIdUrl',
-    //  //wms 成品箱
+    //wms 成品箱
     //  GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     //  GetPackingInformatioByContainer: 'GetPackingInformatioByContainer'
 
@@ -169,7 +184,7 @@ module.exports = {
     workOrderConfig: '',
 
     /**
-     * SF-PFS-Trace  trace
+     * SF-PFS-Trace
      */
     //TracePartByStation 通过工站追溯工件
     GetPageInit: 'GetPageInit',
@@ -215,6 +230,18 @@ module.exports = {
     //上料记录查询页面
     GetStationList: `GetStationList`,
     GetMaterialSetupRecordByCondition: `GetMaterialSetupRecordByCondition`,
+
+
+    // //刀具管理
+    getInitDataQuery: 'GetKeyLableListForToolType',
+    // postAddData: 'Post',  //新增
+    // postEditData: 'Put',  //编辑
+    // postDeleteData: 'Delete',   //删除
+
+    // getAddModalInitData: 'GetAddInitialize',  //新增Modals初始化数据api
+    // getEditModalInitData: 'GetEditinitialize', //编辑Modals初始化数据api
+    // getDetailsModalInitData: 'GetTById', //详细信息Modals初始化数据api
+    // getTableInitData: 'GetTByCondition',//表格初始化数据api
   },
   table: {
     paginationConfig: {
@@ -234,3 +261,4 @@ module.exports = {
     }
   }
 }
+

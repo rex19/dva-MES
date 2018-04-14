@@ -230,6 +230,27 @@ const Routers = function ({ history, app }) {
       path: '/SF_PFS_Trace/TraceMaterialSetupRecord',
       models: () => [import('./models/SF_PFS_Trace/TraceMaterialSetupRecord')],
       component: () => import('./routes/SF_PFS_Trace/TraceMaterialSetupRecord/'),
+    }, {
+      //
+      path: '/SF_ToolingManagement/ToolingInfo',
+      models: () => [import('./models/SF_ToolingManagement/ToolingInfo')],
+      component: () => import('./routes/SF_ToolingManagement/ToolingInfo/'),
+    }, {
+      path: '/SF_ToolingManagement/ToolingType',
+      models: () => [import('./models/SF_ToolingManagement/ToolingType')],
+      component: () => import('./routes/SF_ToolingManagement/ToolingType/'),
+    }, {
+      path: '/SF_ToolingManagement/ToolingLifeRule',
+      models: () => [import('./models/SF_ToolingManagement/ToolingLifeRule')],
+      component: () => import('./routes/SF_ToolingManagement/ToolingLifeRule/'),
+    }, {
+      path: '/SF_ToolingManagement/ProgramToolSetting',
+      models: () => [import('./models/SF_ToolingManagement/ProgramToolSetting')],
+      component: () => import('./routes/SF_ToolingManagement/ProgramToolSetting/'),
+    }, {
+      path: '/SF_ToolingManagement/CurrentToolingCondition',
+      models: () => [import('./models/SF_ToolingManagement/CurrentToolingCondition')],
+      component: () => import('./routes/SF_ToolingManagement/CurrentToolingCondition/'),
     }
   ]
 
