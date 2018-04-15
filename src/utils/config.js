@@ -170,6 +170,8 @@ module.exports = {
     GetWorkOrderInformationForEdit: 'GetWorkOrderInformationForEdit',
     EditWorkOrder: 'EditWorkOrder',
     //激活工单
+
+
     GetAllLineNamesForActiveWorkOrderCombox: 'GetAllLineNamesForActiveWorkOrderCombox',
     GetActivedWorkOrderListOfLine: 'GetActivedWorkOrderListOfLine',
     GetWorkOrderListForActive: 'GetWorkOrderListForActive',
