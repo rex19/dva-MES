@@ -10,7 +10,7 @@ const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'lineTable'
+const TableName = 'toolingLifeRule'
 const AddFormLayout = ['AddToolingCode', 'AddToolingTypeId']
 const EditFormLayout = ['EditId', 'EditToolingCode', 'EditToolingTypeId']
 const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
@@ -19,42 +19,58 @@ const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
 let SpecificationData = ''
 let LifeRuleData = ''
 
-const LineTableComponents = ({
-  lineTable,
+const ToolingLifeRuleComponents = ({
+  toolingLifeRule,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = lineTable
+  const TableModelsData = toolingLifeRule
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
     TotalMultiselectData, AllocatedMultiselectData,
     InitData,
-    ToolTypeSelectData } = TableModelsData
+    ToolTypeSelectData, LifeRuleListData } = TableModelsData
 
-  console.log('TableComponents-lineTable ', TableModelsData)
+  console.log('TableComponents-toolingLifeRule ', TableModelsData)
 
 
+  // const Colums = [{
+  //   title: '刀具类型',
+  //   dataIndex: 'Name',
+  // }, {
+  //   title: '类型描述',
+  //   dataIndex: 'Specification',
+  // }, {
+  //   title: '寿命规则号',
+  //   dataIndex: 'RuleCode',
+  // }, {
+  //   title: '寿命警告阀值',
+  //   dataIndex: 'WarningLifeThreshold',
+  // }, {
+  //   title: '寿命限定阀值',
+  //   dataIndex: 'ExpirationLifeThreshold',
+  // }, {
+  //   title: '编辑时间',
+  //   dataIndex: 'EditDateTime',
+  // }]
   const Colums = [{
-    title: '刀具号',
-    dataIndex: 'ToolingCode',
-  }, {
-    title: '刀具状态',
-    dataIndex: 'ToolingState',
-  }, {
-    title: '刀具类型',
-    dataIndex: 'ToolingTypeName',
-  }, {
-    title: '类型描述',
-    dataIndex: 'ToolingTypeSpecification',
-  }, {
     title: '寿命规则号',
-    dataIndex: 'LifeRuleCode',
+    dataIndex: 'RuleCode',
   }, {
-    title: '当前刀具寿命',
-    dataIndex: 'CurrentLife',
+    title: '名称',
+    dataIndex: 'Name',
+  }, {
+    title: '描述',
+    dataIndex: 'Description',
+  }, {
+    title: '单位',
+    dataIndex: 'Unit',
+  }, {
+    title: '状态',
+    dataIndex: 'State',
   }, {
     title: '寿命警告阀值',
     dataIndex: 'WarningLifeThreshold',
@@ -62,16 +78,9 @@ const LineTableComponents = ({
     title: '寿命限定阀值',
     dataIndex: 'ExpirationLifeThreshold',
   }, {
-    title: '寿命状态',
-    dataIndex: 'LifeState',
-  }, {
-    title: '当前位置',
-    AssigneeCode: 'CurrentLocation',
-  }, {
-    title: '注册时间',
-    dataIndex: 'CreateDateTime',
+    title: '编辑时间',
+    dataIndex: 'EditDateTime',
   }]
-
   /**
    * crud modal
    */
@@ -199,14 +208,14 @@ const LineTableComponents = ({
         <Form >
           <FormItem
             {...formItemLayout}
-            label="刀具号"
+            label="规则号"
             hasFeedback
           >
-            {getFieldDecorator('AddToolingCode', {
+            {getFieldDecorator('AddRuleCode', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入刀具号',
+                  required: true, message: '请输入规则号',
                 },
               ],
             })(<Input />)}
@@ -214,52 +223,96 @@ const LineTableComponents = ({
 
           <FormItem
             {...formItemLayout}
-            label="类别"
-          >
-            <div>
-              {getFieldDecorator('AddToolingTypeId', {
-                initialValue: '',
-                rules: [
-                  {
-                    required: true, message: '请选择类别',
-                  },
-                ],
-              })(
-                <Select onChange={ToolTypeSelectDataChange}>
-                  {ToolTypeSelectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="类别描述"
+            label="名称"
             hasFeedback
           >
-            {getFieldDecorator('AddSpecification', {
-              initialValue: SpecificationData,
+            {getFieldDecorator('AddName', {
+              initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入类别描述',
+                  required: true, message: '请输入名称',
                 },
               ],
             })(<Input />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="分配寿命规则"
+            label="描述"
             hasFeedback
           >
-            {getFieldDecorator('AddLifeRule', {
-              initialValue: LifeRuleData,
+            {getFieldDecorator('AddDescription', {
+              initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入类别描述',
+                  required: true, message: '请输入描述',
                 },
               ],
             })(<Input />)}
+          </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+            hasFeedback
+          >
+            {getFieldDecorator('AddLifeCalculationTypeUnitId', {
+              initialValue: '37',
+              rules: [
+                {
+                  required: true, message: '请输入状态',
+                },
+              ],
+            })(<Select>
+              <Option key={0} value='37'>次</Option>
+              <Option key={1} value='17'>米</Option>
+            </Select>)}
+          </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label="预警值"
+            hasFeedback
+          >
+            {getFieldDecorator('AddWarningLifeThreshold', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入预警值',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="限定值"
+            hasFeedback
+          >
+            {getFieldDecorator('AddExpirationLifeThreshold', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入限定值',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+            hasFeedback
+          >
+            {getFieldDecorator('AddState', {
+              initialValue: '1',
+              rules: [
+                {
+                  required: true, message: '请输入状态',
+                },
+              ],
+            })(<Select>
+              <Option key={0} value='0'>未激活</Option>
+              <Option key={1} value='1'>激活</Option>
+              <Option key={2} value='-1'>已删除</Option>
+            </Select>)}
           </FormItem>
         </Form>
       </div>
@@ -276,78 +329,124 @@ const LineTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: EditData.Id,
+              initialValue: '1',
+              // initialValue: EditData.Id,
               rules: [
                 {
-                  required: true, message: '请输入刀具号',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="刀具号"
-            hasFeedback
-          >
-            {getFieldDecorator('EditToolingCode', {
-              initialValue: EditData.ToolingCode,
-              rules: [
-                {
-                  required: true, message: '请输入刀具号',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="类别"
-          >
-            <div>
-              {getFieldDecorator('EditToolingTypeId', {
-                initialValue: EditData.ToolingTypeId.toString(),
-                rules: [
-                  {
-                    required: true, message: '请选择类别',
-                  },
-                ],
-              })(
-                <Select >
-                  {ToolTypeSelectData.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
-                  })}
-                </Select>
-                )}
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="类别描述"
-            hasFeedback
-          >
-            {getFieldDecorator('EditSpecification', {
-              initialValue: EditData.Specification,
-              rules: [
-                {
-                  required: true, message: '请输入类别描述',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="分配寿命规则"
-            hasFeedback
-          >
-            {getFieldDecorator('EditLifeRule', {
-              initialValue: EditData.LifeRule,
-              rules: [
-                {
-                  required: true, message: '请输入类别描述',
+                  required: true, message: '请输入ID',
                 },
               ],
             })(<Input />)}
           </FormItem>
 
+          <FormItem
+            {...formItemLayout}
+            label="规则号"
+            hasFeedback
+          >
+            {getFieldDecorator('EditRuleCode', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入规则号',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label="名称"
+            hasFeedback
+          >
+            {getFieldDecorator('EditName', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入名称',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="描述"
+            hasFeedback
+          >
+            {getFieldDecorator('EditDescription', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入描述',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+            hasFeedback
+          >
+            {getFieldDecorator('EditLifeCalculationTypeUnitId', {
+              initialValue: '37',
+              rules: [
+                {
+                  required: true, message: '请输入状态',
+                },
+              ],
+            })(<Select>
+              <Option key={0} value='37'>次</Option>
+              <Option key={1} value='17'>米</Option>
+            </Select>)}
+          </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label="预警值"
+            hasFeedback
+          >
+            {getFieldDecorator('EditWarningLifeThreshold', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入预警值',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="限定值"
+            hasFeedback
+          >
+            {getFieldDecorator('EditExpirationLifeThreshold', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入限定值',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+            hasFeedback
+          >
+            {getFieldDecorator('EditState', {
+              initialValue: '1',
+              rules: [
+                {
+                  required: true, message: '请输入状态',
+                },
+              ],
+            })(<Select>
+              <Option key={0} value='0'>未激活</Option>
+              <Option key={1} value='1'>激活</Option>
+              <Option key={2} value='-1'>已删除</Option>
+            </Select>)}
+          </FormItem>
         </Form>
       </div>
     )
@@ -361,48 +460,6 @@ const LineTableComponents = ({
         >
           <Input disabled value={DetailsData.Id} />
         </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="线体编号"
-        >
-          <Input disabled value={DetailsData.CellNumber} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="名称"
-        >
-          <Input disabled value={DetailsData.Description} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="状态"
-        >
-          <Input disabled value={DetailsData.State} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="创建时间"
-        >
-          <Input disabled value={DetailsData.CreationDateTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="创建人"
-        >
-          <Input disabled value={DetailsData.Creator} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑时间"
-        >
-          <Input disabled value={DetailsData.EditDateTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑人"
-        >
-          <Input disabled value={DetailsData.Editor} />
-        </FormItem>
       </div>
     )
   }
@@ -410,48 +467,7 @@ const LineTableComponents = ({
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <Form
-          className="ant-advanced-search-form"
-          onSubmit={handleSearch}
-        >
-          <Form>
-            <Row gutter={40}>
-              <Col span={8} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`刀具编号`}>
-                  {getFieldDecorator(`FormToolingCode`)(
-                    <Input placeholder="placeholder" />
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`刀具类型`}>
-                  {getFieldDecorator(`FormToolingTypeId`)(
-                    <Select>
-                      {InitData.map(function (item, index) {
-                        return <Option key={index} value={item.key}>{item.label}</Option>
-                      })}
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={8} key={3} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`刀具状态`}>
-                  {getFieldDecorator(`FormState`)(
-                    <Select>
-                      <Option key={0} value='0'>正常</Option>
-                      <Option key={1} value='1'>失效</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-          </Form>
-          <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
-              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
-            </Col>
-          </Row>
-        </Form>
+
       </div>
       <div>
         <TableComponents
@@ -473,6 +489,7 @@ const LineTableComponents = ({
 }
 
 
-export default connect(({ lineTable }) => ({ lineTable }))(Form.create()(LineTableComponents))
+export default connect(({ toolingLifeRule }) => ({ toolingLifeRule }))(Form.create()(ToolingLifeRuleComponents))
+// LifeRuleListData
 
 

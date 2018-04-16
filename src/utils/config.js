@@ -170,8 +170,6 @@ module.exports = {
     GetWorkOrderInformationForEdit: 'GetWorkOrderInformationForEdit',
     EditWorkOrder: 'EditWorkOrder',
     //激活工单
-
-
     GetAllLineNamesForActiveWorkOrderCombox: 'GetAllLineNamesForActiveWorkOrderCombox',
     GetActivedWorkOrderListOfLine: 'GetActivedWorkOrderListOfLine',
     GetWorkOrderListForActive: 'GetWorkOrderListForActive',
@@ -239,6 +237,7 @@ module.exports = {
 
     // ProgramToolSetting
     GetKeyLableForStation: 'GetKeyLableForStation',
+    GetProgramToolSettingByProgramId: 'GetProgramToolSettingByProgramId',
 
     // postAddData: 'Post',  //新增
     // postEditData: 'Put',  //编辑

@@ -10,7 +10,7 @@ const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'lineTable'
+const TableName = 'toolingType'
 const AddFormLayout = ['AddToolingCode', 'AddToolingTypeId']
 const EditFormLayout = ['EditId', 'EditToolingCode', 'EditToolingTypeId']
 const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
@@ -19,14 +19,14 @@ const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
 let SpecificationData = ''
 let LifeRuleData = ''
 
-const LineTableComponents = ({
-  lineTable,
+const ToolingTypeComponents = ({
+  toolingType,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = lineTable
+  const TableModelsData = toolingType
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
@@ -34,7 +34,7 @@ const LineTableComponents = ({
     InitData,
     ToolTypeSelectData, LifeRuleListData } = TableModelsData
 
-  console.log('TableComponents-lineTable ', TableModelsData)
+  console.log('TableComponents-toolingType ', TableModelsData)
 
 
   const Colums = [{
@@ -230,6 +230,7 @@ const LineTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
+
                   {ToolTypeSelectData.map(function (item, index) {
                     return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                   })}
@@ -243,7 +244,7 @@ const LineTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('AddSpecification', {
-              initialValue: 1,
+              initialValue: '1',
               rules: [
                 {
                   required: true, message: '请输入状态',
@@ -259,6 +260,7 @@ const LineTableComponents = ({
       </div>
     )
   }
+
   const editModalValue = () => {
     return (
       <div>
@@ -341,7 +343,7 @@ const LineTableComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditSpecification', {
-              initialValue: EditData.State,
+              initialValue: EditData.State.toString(),
               rules: [
                 {
                   required: true, message: '请输入状态',
@@ -395,7 +397,7 @@ const LineTableComponents = ({
 }
 
 
-export default connect(({ lineTable }) => ({ lineTable }))(Form.create()(LineTableComponents))
+export default connect(({ toolingType }) => ({ toolingType }))(Form.create()(ToolingTypeComponents))
 // LifeRuleListData
 
 

@@ -304,7 +304,7 @@ const LineTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditToolingTypeId', {
-                initialValue: EditData.ToolingTypeId.toString(),
+                initialValue: EditData.ToolingTypeId,
                 rules: [
                   {
                     required: true, message: '请选择类别',

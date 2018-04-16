@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, GetKeyLableForStation, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/SF_ToolingManagement/ProgramToolSetting'
+import { query, create, deleted, edit, GetProgramToolSettingByProgramId, GetKeyLableForStation, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/SF_ToolingManagement/ProgramToolSetting'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -46,7 +46,7 @@ export default modelExtend(pageModel, {
     ProductType: [],
     Station: [],
     ToolTypeSelectData: [],
-
+    DetailsDataToolingItem: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -83,12 +83,11 @@ export default modelExtend(pageModel, {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
       const data = yield call(query, payload)
-      console.log('effects-query', payload, data)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
       } else if (data.Status === 200) {
-        const result = yield call(addKey, data.Data) //+1
+        const result = yield call(addKey, data.Data[QueryResponseDTO]) //+1
         yield put({
           type: 'querySuccess',
           payload: {
@@ -186,16 +185,17 @@ export default modelExtend(pageModel, {
           throw data
         }
       } else if (payload.modalType === 'addModalVisible') {
-        const data = yield call(getAddModalData)
-        console.log('addModalVisible', data)
-        if (data.Status === 200) {
-          yield put({ type: 'showModal', payload: payload })
-          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        } else {
-          throw data
-        }
+
+        // const data = yield call(getAddModalData)
+        // console.log('addModalVisible', data)
+        // if (data.Status === 200) {
+        yield put({ type: 'showModal', payload: payload })
+        // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        // } else {
+        //   throw data
+        // }
       } else if (payload.modalType === 'detailsModalVisible') {
-        const data = yield call(getDetailsModalData, payload.record.Id)
+        const data = yield call(GetProgramToolSettingByProgramId, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
@@ -230,7 +230,11 @@ export default modelExtend(pageModel, {
           // TotalMultiselectData: eval(payload.data.TotalCell)
         }
       } else if (payload.modalType === 'detailsModalVisible') {
-        return { ...state, ...payload, DetailsData: payload.data }
+        return {
+          ...state, ...payload,
+          DetailsData: payload.data.ProgramToolSetting,
+          DetailsDataToolingItem: payload.data.ToolingItem
+        }
       } else if (payload.modalType === 'InitDataQuery') {
         return {
           ...state, ...payload,

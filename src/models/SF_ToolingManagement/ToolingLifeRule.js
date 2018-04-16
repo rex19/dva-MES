@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getInitDataQuery, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/SF_ToolingManagement/ToolingInfo'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/SF_ToolingManagement/ToolingLifeRule'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -10,15 +10,26 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'lineTable'
+const TableName = 'toolingLifeRule'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
-  "ToolingCode": "testtool1",
-  "ToolingTypeId": 1,
-  "ToolingTypeName": "T1",
-  "Specification": "描述1",
-  "LifeRule": "sample string 2"
+  "Id": 1,
+  "ToolingType": "sample string 2",
+  "Specification": "sample string 3",
+  "ChoiceRuleCode": [
+    {
+      "Id": 1,
+      "ToolingTypeId": 2,
+      "RuleCode": "sample string 3"
+    },
+    {
+      "Id": 1,
+      "ToolingTypeId": 2,
+      "RuleCode": "sample string 3"
+    }
+  ],
+  "State": 4
 }
 
 export default modelExtend(pageModel, {
@@ -45,15 +56,22 @@ export default modelExtend(pageModel, {
     //刀具
     InitData: [],
     ToolTypeSelectData: [],
+    LifeRuleListData: []
 
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/SF_ToolingManagement/ToolingInfo`) {
+        if (location.pathname === `/SF_ToolingManagement/ToolingLifeRule`) {
           // if (location.pathname === `/masterdata/${TableName}`) {
+          console.log('ToolingType-=+')
           dispatch({
-            type: 'InitDataQuery',
+            type: 'query',
+            payload: {
+              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
+              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
+              [QueryRequestDTO]: null
+            }
           })
         }
       })
@@ -61,33 +79,6 @@ export default modelExtend(pageModel, {
   },
 
   effects: {
-    * InitDataQuery({
-      payload,
-    }, { call, put, select }) {
-
-      const data = yield call(getInitDataQuery, payload)
-      console.log('effects-query123', payload, data)
-      // const pagination = yield select(state => state[TableName].pagination)
-      if (data.Status !== 200) {
-        return errorMessage(data.ErrorMessage || '查询失败')
-      } else if (data.Status === 200) {
-        yield put({ type: 'showModalData', payload: { modalType: 'InitDataQuery', data: data.Data } })
-        // yield put({
-        //   type: 'querySuccess',
-        //   payload: {
-        //     list: result,
-        //     pagination: {
-        //       PageIndex: Number(pagination.PageIndex) || 1,
-        //       PageSize: Number(pagination.PageSize) || 10,
-        //       total: data.Data.RowCount,
-        //     },
-        //   },
-        // })
-        // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
-      } else {
-        throw data
-      }
-    },
     * query({
       payload,
     }, { call, put, select }) {
@@ -99,7 +90,7 @@ export default modelExtend(pageModel, {
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
       } else if (data.Status === 200) {
-        const result = yield call(addKey, data.Data) //+1
+        const result = yield call(addKey, data.Data[QueryResponseDTO]) //+1
         yield put({
           type: 'querySuccess',
           payload: {
@@ -229,7 +220,7 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         return {
           ...state, ...payload,
-          ToolTypeSelectData: payload.data.ToolingAdd,
+          LifeRuleListData: payload.data.LifeRuleList,
           // TotalMultiselectData: eval(payload.data.TotalCell), AllocatedMultiselectData: eval(payload.data.SelectedCell),
           EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto
         }
@@ -242,8 +233,6 @@ export default modelExtend(pageModel, {
         }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
-      } else if (payload.modalType === 'InitDataQuery') {
-        return { ...state, ...payload, InitData: payload.data }
       }
     },
     //teble loading处理

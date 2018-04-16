@@ -3,7 +3,14 @@ import globalConfig from 'utils/config'
 //每个table可能不同的变量字段
 const tableName = globalConfig.api.ProgramToolSetting
 
-
+//获取某一条的详细信息
+export async function GetProgramToolSettingByProgramId(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetProgramToolSettingByProgramId}`,
+    method: 'get',
+    data: params,
+  })
+}
 
 //初始数据
 export async function GetKeyLableForStation(params) {

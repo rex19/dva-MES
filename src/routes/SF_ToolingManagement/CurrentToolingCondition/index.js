@@ -72,6 +72,35 @@ const LineTableComponents = ({
     dataIndex: 'CreateDateTime',
   }]
 
+  // const Colums1 = [{
+  //   title: '刀穴号',
+  //   dataIndex: 'RuleCode',
+  // }, {
+  //   title: '所需刀具类型',
+  //   dataIndex: 'Name',
+  // }, {
+  //   title: '当前刀具类型',
+  //   dataIndex: 'Description',
+  // }, {
+  //   title: '是否匹配',
+  //   dataIndex: 'Unit',
+  // }, {
+  //   title: '当前刀具号',
+  //   dataIndex: 'State',
+  // }, {
+  //   title: '当前刀具寿命',
+  //   dataIndex: 'WarningLifeThreshold',
+  // }, {
+  //   title: '刀具寿命预警值',
+  //   dataIndex: 'ExpirationLifeThreshold',
+  // }, {
+  //   title: '刀具寿命阀值',
+  //   dataIndex: 'EditDateTime',
+  // }, {
+  //   title: '刀具状态',
+  //   dataIndex: 'EditDateTime',
+  // }]
+
   /**
    * crud modal
    */

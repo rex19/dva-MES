@@ -1,10 +1,12 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, Button, Icon } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, Button, Icon, Table } from 'antd'
 import { connect } from 'dva'
 // import { FormComponents, TableComponents } from '../../../components'
 import globalConfig from 'utils/config'
-import TableComponents from '../components/ToolingInfoTableComponent'
+import TableComponents from '../components/ProgramToolSettingTableComponent'
 import './index.less'
+// import RowEditableAddTable from '../components/rowEditableforAddModals'
+// import RowEditableEditTable from '../components/rowEditableforEditModals'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
@@ -32,33 +34,61 @@ const ProgramToolSettingComponents = ({
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
     TotalMultiselectData, AllocatedMultiselectData,
     ProductType, Station,
-    ToolTypeSelectData } = TableModelsData
+    DetailsDataToolingItem, ToolTypeSelectData } = TableModelsData
 
   console.log('TableComponents-programToolSetting ', TableModelsData)
 
 
   const Colums = [{
     title: '程序名',
-    dataIndex: 'ToolingCode',
+    dataIndex: 'ProgramNumber',
   }, {
     title: '版本号',
-    dataIndex: 'ToolingState',
+    dataIndex: 'Version',
   }, {
     title: '面',
-    dataIndex: 'ToolingTypeName',
+    dataIndex: 'Layer',
   }, {
     title: '状态',
-    dataIndex: 'ToolingTypeSpecification',
+    dataIndex: 'State',
   }, {
     title: '工站号',
-    dataIndex: 'LifeRuleCode',
+    dataIndex: 'Station',
   }, {
     title: '产品类型',
-    dataIndex: 'CurrentLife',
+    dataIndex: 'ProductType',
   }, {
     title: '注册结束时间',
-    dataIndex: 'WarningLifeThreshold',
+    dataIndex: 'CreateDateTime',
   }]
+
+  const columns = [{
+    title: '项名',
+    dataIndex: 'ParameterName',
+    key: 'ParameterName',
+  }, {
+    title: '值',
+    dataIndex: 'MatchString',
+    key: 'MatchString',
+  }, {
+    title: '创建人',
+    dataIndex: 'Creator',
+    key: 'Creator',
+  }, {
+    title: '创建日期',
+    dataIndex: 'CreateDateTime',
+    key: 'CreateDateTime',
+  }, {
+    title: '编辑人',
+    dataIndex: 'Editor',
+    key: 'Editor',
+  }, {
+    title: '编辑日期',
+    dataIndex: 'EditDateTime',
+    key: 'EditDateTime',
+  }];
+
+  const data1 = [];
 
   /**
    * crud modal
@@ -181,29 +211,151 @@ const ProgramToolSettingComponents = ({
       </Form>
     )
   }
+  //把添加删除Modal的子table数据存到store  然后一起分发到请求
+  const onEditableCellChange = (dataSource, type) => {
+    // dispatch({
+    //   type: `${TableName}/editableDataChanger`,
+    //   payload: {
+    //     BomItemDtoDataSource: dataSource,
+    //     type: type
+    //   },
+    // })
+  }
   const addModalValue = () => {
     return (
       <div>
         <Form >
           <FormItem
             {...formItemLayout}
-            label="刀具号"
+            label="程序名"
             hasFeedback
           >
-            {getFieldDecorator('AddToolingCode', {
+            {getFieldDecorator('AddRecipeName', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入刀具号',
+                  required: true, message: '请输入程序名',
                 },
               ],
             })(<Input />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="工站"
+          >
+            <div>
+              {getFieldDecorator('AddStationId', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择工站',
+                  },
+                ],
+              })(
+                <Select>
+                  {Station.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="产品种类"
+          >
+            <div>
+              {getFieldDecorator('AddProductTypeId', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择产品种类',
+                  },
+                ],
+              })(
+                <Select>
+                  {ProductType.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="版本"
+            hasFeedback
+          >
+            {getFieldDecorator('AddVersion', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入版本',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="面"
+          >
+            <div>
+              {getFieldDecorator('AddLayer', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择面',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>所有</Option>
+                  <Option key={1} value='1'>正面</Option>
+                  <Option key={2} value='-1'>反面</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="创建人"
+            hasFeedback
+          >
+            {getFieldDecorator('AddCreatorId', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('AddState', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="明细"
+          >
+            <Table columns={columns} dataSource={DetailsDataToolingItem} />
+          </FormItem>
         </Form>
       </div>
     )
   }
+
   const editModalValue = () => {
     return (
       <div>
@@ -218,7 +370,132 @@ const ProgramToolSettingComponents = ({
               initialValue: EditData.Id,
             })(<Input />)}
           </FormItem>
-
+          <FormItem
+            {...formItemLayout}
+            label="程序名"
+            hasFeedback
+          >
+            {getFieldDecorator('EditRecipeName', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入程序名',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工站"
+          >
+            <div>
+              {getFieldDecorator('EditStationId', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择工站',
+                  },
+                ],
+              })(
+                <Select>
+                  {Station.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="产品种类"
+          >
+            <div>
+              {getFieldDecorator('EditProductTypeId', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择产品种类',
+                  },
+                ],
+              })(
+                <Select>
+                  {ProductType.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="版本"
+            hasFeedback
+          >
+            {getFieldDecorator('EditVersion', {
+              initialValue: '',
+              rules: [
+                {
+                  required: true, message: '请输入版本',
+                },
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="面"
+          >
+            <div>
+              {getFieldDecorator('EditLayer', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择面',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>所有</Option>
+                  <Option key={1} value='1'>正面</Option>
+                  <Option key={2} value='-1'>反面</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="创建人"
+            hasFeedback
+          >
+            {getFieldDecorator('EditVersion', {
+              initialValue: '',
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="状态"
+          >
+            <div>
+              {getFieldDecorator('EditState', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true, message: '请选择状态',
+                  },
+                ],
+              })(
+                <Select>
+                  <Option key={0} value='0'>未激活</Option>
+                  <Option key={1} value='1'>激活</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="明细"
+          >
+            <Table columns={columns} dataSource={DetailsDataToolingItem} />
+          </FormItem>
         </Form>
       </div>
     )
@@ -234,15 +511,34 @@ const ProgramToolSettingComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="线体编号"
+          label="程序名"
         >
-          <Input disabled value={DetailsData.CellNumber} />
+          <Input disabled value={DetailsData.ProgramName} />
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="名称"
+          label="工站"
         >
-          <Input disabled value={DetailsData.Description} />
+          <Input disabled value={DetailsData.Station} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="产品种类"
+        >
+          <Input disabled value={DetailsData.ProductType} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="版本"
+        >
+          <Input disabled value={DetailsData.Version} />
+        </FormItem>
+
+        <FormItem
+          {...formItemLayout}
+          label="面"
+        >
+          <Input disabled value={DetailsData.Layer} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -252,28 +548,11 @@ const ProgramToolSettingComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="创建时间"
+          label="明细"
         >
-          <Input disabled value={DetailsData.CreationDateTime} />
+          <Table columns={columns} dataSource={DetailsDataToolingItem} />
         </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="创建人"
-        >
-          <Input disabled value={DetailsData.Creator} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑时间"
-        >
-          <Input disabled value={DetailsData.EditDateTime} />
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="最后编辑人"
-        >
-          <Input disabled value={DetailsData.Editor} />
-        </FormItem>
+
       </div>
     )
   }
@@ -333,6 +612,7 @@ const ProgramToolSettingComponents = ({
           pagination={pagination}
           columns={Colums}
           TableWidth={1300}
+          ModalWidth={1300}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}
@@ -349,5 +629,10 @@ export default connect(({ programToolSetting }) => ({ programToolSetting }))(For
 
 
 // {InitData.map(function (item, index) {
+//   return <Option key={index} value={item.key}>{item.label}</Option>
+// })}
+
+
+// {ToolTypeSelectData.map(function (item, index) {
 //   return <Option key={index} value={item.key}>{item.label}</Option>
 // })}
