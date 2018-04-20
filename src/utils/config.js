@@ -150,7 +150,6 @@ module.exports = {
     GetProductInStockingFormItemByFormIdRequest: 'GetProductInStockingFormItemByFormIdForList',
     GetMovementRecordProductInStockingByWMSFormIdRequest: 'GetMovementRecordProductInStockingByWMSFormId',
 
-
     /**
      * SF-PFS-FIS
      */

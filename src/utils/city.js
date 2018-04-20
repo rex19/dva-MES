@@ -13,7 +13,6 @@
     港澳台 香港特别行政区 澳门特别行政区 台湾省
 
     **排序**
-
     ```js
     var map = {}
     _.each(_.keys(REGIONS),function(id){
