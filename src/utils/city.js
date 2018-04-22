@@ -18,6 +18,7 @@
     _.each(_.keys(REGIONS),function(id){
       map[id] = REGIONS[ID]
     })
+
     JSON.stringify(map)
     ```
 */
