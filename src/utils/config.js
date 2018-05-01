@@ -115,7 +115,6 @@ module.exports = {
     //pda
     // UpperTool: `${SFToolManager}/UpperTool`,
     // Feeding: `${SFToolManager}/Feeding`,
-
   },
   crudApi: {
     postAddData: 'Post',  //新增
