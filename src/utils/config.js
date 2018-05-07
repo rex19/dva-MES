@@ -121,6 +121,7 @@ module.exports = {
     postEditData: 'Put',  //编辑
     postDeleteData: 'Delete',   //删除
 
+
     getAddModalInitData: 'GetAddInitialize',  //新增Modals初始化数据api
     getEditModalInitData: 'GetEditinitialize', //编辑Modals初始化数据api
     getDetailsModalInitData: 'GetTById', //详细信息Modals初始化数据api
