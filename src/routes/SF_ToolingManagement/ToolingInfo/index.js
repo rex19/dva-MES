@@ -10,7 +10,7 @@ const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'lineTable'
+const TableName = 'toolingInfo'
 const AddFormLayout = ['AddToolingCode', 'AddToolingTypeId']
 const EditFormLayout = ['EditId', 'EditToolingCode', 'EditToolingTypeId']
 const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
@@ -19,14 +19,14 @@ const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
 let SpecificationData = ''
 let LifeRuleData = ''
 
-const LineTableComponents = ({
-  lineTable,
+const ToolingInfoComponents = ({
+  toolingInfo,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = lineTable
+  const TableModelsData = toolingInfo
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
@@ -34,7 +34,7 @@ const LineTableComponents = ({
     InitData,
     ToolTypeSelectData } = TableModelsData
 
-  console.log('TableComponents-lineTable ', TableModelsData)
+  console.log('TableComponents-toolingInfo ', TableModelsData)
 
 
   const Colums = [{
@@ -473,6 +473,6 @@ const LineTableComponents = ({
 }
 
 
-export default connect(({ lineTable }) => ({ lineTable }))(Form.create()(LineTableComponents))
+export default connect(({ toolingInfo }) => ({ toolingInfo }))(Form.create()(ToolingInfoComponents))
 
 

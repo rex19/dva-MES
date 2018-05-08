@@ -5,18 +5,19 @@ import { connect } from 'dva'
 import globalConfig from 'utils/config'
 import TableComponents from '../components/ProgramToolSettingTableComponent'
 import './index.less'
-// import RowEditableAddTable from '../components/rowEditableforAddModals'
-// import RowEditableEditTable from '../components/rowEditableforEditModals'
+// import NestedTable from './subpage/NestedTable'
+import RowEditableAddTable from './subpage/rowEditableforAddModals'
+import RowEditableEditTable from './subpage/rowEditableforEditModals'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'programToolSetting'
-const AddFormLayout = ['AddToolingCode', 'AddToolingTypeId']
-const EditFormLayout = ['EditId', 'EditToolingCode', 'EditToolingTypeId']
+const AddFormLayout = ['AddRecipeName', 'AddStationId', 'AddProductTypeId', 'AddVersion', 'AddLayer', 'AddCreatorId']
+const EditFormLayout = ['EditId', 'EditRecipeName', 'EditStationId', 'EditProductTypeId', 'EditVersion', 'EditLayer', 'EditCreatorId']
 const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
-
+window.BOMTempRender = false
 
 let SpecificationData = ''
 let LifeRuleData = ''
@@ -34,7 +35,8 @@ const ProgramToolSettingComponents = ({
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
     TotalMultiselectData, AllocatedMultiselectData,
     ProductType, Station,
-    DetailsDataToolingItem, ToolTypeSelectData } = TableModelsData
+    DetailsDataToolingItem, ToolTypeSelectData,
+    AddProgramItemListDataSource, EditProgramItemListDataSource, ToolSlotViewModel } = TableModelsData
 
   console.log('TableComponents-programToolSetting ', TableModelsData)
 
@@ -88,7 +90,7 @@ const ProgramToolSettingComponents = ({
     key: 'EditDateTime',
   }];
 
-  const data1 = [];
+
 
   /**
    * crud modal
@@ -113,10 +115,10 @@ const ProgramToolSettingComponents = ({
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
         const editParam = {
-          Id: payload.EditId,
-          ToolingCode: payload.EditToolingCode,
-          ToolingTypeId: payload.EditToolingTypeId,
-          EditorId: 10,
+          // Id: payload.EditId,
+          // ToolingCode: payload.EditToolingCode,
+          // ToolingTypeId: payload.EditToolingTypeId,
+          // EditorId: 10,
         }
         if (!err) {
           dispatch({
@@ -213,13 +215,13 @@ const ProgramToolSettingComponents = ({
   }
   //把添加删除Modal的子table数据存到store  然后一起分发到请求
   const onEditableCellChange = (dataSource, type) => {
-    // dispatch({
-    //   type: `${TableName}/editableDataChanger`,
-    //   payload: {
-    //     BomItemDtoDataSource: dataSource,
-    //     type: type
-    //   },
-    // })
+    dispatch({
+      type: `${TableName}/editableDataChanger`,
+      payload: {
+        editableDataSource: dataSource,
+        type: type
+      },
+    })
   }
   const addModalValue = () => {
     return (
@@ -349,13 +351,22 @@ const ProgramToolSettingComponents = ({
             {...formItemLayout}
             label="明细"
           >
-            <Table columns={columns} dataSource={DetailsDataToolingItem} />
+            <RowEditableAddTable
+              onEditableCellChange={onEditableCellChange}
+            />
+
           </FormItem>
         </Form>
       </div>
     )
   }
 
+  // <Table columns={columns} dataSource={DetailsDataToolingItem} />
+
+  //   <NestedTable
+  //   TableData={TableData}
+  //   SubTableData={SubTableData}
+  // />
   const editModalValue = () => {
     return (
       <div>
@@ -466,7 +477,7 @@ const ProgramToolSettingComponents = ({
             label="创建人"
             hasFeedback
           >
-            {getFieldDecorator('EditVersion', {
+            {getFieldDecorator('EditCreatorId', {
               initialValue: '',
             })(<Input />)}
           </FormItem>
@@ -494,12 +505,32 @@ const ProgramToolSettingComponents = ({
             {...formItemLayout}
             label="明细"
           >
-            <Table columns={columns} dataSource={DetailsDataToolingItem} />
+            <RowEditableEditTable
+              onEditableCellChange={onEditableCellChange}
+              EditDataSource={ToolSlotViewModel}
+            // StationGroup={StationGroup}
+            // MaterialList={MaterialList}
+
+            />
           </FormItem>
+
         </Form>
       </div>
     )
   }
+
+  //   <FormItem
+  //   {...formItemLayout}
+  //   label="明细"
+  // >
+  // <RowEditableEditTable
+  // onEditableCellChange={onEditableCellChange}
+  // // EditDataSource={BomItemDto}
+  // // StationGroup={StationGroup}
+  // // MaterialList={MaterialList}
+
+  // />
+  // </FormItem>
   const detailsModalValue = () => {
     return (
       <div>
@@ -636,3 +667,8 @@ export default connect(({ programToolSetting }) => ({ programToolSetting }))(For
 // {ToolTypeSelectData.map(function (item, index) {
 //   return <Option key={index} value={item.key}>{item.label}</Option>
 // })}
+
+
+
+
+

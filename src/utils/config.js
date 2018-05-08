@@ -7,6 +7,8 @@
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
 
+const Middleware_IP = 'http://192.168.1.113:3009'
+
 // const APIV1 = 'http://192.168.1.230:3009/api'
 // const ADMAPI = 'http://192.168.1.230/SFMES/api'
 // const WMSAPI = 'http://192.168.1.230:3009/sfwms'
@@ -18,12 +20,13 @@ const APIV3 = '/api/v3'
 // const SFPFSTrace = 'http://localhost:3009/SFPFSTrace'
 // const SFToolManager = 'http://localhost:3009/sfTooling'
 
-const APIV1 = 'http://192.168.1.114:3009/api'
+const APIV1 = `${Middleware_IP}/api`
 const ADMAPI = 'http://192.168.1.252/SFMES/api'
-const WMSAPI = 'http://192.168.1.114:3009/sfwms'
-const SFPFSFIS = 'http://192.168.1.114:3009/sfpfsfis'
-const SFPFSTrace = 'http://192.168.1.114:3009/SFPFSTrace'
-const SFToolManager = 'http://192.168.1.114:3009/ToolManager'
+const WMSAPI = `${Middleware_IP}/sfwms`
+const SFPFSFIS = `${Middleware_IP}/sfpfsfis`
+const SFPFSTrace = `${Middleware_IP}/SFPFSTrace`
+const SFToolManager = `${Middleware_IP}/ToolManager`
+const SFEcall = `http://192.168.1.116:8080/ecall`
 // const SFToolManager = 'http://192.168.1.252/ToolManager/api'
 module.exports = {
   name: '翊流智能',
@@ -41,6 +44,7 @@ module.exports = {
   APIV3,
   api: {
     userLogin: `${APIV1}/user/login`,
+    GetTokenForLogin: `${APIV1}/user/GetTokenForLogin`,
     userLogout: `${APIV1}/user/logout`,
     userInfo: `${APIV1}/userInfo`,
     users: `${APIV1}/users`,
@@ -112,15 +116,22 @@ module.exports = {
     ProgramToolSetting: `${SFToolManager}/ProgramToolSetting`,
     LifeRule: `${SFToolManager}/LifeRule`,
     ToolingType: `${SFToolManager}/ToolingType`,
+    CurrentToolInfo: `${SFToolManager}/CurrentToolInfo`,
     //pda
     // UpperTool: `${SFToolManager}/UpperTool`,
     // Feeding: `${SFToolManager}/Feeding`,
+
+    //Ecall
+    electronicCallBoard: `${SFEcall}/electronicCallBoard`,//电子叫料看板
+    creatProductionInitialOrderBlank: `${SFEcall}/BeginningPickBill`,//创建生产初始配货单
+    creatOrderBlank: `${SFEcall}/PickBill`,//创建配货单
+
+
   },
   crudApi: {
     postAddData: 'Post',  //新增
     postEditData: 'Put',  //编辑
     postDeleteData: 'Delete',   //删除
-
 
     getAddModalInitData: 'GetAddInitialize',  //新增Modals初始化数据api
     getEditModalInitData: 'GetEditinitialize', //编辑Modals初始化数据api
@@ -149,6 +160,7 @@ module.exports = {
     //成品入库单
     GetProductInStockingFormItemByFormIdRequest: 'GetProductInStockingFormItemByFormIdForList',
     GetMovementRecordProductInStockingByWMSFormIdRequest: 'GetMovementRecordProductInStockingByWMSFormId',
+
 
     /**
      * SF-PFS-FIS
@@ -181,8 +193,8 @@ module.exports = {
     //工单激活
     GetSetupActivationInformationByWorkOrderAndStationNumber: 'GetSetupActivationInformationByWorkOrderAndStationNumber',
     workOrderConfig: '',
+
     /**
-     *
      * SF-PFS-Trace
      */
     //TracePartByStation 通过工站追溯工件
@@ -237,6 +249,10 @@ module.exports = {
     // ProgramToolSetting
     GetKeyLableForStation: 'GetKeyLableForStation',
     GetProgramToolSettingByProgramId: 'GetProgramToolSettingByProgramId',
+    //CurrentToolInfo
+    GetCurrentToolInfoByStationId: 'GetCurrentToolInfoByStationId',
+
+
 
     // postAddData: 'Post',  //新增
     // postEditData: 'Put',  //编辑

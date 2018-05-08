@@ -17,13 +17,21 @@ export default {
       const { locationQuery } = yield select(_ => _.app)
       if (data.success) {
         //新增添加token到cookie
+        // const {
+        //   access_token,
+        //   expires_in
+        //  } = data.token
+        // Cookies.set('token', access_token, {
+        //   expires: expires_in
+        // });
+
         const {
-          access_token,
-          expires_in
-         } = data.token
-        Cookies.set('token', access_token, {
-          expires: expires_in
-        });
+           Access_Token,
+          Token_Type,
+          Expires_In
+         } = data.Data
+        Cookies.set('token', Access_Token);
+
         console.log(Cookies.get('token'))
 
         const { from } = locationQuery

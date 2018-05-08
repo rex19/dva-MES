@@ -12,14 +12,13 @@
     西北   陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区
     港澳台 香港特别行政区 澳门特别行政区 台湾省
 
-
     **排序**
+
     ```js
     var map = {}
     _.each(_.keys(REGIONS),function(id){
       map[id] = REGIONS[ID]
     })
-
     JSON.stringify(map)
     ```
 */

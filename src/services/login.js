@@ -2,12 +2,12 @@ import { request, config } from 'utils'
 import axios from 'axios'
 
 const { api } = config
-const { userLogin, postLogin } = api
+const { GetTokenForLogin, postLogin } = api
 
 export async function login(data) {
-  // console.log('++++', userLogin, data, )
+  console.log('++++', GetTokenForLogin, data, )
   return request({
-    url: userLogin,
+    url: GetTokenForLogin,
     method: 'post',
     data,
   })

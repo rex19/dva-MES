@@ -47,6 +47,10 @@ export default modelExtend(pageModel, {
     Station: [],
     ToolTypeSelectData: [],
     DetailsDataToolingItem: [],
+
+    AddProgramItemListDataSource: [],
+    EditProgramItemListDataSource: [],
+    ToolSlotViewModel: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -204,6 +208,7 @@ export default modelExtend(pageModel, {
         }
       }
     },
+
   },
   reducers: {
     //打开关闭Modals
@@ -218,9 +223,9 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         return {
           ...state, ...payload,
-          ToolTypeSelectData: payload.data.ToolingAdd,
+          ToolSlotViewModel: payload.data.ToolSlotViewModel,
           // TotalMultiselectData: eval(payload.data.TotalCell), AllocatedMultiselectData: eval(payload.data.SelectedCell),
-          EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto
+          EditData: payload.data.ProgramViewModel == null ? state.EditData : payload.data.ProgramViewModel
         }
       } else if (payload.modalType === 'addModalVisible') {
         console.log('addModalVisible==', payload)
@@ -249,6 +254,14 @@ export default modelExtend(pageModel, {
         return { ...state, ...payload, tableLoading: true }
       } else if (payload === 'closeLoading') {
         return { ...state, ...payload, tableLoading: false }
+      }
+    },
+    //改变editable的datasource
+    editableDataChanger(state, { payload }) {
+      if (payload.type === 'RowEditableAddTable') {
+        return { ...state, ...payload, AddProgramItemListDataSource: payload.editableDataSource }
+      } else if (payload.type === 'RowEditableEditTable') {
+        return { ...state, ...payload, EditProgramItemListDataSource: payload.editableDataSource }
       }
     },
     //改变table pageIndex pageSize

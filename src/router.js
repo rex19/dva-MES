@@ -252,6 +252,20 @@ const Routers = function ({ history, app }) {
       models: () => [import('./models/SF_ToolingManagement/CurrentToolingCondition')],
       component: () => import('./routes/SF_ToolingManagement/CurrentToolingCondition/'),
     }
+    //ecall
+    , {
+      path: '/Ecall/ElectronicCallBoard',
+      models: () => [import('./models/Ecall/ElectronicCallBoard')],
+      component: () => import('./routes/Ecall/ElectronicCallBoard/'),
+    }, {
+      path: '/Ecall/CreatProductionInitialOrderBlank',
+      models: () => [import('./models/Ecall/CreatProductionInitialOrderBlank')],
+      component: () => import('./routes/Ecall/CreatProductionInitialOrderBlank/'),
+    }, {
+      path: '/Ecall/CreatOrderBlank',
+      models: () => [import('./models/Ecall/CreatOrderBlank')],
+      component: () => import('./routes/Ecall/CreatOrderBlank/'),
+    }
   ]
 
   return (

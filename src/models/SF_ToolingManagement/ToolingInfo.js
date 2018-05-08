@@ -10,7 +10,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'lineTable'
+const TableName = 'toolingInfo'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {

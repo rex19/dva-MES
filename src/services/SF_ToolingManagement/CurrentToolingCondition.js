@@ -1,15 +1,15 @@
 import { request } from 'utils'
 import globalConfig from 'utils/config'
 //每个table可能不同的变量字段
-const tableName = globalConfig.api.PartAttributeRecord
+const tableName = globalConfig.api.CurrentToolInfo
 
 
 
 
-export async function GetPartAttributeRecordByPartSerialNumber(params) {
+export async function GetCurrentToolInfoByStationId(params) {
   return request({
-    url: `${tableName}/${globalConfig.crudApi.GetPartAttributeRecordByPartSerialNumber}`,
-    method: 'post',
+    url: `${tableName}/${globalConfig.crudApi.GetCurrentToolInfoByStationId}`,
+    method: 'get',
     data: params,
   })
 }

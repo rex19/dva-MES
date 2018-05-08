@@ -170,87 +170,13 @@ class RowEditableEditTable extends React.Component {
       count: 1
     };
     this.columns = [{
-      title: '料号|名称|版本',
-      dataIndex: 'MaterialId',
-      render: (text, record) => (
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'MaterialId')}
-          MaterialList={this.props.MaterialList}
-          MaterialIdValue={record.MaterialId}
-          type='MaterialId'
-        />
-      ),
+      title: '项名',
+      dataIndex: 'ParameterName',
+      render: (text, record) => this.renderColumns(text, record, 'ParameterName'),
     }, {
-      title: '版本',
-      dataIndex: 'Version',
-      render: (text, record) => (
-        <EditableCellInputTypeOfInt
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'Version')}
-        />
-      ),
-    }, {
-      title: '设备组',
-      dataIndex: 'StationGroupId',
-      render: (text, record) => (
-        console.log('设备组', text, record),
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'StationGroupId')}
-          StationGroup={this.props.StationGroup}
-          StationGroupIdValue={record.StationGroupId}
-          type='StationGroupId'
-        />
-      ),
-    }, {
-      title: '定位号',
-      dataIndex: 'Designator',
-      render: (text, record) => this.renderColumns(text, record, 'Designator'),
-    }, {
-      title: '正反面',
-      dataIndex: 'Layer',
-      render: (text, record) => (
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'Layer')}
-          type='Layer'
-        />
-      ),
-    }, {
-      title: '是否是产出品',
-      dataIndex: 'IsAlternative',
-      render: (text, record) => (
-        <EditableCellRadio
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'IsAlternative')}
-        />
-      ),
-    }, {
-      title: '用量',
-      dataIndex: 'Quantity',
-      render: (text, record) => (
-        <EditableCellInputTypeOfInt
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'Quantity')}
-        />
-      ),
-    }, {
-      title: '是否上料检测',
-      dataIndex: 'IsNeedSetupCheck',
-      render: (text, record) => (
-        <EditableCellRadio
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'IsNeedSetupCheck')}
-        />
-      ),
+      title: '值',
+      dataIndex: 'MatchString',
+      render: (text, record) => this.renderColumns(text, record, 'MatchString'),
     }, {
       title: '操作',
       dataIndex: 'operation',
@@ -262,6 +188,7 @@ class RowEditableEditTable extends React.Component {
               editable ?
                 <span>
                   <a onClick={() => this.save(record.key)}>保存</a>
+                  <span className="ant-divider" />
                   <Popconfirm title="确定取消?" onConfirm={() => this.cancel(record.key)}>
                     <a>取消</a>
                   </Popconfirm>
@@ -343,17 +270,8 @@ class RowEditableEditTable extends React.Component {
     const { count, data } = this.state;
     const newData = {
       key: count,
-      MaterialId: 1,
-      StationGroupId: '请选择',
-      Version: count,
-      Designator: `PCB`, //不能超过10位
-      Quantity: 0,
-      IsNeedSetupCheck: true,
-      Layer: 1,
-      IsAlternative: true,
-      StationGroup: `1`,
-      MaterialName: `MaterialName${count}`,
-      MaterialNumber: `MaterialNumber${count}`,
+      ParameterName: '请输入',
+      MatchString: '请输入',
     };
     this.setState({
       data: [...data, newData],
