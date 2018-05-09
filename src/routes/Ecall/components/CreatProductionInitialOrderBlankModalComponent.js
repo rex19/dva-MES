@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Input, Row, Col, Button, Select, DatePicker, Table } from 'antd'
+import { Modal, Input, Row, Col, Button, Select, DatePicker, Table, Badge } from 'antd'
 import './index.less'
 
 const InputGroup = Input.Group;
@@ -21,6 +21,30 @@ export const ModalComponents = ({
 
   PreviewSubTableList//配货单预览table
 }) => {
+
+  const SubCreatOrderBlankColums = [{
+    title: '状态',
+    dataIndex: 'stateValue',
+    render: (text, record) => <span><Badge status={record.stateColor} />{record.stateValue}</span>
+  }, {
+    title: 'Id',
+    dataIndex: 'id',
+  }, {
+    title: '请求时间',
+    dataIndex: 'createDateTime',
+  }, {
+    title: '请求地点',
+    dataIndex: 'locationNumber',
+  }, {
+    title: '找料区域',
+    dataIndex: 'areaNumber',
+  }, {
+    title: '物料料号',
+    dataIndex: 'MaterialNumber',
+  }, {
+    title: '请求数量',
+    dataIndex: 'Quantity',
+  }]
 
   const handleOk = (modalType) => {
     handleAdd(modalType)
@@ -200,26 +224,3 @@ const dataSource = [{
   "createDateTime": 1541865600000,
   "RequestItemDataArra": 0
 }];
-
-const SubCreatOrderBlankColums = [{
-  title: '状态',
-  dataIndex: 'RequestItemDataArra',
-}, {
-  title: 'Id',
-  dataIndex: 'id',
-}, {
-  title: '请求时间',
-  dataIndex: 'createDateTime',
-}, {
-  title: '请求地点',
-  dataIndex: 'locationNumber',
-}, {
-  title: '找料区域',
-  dataIndex: 'areaNumber',
-}, {
-  title: '物料料号',
-  dataIndex: 'MaterialNumber',
-}, {
-  title: '请求数量',
-  dataIndex: 'Quantity',
-}]

@@ -71,6 +71,8 @@ export default modelExtend(pageModel, {
     TableComponentsValueToWorkOrderSettingState: [],
 
     //ecall
+    // tableCellColorl: 'success',
+    queryParams: {},
     areaIdFormData: [],
     locationIdFormData: [],
     AreaId: 1,
@@ -160,10 +162,16 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       // yield put({ type: 'loadingChanger', payload: 'showLoading' })
       // yield put({ type: 'tablePaginationChanger', payload: payload })
+      yield put({
+        type: 'ChangerState',
+        payload: {
+          modalType: 'queryParams',
+          Params: payload
+        }
+      })
       const data = yield call(GetPickBillInChosenLocation, payload)
       const pagination = yield select(state => state[TableName].pagination)
       const result = yield call(addKey, data.Data.requestFormList) //+1
-      // console.log('result', result)
       yield put({
         type: 'querySuccess',
         payload: {
@@ -243,7 +251,7 @@ export default modelExtend(pageModel, {
     // },
     * showModalAndAjax({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       if (payload.modalType === 'editModalVisible') {
         // const data = yield call(getEditModalData, payload.record.Id)
         // if (data.Status === 200) {
@@ -270,22 +278,28 @@ export default modelExtend(pageModel, {
           throw data
         }
       } else if (payload.modalType === 'Revoke') {
-        console.log('Revoke!', payload.record.id)
-        const data = yield call(PickChosenBillRevocation, payload.record.id)
+        const data = yield call(PickChosenBillRevocation, payload.record.Id)
         console.log('Revoke', data)
-        // if (data.Status === 200) {
-        // yield put({ type: 'showModal', payload: payload })
-        //   yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        // } else {
-        //   throw data
-        // }
+        if (data.Status === 200 && data.Data === 0) {
+          const queryParams = yield select(state => state[TableName].queryParams)
+          yield put({
+            type: `${TableName}/query`,
+            payload: queryParams,
+          })
+          return successMessage(data.ErrorMessage || '成功')
+
+        } else if (data.Status === 200 && data.Data !== 0) {
+          return errorMessage(data.ErrorMessage || '失败')
+        } else {
+          throw data
+        }
       }
     },
 
     //打印配货单
     * PrintPickingBillFunction({
       payload,
-    }, { call, put }) {
+    }, { call, put, select }) {
       const MaterialRequestFormId = yield select(state => state[TableName].MaterialRequestFormId)
       const AreaId = yield select(state => state[TableName].AreaId)
       const LocationId = yield select(state => state[TableName].LocationId)
@@ -296,10 +310,17 @@ export default modelExtend(pageModel, {
       }
 
       const data = yield call(PrintPickingBill, Params)
-      if (data.Status === 200) {
+      if (data.Status === 200 && data.Data === 0) {
+        window.print()
+        return successMessage(data.ErrorMessage || '成功')
         // yield put({ type: 'showModal', payload: payload })
         // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data.requestFormList } })
-      } else {
+      } else if (data.Status === 200 && data.Data !== 0) {
+        return errorMessage(data.ErrorMessage || '失败')
+        // yield put({ type: 'showModal', payload: payload })
+        // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data.requestFormList } })
+      } else if (data.Status !== 200) {
+        // return errorMessage(data.ErrorMessage || '失败')
         throw data
       }
     },
@@ -344,14 +365,19 @@ export default modelExtend(pageModel, {
       return { ...state, ...payload, [payload]: false, PreviewSubTableList: [] }
     },
     ChangerState(state, { payload }) {
-      // console.log('ChangerState`11', payload)
-      if (payload.modalType === 'areaIdFormData') {
+      if (payload.modalType === 'queryParams') {
         return {
-          ...state, ...payload, [payload]: false, AreaId: payload.areaIdFormData
+          ...state, ...payload, [payload]: false, queryParams: payload.Params
         }
-      } else if (payload.modalType === 'locationIdFormData') {
+      } else if (payload.modalType === 'areaId') {
+        console.log('ChangerState-areaId')
         return {
-          ...state, ...payload, [payload]: false, LocationId: payload.locationIdFormData
+          ...state, ...payload, [payload]: false, AreaId: payload.areaId
+        }
+      } else if (payload.modalType === 'locationId') {
+        console.log('ChangerState-locationId')
+        return {
+          ...state, ...payload, [payload]: false, LocationId: payload.locationId
         }
       }
     },

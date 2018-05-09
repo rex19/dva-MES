@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, Button, Icon, DatePicker, } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, Button, Icon, DatePicker, Badge } from 'antd'
 import { connect } from 'dva'
 import FormComponents from '../components/creatOrderBlankFormComponent'
 import TableComponents from '../components/creatOrderBlankTableComponent'
@@ -33,28 +33,6 @@ const EditFormLayout = [
 const SearchFormLayout = ['areaIdForm', 'locationIdForm', 'requestStartTimeForm', 'requestEndTimeForm']
 
 
-const creatOrderBlankColums = [{
-  title: '状态',
-  dataIndex: 'RequestItemDataArra',
-}, {
-  title: 'Id',
-  dataIndex: 'Id',
-}, {
-  title: '请求时间',
-  dataIndex: 'createDateTime',
-}, {
-  title: '请求地点',
-  dataIndex: 'locationNumber',
-}, {
-  title: '找料区域',
-  dataIndex: 'areaNumber',
-}, {
-  title: '物料料号',
-  dataIndex: 'MaterialNumber',
-}, {
-  title: '请求数量',
-  dataIndex: 'Quantity',
-}]
 const CreatOrderBlankComponent = ({
   creatOrderBlank,
   dispatch,
@@ -67,9 +45,35 @@ const CreatOrderBlankComponent = ({
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, TableComponentsValueToWorkOrderSettingState, GetStationInformationInitData,
     pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList,
-    areaIdFormData, locationIdFormData, MaterialRequestFormId, PreviewSubTableList } = TableModelsData
+    areaIdFormData, locationIdFormData, MaterialRequestFormId, PreviewSubTableList,
+} = TableModelsData
 
   console.log('WorkOrderListComponent-WorkOrderList-', TableModelsData)
+
+  // , <span><Badge status={record.stateColor} />{record.stateValue}</span>
+  const creatOrderBlankColums = [{
+    title: '状态',
+    dataIndex: 'stateValue',
+    render: (text, record) => <span><Badge status={record.stateColor} />{record.stateValue}</span>
+  }, {
+    title: 'Id',
+    dataIndex: 'Id',
+  }, {
+    title: '请求时间',
+    dataIndex: 'createDateTime',
+  }, {
+    title: '请求地点',
+    dataIndex: 'locationNumber',
+  }, {
+    title: '找料区域',
+    dataIndex: 'areaNumber',
+  }, {
+    title: '物料料号',
+    dataIndex: 'MaterialNumber',
+  }, {
+    title: '请求数量',
+    dataIndex: 'Quantity',
+  }]
   /**
    * crud modal
    */
@@ -187,10 +191,8 @@ const CreatOrderBlankComponent = ({
     validateFields(SearchFormLayout, (err, payload) => {
       if (!err) {
         const Params = {
-          // areaId: payload.areaIdForm,
-          // locationId: payload.locationIdForm,
-          areaId: 1,
-          locationId: 8,
+          areaId: payload.areaIdForm,
+          locationId: payload.locationIdForm,
           requestStartTime: moment(payload.requestStartTimeForm).format(dateFormat),
           requestEndTime: moment(payload.requestEndTimeForm).format(dateFormat),
           pageIndex: 1,
@@ -254,7 +256,7 @@ const CreatOrderBlankComponent = ({
               <Col span={8} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`找料区域`}>
                   {getFieldDecorator(`areaIdForm`)(
-                    <Select onChange={FormDataoOnChange('areaIdFormData')}>
+                    <Select onChange={FormDataoOnChange('areaId')}>
                       {areaIdFormData.map(function (item, index) {
                         return <Option key={index} value={item.key}>{item.label}</Option>
                       })}
@@ -265,7 +267,7 @@ const CreatOrderBlankComponent = ({
               <Col span={8} key={2} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`请求地点`}>
                   {getFieldDecorator(`locationIdForm`)(
-                    <Select onChange={FormDataoOnChange('locationIdFormData')}>
+                    <Select onChange={FormDataoOnChange('locationId')}>
                       {locationIdFormData.map(function (item, index) {
                         return <Option key={index} value={item.key}>{item.label}</Option>
                       })}
@@ -307,7 +309,13 @@ const CreatOrderBlankComponent = ({
             </Col>
           </Row>
         </Form>
+        <Row style={{ marginBottom: '10px' }}>
+          <Col span={24} style={{ textAlign: 'left' }}>
+            <span><Badge status='error' />超时一小时</span>
+          </Col>
+        </Row>
       </div>
+
       <div>
         <TableComponents
           tableName={TableName}

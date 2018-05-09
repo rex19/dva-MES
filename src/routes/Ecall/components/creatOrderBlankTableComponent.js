@@ -112,13 +112,20 @@ const TableComponents = ({
       name: record.Id,
     }),
   };
+  const handlePrintFunction = () => {
+    dispatch({
+      type: `${tableName}/PrintPickingBillFunction`,
+    })
 
+    // window.print()
+  }
 
   return (
     <div>
 
       <Row>
         <Table
+          bordered
           rowSelection={rowSelection}
           columns={columnFunc(column, columns, ActionColumn)}
           dataSource={data}
@@ -155,6 +162,7 @@ const TableComponents = ({
         detailsModalValue={detailsModalValue}
         handleAdd={handleAdd}
         PreviewSubTableList={PreviewSubTableList}
+        handlePrintFunction={handlePrintFunction}
       />
     </div>
   )

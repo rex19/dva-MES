@@ -4,6 +4,25 @@ import globalConfig from 'utils/config'
 const tableName = globalConfig.api.electronicCallBoard
 
 
+
+
+
+/**
+ * 叫料单看板
+ * @param {*} params
+ */
+//获得找料区域与请求地点   /RequestMaterialBill/RequestNeedView
+export async function RequestNeedView(params) {
+  return request({
+    // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
+    url: `http://192.168.1.116:8080/ecall/RequestMaterialBill/RequestNeedView`,
+    method: 'post',
+    data: params,
+  })
+}
+
+
+
 /**
  * 创建配货单
  * @param {*} params

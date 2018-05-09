@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, Button, Icon, DatePicker, Tag } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, Button, Icon, DatePicker, Badge } from 'antd'
 import { connect } from 'dva'
 import FormComponents from '../components/CreatProductionInitialOrderBlankFormComponent'
 import TableComponents from '../components/CreatProductionInitialOrderBlankTableComponent'
@@ -35,7 +35,8 @@ const SearchFormLayout = ['areaIdForm', 'locationIdForm', 'requestStartTimeForm'
 
 const electronicCallBoardColums = [{
   title: '状态',
-  dataIndex: 'RequestItemDataArra',
+  dataIndex: 'stateValue',
+  render: (text, record) => <span><Badge status={record.stateColor} />{record.stateValue}</span>
 }, {
   title: '请求时间',
   dataIndex: 'createDateTime',
@@ -234,7 +235,7 @@ const ElectronicCallBoardComponent = ({
       <div>
         <Row style={{ marginBottom: '10px' }}>
           <Col span={24} style={{ textAlign: 'left' }}>
-            <Tag color="red">超时一小时</Tag>
+            <span><Badge status='error' />超时一小时</span>
           </Col>
         </Row>
 

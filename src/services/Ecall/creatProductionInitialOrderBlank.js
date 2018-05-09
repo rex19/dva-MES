@@ -6,24 +6,16 @@ const tableName = globalConfig.api.creatProductionInitialOrderBlank
 /**
  * 创建生产初始配货单
  */
-//根据时间得到工单号   /BeginningPickBill/WorkOrderInChosenTime
-export async function WorkOrderInChosenTime(params) {
+//根据时间得到工单号 送货地址初始数据  /BeginningPickBill/GetWorkOrderAndLocation
+export async function GetWorkOrderAndLocation(params) {
   return request({
     // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
-    url: `http://192.168.1.116:8080/ecall/BeginningPickBill/WorkOrderInChosenTime`,
+    url: `http://192.168.1.116:8080/ecall/BeginningPickBill/GetWorkOrderAndLocation`,
     method: 'post',
     data: params,
   })
 }
-//获取下拉框送货地址初始数据   /BeginningPickBill/BeginningPickBillLoactionList
-export async function BeginningPickBillLoactionList(params) {
-  return request({
-    // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
-    url: `http://192.168.1.116:8080/ecall/BeginningPickBill/BeginningPickBillLoactionList`,
-    method: 'post',
-    data: params,
-  })
-}
+
 //获取JPH数量，Bom料号及两小时用量    /BeginningPickBill/CalculateJPHAndBOM
 export async function CalculateJPHAndBOM(params) {
   return request({

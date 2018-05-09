@@ -31,6 +31,7 @@ const EditFormLayout = [
   'EditZ',
   'EditState']
 const SearchFormLayout = ['startCreateTimeForm', 'endCreateTimeForm']
+const workOrderIdFormChangerLayout = ['workOrderIdForm', 'locationIdForm']
 
 
 
@@ -62,7 +63,9 @@ const CreatProductionInitialOrderBlankComponent = ({
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, TableComponentsValueToWorkOrderSettingState, GetStationInformationInitData,
     pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList,
-    areaIdFormData, locationIdFormData, MaterialRequestFormId, PreviewSubTableList } = TableModelsData
+    areaIdFormData, locationIdFormData, MaterialRequestFormId, PreviewSubTableList,
+    workOrderIdFormData, JPH, BOM
+  } = TableModelsData
 
   console.log('WorkOrderListComponent-WorkOrderList-', TableModelsData)
   /**
@@ -188,24 +191,61 @@ const CreatProductionInitialOrderBlankComponent = ({
         console.log('handleSearch-Params', Params)
         // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
         dispatch({
-          type: `${TableName}/WorkOrderInChosenTimeQuery`,
+          type: `${TableName}/GetWorkOrderAndLocation`,
           payload: Params,
         })
       }
     });
   }
   //配货单预览
-  const previewClick = (modalVisible) => {
-    console.log('success preview!', MaterialRequestFormId)
-    dispatch({
-      type: `${TableName}/showModalAndAjax`,
-      payload: {
-        modalType: modalVisible,
-        data: MaterialRequestFormId
-      },
+  const PreviewBeginningPickBillFunction = (e) => {
+    console.log('success preview!')
+    validateFields(workOrderIdFormChangerLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          workOrderId: payload.workOrderIdForm,
+          locationIds: payload.locationIdForm
+        }
+        console.log('handleSearch-Params', Params)
+        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
+        dispatch({
+          type: `${TableName}/PreviewBeginningPickBill`,
+          payload: Params,
+        })
+      }
+    });
+    // dispatch({
+    //   type: `${TableName}/showModalAndAjax`,
+    //   payload: {
+    //     modalType: modalVisible,
+    //     data: MaterialRequestFormId
+    //   },
+    // })
+  }
+  //工单下拉菜单变更 > 获取送货地
+  const locationIdFormChanger = (e) => {
+
+    // console.log('locationIdFormChanger', e)
+    // const Params = e
+    // dispatch({
+    //   type: `${TableName}/BeginningPickBillLoactionList`,
+    //   payload: Params,
+    // })
+
+
+    validateFields(workOrderIdFormChangerLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          workOrderId: payload.workOrderIdForm,
+          locationId: e,
+        }
+        dispatch({
+          type: `${TableName}/CalculateJPHAndBOMQuery`,
+          payload: Params,
+        })
+      }
     })
   }
-
   // //打开模态框
   // const handleModalShow = (modalVisible, record = {}) => {
   //   console.log('handleModalShow', modalVisible, tableName)
@@ -258,11 +298,11 @@ const CreatProductionInitialOrderBlankComponent = ({
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`工单`}>
-                  {getFieldDecorator(`areaIdForm`)(
+                  {getFieldDecorator(`workOrderIdForm`)(
                     <Select>
-                      <Option key={0} value='0'>未激活</Option>
-                      <Option key={1} value='1'>激活</Option>
-                      <Option key={2} value='-1'>已删除</Option>
+                      {workOrderIdFormData.map(function (item, index) {
+                        return <Option key={index} value={item.key}>{item.label}</Option>
+                      })}
                     </Select>
                   )}
                 </FormItem>
@@ -272,12 +312,21 @@ const CreatProductionInitialOrderBlankComponent = ({
               <Col span={8} key={2} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`送货地`}>
                   {getFieldDecorator(`locationIdForm`)(
-                    <Select>
-                      <Option key={0} value='0'>未激活</Option>
-                      <Option key={1} value='1'>激活</Option>
-                      <Option key={2} value='-1'>已删除</Option>
+                    <Select onChange={locationIdFormChanger}>
+                      {locationIdFormData.map(function (item, index) {
+                        return <Option key={index} value={item.key}>{item.label}</Option>
+                      })}
                     </Select>
                   )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={40}>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`JPH`}>
+                  {getFieldDecorator('JPHForm', {
+                    initialValue: JPH
+                  })(<Input />)}
                 </FormItem>
               </Col>
             </Row>
@@ -287,7 +336,7 @@ const CreatProductionInitialOrderBlankComponent = ({
       <div>
         <TableComponents
           tableName={TableName}
-          data={list}
+          data={BOM}
           tableLoading={tableLoading}
           pagination={pagination}
           columns={creatProductionInitialOrderBlankColums}
@@ -301,7 +350,7 @@ const CreatProductionInitialOrderBlankComponent = ({
         />
       </div>
 
-      <Button type="primary" style={{ marginRight: '5px' }} onClick={() => previewClick('detailsModalVisible')} ><Icon type="database" />创建初始配货单</Button>
+      <Button type="primary" style={{ marginRight: '5px' }} onClick={() => PreviewBeginningPickBillFunction()} ><Icon type="database" />创建初始配货单</Button>
     </div>
   )
 }
@@ -310,12 +359,10 @@ const CreatProductionInitialOrderBlankComponent = ({
 export default connect(({ creatProductionInitialOrderBlank }) => ({ creatProductionInitialOrderBlank }))(Form.create()(CreatProductionInitialOrderBlankComponent))
 
 
-// <Select>
-// {InitData.map(function (item, index) {
-//   return <Option key={index} value={item.key}>{item.label}</Option>
-// })}
-// </Select>
 
-// {areaIdFormData.map(function (item, index) {
-//   return <Option key={index} value={item.key}>{item.label}</Option>
-// })}
+
+// <Select>
+// <Option key={0} value='0'>未激活</Option>
+// <Option key={1} value='1'>激活</Option>
+// <Option key={2} value='-1'>已删除</Option>
+// </Select>

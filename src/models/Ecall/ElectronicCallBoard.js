@@ -1,5 +1,7 @@
 import modelExtend from 'dva-model-extend'
 import {
+  RequestNeedView,
+
   PickBillLocationList,
   GetPickBillInChosenLocation,
   PickChosenBillRevocation,
@@ -82,9 +84,7 @@ export default modelExtend(pageModel, {
           dispatch({
             type: 'InitQuery',
             payload: {
-              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-              [QueryRequestDTO]: null
+              locationId: '8'
             }
           })
         }
@@ -98,27 +98,30 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       // yield put({ type: 'loadingChanger', payload: 'showLoading' })
       // yield put({ type: 'tablePaginationChanger', payload: payload })
-      console.log('PickBillLocationList1')
-      // axios.post('http://192.168.1.111:8080/ecall/PickBill/PickBillLocationList', {})
-      //   .then(function (response) {
-      //     console.log(response);
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error);
-      //   });
 
-
-
-      const data = yield call(PickBillLocationList, {})
-      console.log('PickBillLocationList2', data)
+      const data = yield call(RequestNeedView, payload)
+      console.log('InitQuery', data)
+      // const pagination = yield select(state => state[TableName].pagination)
+      const result = yield call(addKey, data.Data.requestNeedList) //+1
+      // console.log('result', result)
       yield put({
-        type: 'showFormData', payload: {
-          modalType: 'InitFormData',
-
-          areaIdFormData: data.Data.areaId,
-          locationIdFormData: data.Data.locationId,
-        }
+        type: 'querySuccess',
+        payload: {
+          list: result,
+        },
       })
+
+
+      // const data = yield call(RequestNeedView, {})
+      // console.log('PickBillLocationList2', data)
+      // yield put({
+      //   type: 'showFormData', payload: {
+      //     modalType: 'InitFormData',
+
+      //     areaIdFormData: data.Data.areaId,
+      //     locationIdFormData: data.Data.locationId,
+      //   }
+      // })
 
 
       // const GetStationInformationForSetupInformationData = yield call(GetStationInformationForSetupInformation)

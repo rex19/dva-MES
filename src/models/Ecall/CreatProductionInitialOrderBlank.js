@@ -1,7 +1,6 @@
 import modelExtend from 'dva-model-extend'
 import {
-  WorkOrderInChosenTime,
-  BeginningPickBillLoactionList,
+  GetWorkOrderAndLocation,
   CalculateJPHAndBOM,
   PreviewBeginningPickBill,
 
@@ -77,7 +76,13 @@ export default modelExtend(pageModel, {
     areaIdFormData: [],
     locationIdFormData: [],
     MaterialRequestFormId: [], //table上多选的行数据 id
-    PreviewSubTableList: [] //配货单预览Table
+    PreviewSubTableList: [], //配货单预览Table
+
+    //new
+    workOrderIdFormData: [],
+    locationIdFormData: [],
+    JPH: 0,
+    BOM: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -97,52 +102,68 @@ export default modelExtend(pageModel, {
   },
 
   effects: {
-    * WorkOrderInChosenTimeQuery({
+    * GetWorkOrderAndLocation({
       payload,
     }, { call, put, select }) {
-      // yield put({ type: 'loadingChanger', payload: 'showLoading' })
-      // yield put({ type: 'tablePaginationChanger', payload: payload })
-      const data = yield call(WorkOrderInChosenTime, payload)
-      console.log('WorkOrderInChosenTimeQuery1', data)
-      // const pagination = yield select(state => state[TableName].pagination)
-      // const result = yield call(addKey, data.Data.requestFormList) //+1
-      // console.log('result', result)
-      // yield put({
-      //   type: 'querySuccess',
-      //   payload: {
-      //     list: result,
-      //     pagination: {
-      //       PageIndex: Number(pagination.PageIndex) || 1,
-      //       PageSize: Number(pagination.PageSize) || 10,
-      //       total: data.Data.RowCount,
-      //     },
-      //   },
-      // })
-      // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+      const data = yield call(GetWorkOrderAndLocation, payload)
+      yield put({
+        type: 'ChangerState',
+        payload: {
+          modalType: 'GetWorkOrderAndLocation',
+          data: data.Data
+        }
+      })
     },
-    * WorkOrderInChosenTimeQuery({
+    * CalculateJPHAndBOMQuery({
       payload,
     }, { call, put, select }) {
-      // yield put({ type: 'loadingChanger', payload: 'showLoading' })
-      // yield put({ type: 'tablePaginationChanger', payload: payload })
-      const data = yield call(WorkOrderInChosenTime, payload)
-      console.log('WorkOrderInChosenTimeQuery1', data)
-      // const pagination = yield select(state => state[TableName].pagination)
-      // const result = yield call(addKey, data.Data.requestFormList) //+1
-      // console.log('result', result)
-      // yield put({
-      //   type: 'querySuccess',
-      //   payload: {
-      //     list: result,
-      //     pagination: {
-      //       PageIndex: Number(pagination.PageIndex) || 1,
-      //       PageSize: Number(pagination.PageSize) || 10,
-      //       total: data.Data.RowCount,
-      //     },
-      //   },
-      // })
-      // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+      const data = yield call(CalculateJPHAndBOM, payload)
+      console.log('CalculateJPHAndBOM', data)
+      yield put({
+        type: 'ChangerState',
+        payload: {
+          modalType: 'CalculateJPHAndBOM',
+          data: data.Data
+        }
+      })
     },
+    * PreviewBeginningPickBill({
+      payload,
+    }, { call, put, select }) {
+      const data = yield call(PreviewBeginningPickBill, payload)
+      console.log('PreviewBeginningPickBill', data)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage || '创建失败')
+      } else if (data.Status === 200) {
+        return successMessage(data.ErrorMessage || '创建成功')
+      } else {
+        throw data
+      }
+    },
+
+    // * WorkOrderInChosenTimeQuery({
+    //   payload,
+    // }, { call, put, select }) {
+    //   // yield put({ type: 'loadingChanger', payload: 'showLoading' })
+    //   // yield put({ type: 'tablePaginationChanger', payload: payload })
+    //   const data = yield call(WorkOrderInChosenTime, payload)
+    //   console.log('WorkOrderInChosenTimeQuery1', data)
+    //   // const pagination = yield select(state => state[TableName].pagination)
+    //   // const result = yield call(addKey, data.Data.requestFormList) //+1
+    //   // console.log('result', result)
+    //   // yield put({
+    //   //   type: 'querySuccess',
+    //   //   payload: {
+    //   //     list: result,
+    //   //     pagination: {
+    //   //       PageIndex: Number(pagination.PageIndex) || 1,
+    //   //       PageSize: Number(pagination.PageSize) || 10,
+    //   //       total: data.Data.RowCount,
+    //   //     },
+    //   //   },
+    //   // })
+    //   // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+    // },
 
     * InitQuery({
       payload,
@@ -370,7 +391,23 @@ export default modelExtend(pageModel, {
     hideModal(state, { payload }) {
       return { ...state, ...payload, [payload]: false }
     },
+    ChangerState(state, { payload }) {
+      console.log('ChangerState-=', payload)
+      if (payload.modalType === 'GetWorkOrderAndLocation') {
+        return {
+          ...state, ...payload, [payload]: false,
+          workOrderIdFormData: payload.data.WorkOrderList,
+          locationIdFormData: payload.data.LocationList
+        }
+      } else if (payload.modalType === 'CalculateJPHAndBOM') {
+        return {
+          ...state, ...payload, [payload]: false,
+          JPH: payload.data.JPH,
+          BOM: payload.data.BOM
+        }
+      }
 
+    },
     //Form初始化数据
     showFormData(state, { payload }) {
       if (payload.modalType === 'InitFormData') {
