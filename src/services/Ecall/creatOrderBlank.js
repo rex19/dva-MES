@@ -11,8 +11,8 @@ const tableName = globalConfig.api.creatOrderBlank
 //获得找料区域与请求地点   /PickBill/PickBillLocationList
 export async function PickBillLocationList(params) {
   return request({
-    // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
-    url: `http://192.168.1.116:8080/ecall/PickBill/PickBillLocationList`,
+    url: `${tableName}/${globalConfig.crudApi.PickBillLocationList}`,
+    // url: `http://192.168.1.116:8080/ecall/PickBill/PickBillLocationList`,
     method: 'post',
     data: params,
   })
@@ -20,7 +20,8 @@ export async function PickBillLocationList(params) {
 //叫料单   /PickBill/GetPickBillInChosenLocation
 export async function GetPickBillInChosenLocation(params) {
   return request({
-    url: `http://192.168.1.116:8080/ecall/PickBill/GetPickBillInChosenLocation`,
+    url: `${tableName}/${globalConfig.crudApi.GetPickBillInChosenLocation}`,
+    // url: `http://192.168.1.116:8080/ecall/PickBill/GetPickBillInChosenLocation`,
     method: 'post',
     data: params,
   })
@@ -29,15 +30,17 @@ export async function GetPickBillInChosenLocation(params) {
 //撤销已选中的叫料单号   /PickBill/PickChosenBillRevocation
 export async function PickChosenBillRevocation(params) {
   return request({
-    url: `http://192.168.1.116:8080/ecall/PickBill/PickChosenBillRevocation/${params}`,
-    method: 'get',
+    url: `${tableName}/${globalConfig.crudApi.PickChosenBillRevocation}`,
+    // url: `http://192.168.1.116:8080/ecall/PickBill/PickChosenBillRevocation/${params}`,
+    method: 'post',
     data: params,
   })
 }
 //配货单预览   /PickingBill/CreatePickBill
 export async function CreatePickBill(params) {
   return request({
-    url: `http://192.168.1.116:8080/ecall/PickBill/CreatePickBill`,
+    url: `${tableName}/${globalConfig.crudApi.CreatePickBill}`,
+    // url: `http://192.168.1.116:8080/ecall/PickBill/CreatePickBill`,
     method: 'post',
     data: params,
   })
@@ -45,7 +48,8 @@ export async function CreatePickBill(params) {
 //打印配货单   /PickingBill/PrintPickingBill
 export async function PrintPickingBill(params) {
   return request({
-    url: `http://192.168.1.116:8080/ecall/PickBill/PrintPickingBill`,
+    url: `${tableName}/${globalConfig.crudApi.PrintPickingBill}`,
+    // url: `http://192.168.1.116:8080/ecall/PickBill/PrintPickingBill`,
     method: 'post',
     data: params,
   })

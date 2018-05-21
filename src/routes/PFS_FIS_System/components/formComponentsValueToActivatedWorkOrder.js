@@ -61,7 +61,6 @@ class Forms extends React.Component {
     // console.log('params', pagination, filters, sorter)
   }
   render() {
-    console.log('Forms+++render', this.props)
     const { getFieldDecorator } = this.props.form;
     // console.log('render-stationTable-fromComp', this.props.form)
     const formItemLayout = {

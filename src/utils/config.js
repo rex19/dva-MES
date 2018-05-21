@@ -7,27 +7,23 @@
 const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
 
-const Middleware_IP = 'http://192.168.1.113:3009'
 
-// const APIV1 = 'http://192.168.1.230:3009/api'
-// const ADMAPI = 'http://192.168.1.230/SFMES/api'
-// const WMSAPI = 'http://192.168.1.230:3009/sfwms'
+// //英提尔
+// const Middleware_IP = 'http://192.168.243.118:3009'
+// // const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
+// const ADMAPI = 'http://192.168.1.180/SFMES/api'
+// const SFEcall = `http://smart-flow.diskstation.me:8000/ecall`
 
-// const APIV1 = 'http://localhost:3009/api'
-// const ADMAPI = 'http://192.168.1.252/SFMES/api'
-// const WMSAPI = 'http://localhost:3009/sfwms'
-// const SFPFSFIS = 'http://localhost:3009/sfpfsfis'
-// const SFPFSTrace = 'http://localhost:3009/SFPFSTrace'
-// const SFToolManager = 'http://localhost:3009/sfTooling'
 
+const Middleware_IP = 'http://192.168.1.127:3009'
 const APIV1 = `${Middleware_IP}/api`
-const ADMAPI = 'http://192.168.1.252/SFMES/api'
+const ADMAPI = 'http://192.168.1.230/SFMES/api'
 const WMSAPI = `${Middleware_IP}/sfwms`
 const SFPFSFIS = `${Middleware_IP}/sfpfsfis`
 const SFPFSTrace = `${Middleware_IP}/SFPFSTrace`
 const SFToolManager = `${Middleware_IP}/ToolManager`
 const SFEcall = `http://192.168.1.116:8080/ecall`
-// const SFToolManager = 'http://192.168.1.252/ToolManager/api'
+
 module.exports = {
   name: '翊流智能',
   title: '翊流智能',
@@ -90,6 +86,7 @@ module.exports = {
     //SF-PFS-FIS
     workOrder: `${SFPFSFIS}/workOrder`,
     workOrderActivation: `${SFPFSFIS}/workOrderActivation`,
+    workOrderSetting: `${SFPFSFIS}/workOrderActivation`,
 
     //SF-PFS-Trace
     TracePartByStation: `${SFPFSTrace}/TracePartByStation`,
@@ -122,7 +119,7 @@ module.exports = {
     // Feeding: `${SFToolManager}/Feeding`,
 
     //Ecall
-    electronicCallBoard: `${SFEcall}/electronicCallBoard`,//电子叫料看板
+    electronicCallBoard: `${SFEcall}/RequestMaterialBill`,//电子叫料看板
     creatProductionInitialOrderBlank: `${SFEcall}/BeginningPickBill`,//创建生产初始配货单
     creatOrderBlank: `${SFEcall}/PickBill`,//创建配货单
 
@@ -251,6 +248,22 @@ module.exports = {
     GetProgramToolSettingByProgramId: 'GetProgramToolSettingByProgramId',
     //CurrentToolInfo
     GetCurrentToolInfoByStationId: 'GetCurrentToolInfoByStationId',
+
+    /**
+     * Ecall
+     */
+    //RequestMaterialBill
+    RequestNeedView: `RequestNeedView`,
+    //creatProductionInitialOrderBlank
+    GetWorkOrderAndLocation: `GetWorkOrderAndLocation`,
+    CalculateJPHAndBOM: `CalculateJPHAndBOM`,
+    PreviewBeginningPickBill: `PreviewBeginningPickBill`,
+    //creatOrderBlank
+    PickBillLocationList: `PickBillLocationList`,
+    GetPickBillInChosenLocation: `GetPickBillInChosenLocation`,
+    PickChosenBillRevocation: `PickChosenBillRevocation`,
+    CreatePickBill: `CreatePickBill`,
+    PrintPickingBill: `PrintPickingBill`,
 
 
 

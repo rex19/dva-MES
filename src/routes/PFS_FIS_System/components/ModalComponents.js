@@ -76,6 +76,7 @@ const EditWorkOrderLayout = [
   'PlanStartDateTimeEditDecorator',
   'PlanEndDateTimeEditDecorator',
   'CommentEditDecorator',
+  'WorkOrderNumberEditDecorator'
 ]
 
 
@@ -103,7 +104,7 @@ export class Modals extends React.Component {
     })
   }
 
-  handleVMPartInformationChange = (Params) => {
+  handleVMPartInformationChange = (Params) => {//onChange={this.handleVMPartInformationChange}
     console.log('handleVMPartInformationChange', Params)
     this.props.SearchGetProcessListForCreateWorkOrder(Params)
   }
@@ -118,18 +119,18 @@ export class Modals extends React.Component {
       this.props.form.validateFields(CreateWorkOrderLayout, (err, payload) => {
         if (!err) {
           const Params = {
-            PartId: payload.PartIdDecorator,
+            BOMHeadId: payload.PartIdDecorator,
             ProcessId: payload.ProcessIdDecorator,
             WorkOrderNumber: payload.WorkOrderNumberDecorator,
             Quantity: payload.QuantityDecorator,
-            LineName: payload.LineNameDecorator,
-            ShiftName: payload.ShiftNameDecorator,
             CycleTimeInTheory: payload.CycleTimeInTheoryDecorator,
             OEEInTheory: payload.OEEInTheoryDecorator,
             PlanStartDateTime: moment(payload.PlanStartDateTimeDecorator).format(),
             PlanEndDateTime: moment(payload.PlanEndDateTimeDecorator).format(),
             Comment: payload.CommentDecorator,
-            CreatorId: 1
+            CreatorId: 10,
+            LineId: payload.LineNameDecorator,
+            ShiftId: payload.ShiftNameDecorator,
           }
           this.props.handleAdd(Params, modalType)
         }
@@ -138,18 +139,29 @@ export class Modals extends React.Component {
       this.props.form.validateFields(EditWorkOrderLayout, (err, payload) => {
         if (!err) {
           const Params = {
-            PartId: payload.PartIdEditDecorator,
-            PartNumber: payload.PartNumberEditDecorator,
-            Version: payload.VersionEditDecorator,
-            WorkOrderNumber: payload.WorkOrderNumberEditDecorator,
-            WorkOrderState: payload.WorkOrderStateEditDecorator,
+            // BOMHeadId: payload.PartIdEditDecorator,
+            // PartNumber: payload.PartNumberEditDecorator,
+            // Version: payload.VersionEditDecorator,
+            // WorkOrderNumber: payload.WorkOrderNumberEditDecorator,
+            // WorkOrderState: payload.WorkOrderStateEditDecorator,
+            // Quantity: payload.QuantityEditDecorator,
+            // PlanStartDateTime: moment(payload.PlanStartDateTimeEditDecorator).format(),
+            // PlanEndDateTime: moment(payload.PlanEndDateTimeEditDecorator).format(),
+            // Comment: payload.CommentEditDecorator,
+            // CreatorId: 10,
+            // LineId: payload.LineNameDecorator,
+            // ShiftId: payload.ShiftNameDecorator,
+
+            // Quantity: payload.QuantityEditDecorator,
             Quantity: payload.QuantityEditDecorator,
-            LineName: payload.LineNameEditDecorator,
-            ShiftName: payload.ShiftNameEditDecorator,
-            PlanStartDateTime: moment(payload.PlanStartDateTimeEditDecorator).format(),
-            PlanEndDateTime: moment(payload.PlanEndDateTimeEditDecorator).format(),
+            LineId: payload.LineNameEditDecorator,
+            ShiftId: payload.ShiftNameEditDecorator,
+            PlannedStartDateTime: moment(payload.PlanStartDateTimeEditDecorator).format(),
+            PlannedFinishDateTime: moment(payload.PlanEndDateTimeEditDecorator).format(),
             Comment: payload.CommentEditDecorator,
-            CreatorId: 1
+            State: payload.WorkOrderStateEditDecorator,
+            EditorId: 10,
+            WorkOrderNumber: payload.WorkOrderNumberEditDecorator,
           }
           // console.log('else if (modalType === edit', Params)
           this.props.handleAdd(Params, modalType)
@@ -233,7 +245,7 @@ export class Modals extends React.Component {
                 <FormItem {...formItemLayout} label={`成品半成品列表`}>
                   {getFieldDecorator(`PartIdDecorator`, {
                     initialValue: '',
-                  })(<Select onChange={this.handleVMPartInformationChange}>
+                  })(<Select >
                     {VMPartInformation.map(function (item, index) {
                       return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                     })}

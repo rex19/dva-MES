@@ -204,7 +204,8 @@ const CreatProductionInitialOrderBlankComponent = ({
       if (!err) {
         const Params = {
           workOrderId: payload.workOrderIdForm,
-          locationIds: payload.locationIdForm
+          locationIds: payload.locationIdForm.map(item => parseInt(item.key))
+
         }
         console.log('handleSearch-Params', Params)
         // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
@@ -237,7 +238,7 @@ const CreatProductionInitialOrderBlankComponent = ({
       if (!err) {
         const Params = {
           workOrderId: payload.workOrderIdForm,
-          locationId: e,
+          locationId: e.map(item => parseInt(item.key))
         }
         dispatch({
           type: `${TableName}/CalculateJPHAndBOMQuery`,
@@ -310,14 +311,28 @@ const CreatProductionInitialOrderBlankComponent = ({
             </Row>
             <Row gutter={40}>
               <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`送货地`}>
-                  {getFieldDecorator(`locationIdForm`)(
-                    <Select onChange={locationIdFormChanger}>
-                      {locationIdFormData.map(function (item, index) {
-                        return <Option key={index} value={item.key}>{item.label}</Option>
-                      })}
-                    </Select>
-                  )}
+
+                <FormItem
+                  {...formItemLayout}
+                  label="送货地"
+                >
+                  <div>
+                    {getFieldDecorator('locationIdForm', {
+                      initialValue: [],
+                    })(
+                      <Select
+                        mode="multiple"
+                        labelInValue
+                        style={{ width: '100%' }}
+                        placeholder="请选择"
+                        onBlur={locationIdFormChanger}
+                      >
+                        {locationIdFormData.map(function (item, index) {
+                          return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                        })}
+                      </Select>
+                      )}
+                  </div>
                 </FormItem>
               </Col>
             </Row>
@@ -340,7 +355,7 @@ const CreatProductionInitialOrderBlankComponent = ({
           tableLoading={tableLoading}
           pagination={pagination}
           columns={creatProductionInitialOrderBlankColums}
-          TableWidth={1300}
+          TableWidth={800}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}
@@ -366,3 +381,37 @@ export default connect(({ creatProductionInitialOrderBlank }) => ({ creatProduct
 // <Option key={1} value='1'>激活</Option>
 // <Option key={2} value='-1'>已删除</Option>
 // </Select>
+
+
+// <FormItem
+// {...formItemLayout}
+// label="已分配人员角色"
+// >
+// <div>
+//   {getFieldDecorator('AddRole', {
+//     initialValue: [],
+//   })(
+//     <Select
+//       mode="multiple"
+//       labelInValue
+//       style={{ width: '100%' }}
+//       placeholder="请选择"
+//     >
+//       {TotalMultiselectData.map(function (item, index) {
+//         return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+//       })}
+//     </Select>
+//     )}
+// </div>
+// </FormItem>
+
+
+// <FormItem {...formItemLayout} label={`送货地`}>
+// {getFieldDecorator(`locationIdForm`)(
+//   <Select onChange={locationIdFormChanger}>
+//     {locationIdFormData.map(function (item, index) {
+//       return <Option key={index} value={item.key}>{item.label}</Option>
+//     })}
+//   </Select>
+// )}
+// </FormItem>

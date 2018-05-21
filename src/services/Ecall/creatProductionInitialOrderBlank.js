@@ -9,8 +9,8 @@ const tableName = globalConfig.api.creatProductionInitialOrderBlank
 //根据时间得到工单号 送货地址初始数据  /BeginningPickBill/GetWorkOrderAndLocation
 export async function GetWorkOrderAndLocation(params) {
   return request({
-    // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
-    url: `http://192.168.1.116:8080/ecall/BeginningPickBill/GetWorkOrderAndLocation`,
+    url: `${tableName}/${globalConfig.crudApi.GetWorkOrderAndLocation}`,
+    // url: `http://192.168.1.116:8080/ecall/BeginningPickBill/GetWorkOrderAndLocation`,
     method: 'post',
     data: params,
   })
@@ -19,8 +19,8 @@ export async function GetWorkOrderAndLocation(params) {
 //获取JPH数量，Bom料号及两小时用量    /BeginningPickBill/CalculateJPHAndBOM
 export async function CalculateJPHAndBOM(params) {
   return request({
-    // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
-    url: `http://192.168.1.116:8080/ecall/BeginningPickBill/CalculateJPHAndBOM`,
+    url: `${tableName}/${globalConfig.crudApi.CalculateJPHAndBOM}`,
+    // url: `http://192.168.1.116:8080/ecall/BeginningPickBill/CalculateJPHAndBOM`,
     method: 'post',
     data: params,
   })
@@ -28,8 +28,8 @@ export async function CalculateJPHAndBOM(params) {
 //创建初始配货单   /BeginningPickBill/PreviewBeginningPickBill
 export async function PreviewBeginningPickBill(params) {
   return request({
-    // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
-    url: `http://192.168.1.116:8080/ecall/BeginningPickBill/PreviewBeginningPickBill`,
+    url: `${tableName}/${globalConfig.crudApi.PreviewBeginningPickBill}`,
+    // url: `http://192.168.1.116:8080/ecall/BeginningPickBill/PreviewBeginningPickBill`,
     method: 'post',
     data: params,
   })

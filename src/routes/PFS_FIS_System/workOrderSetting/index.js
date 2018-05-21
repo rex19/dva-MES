@@ -1,21 +1,18 @@
+
+
 import React from 'react'
-import { Form, Input, Row, Col, Radio, DatePicker, Select, Checkbox } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, Button, Icon, Badge } from 'antd'
 import { connect } from 'dva'
-import FormComponentsValueToActivatedWorkOrder from '../components/formComponentsValueToActivatedWorkOrder'
-import FormComponentsValueToOptionalWorkOrder from '../components/formComponentsValueToOptionalWorkOrder'
-import TableComponents from '../components/workOrderActivationTableComponent'
+import FormComponents from '../components/workOrderActivationFormComponent'
+import TableComponents from '../components/workOrderSettingTableComponent'
 import globalConfig from 'utils/config'
-const { RangePicker } = DatePicker;
+import './index.less'
+
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
-const CheckboxGroup = Checkbox.Group;
-function onChange(checkedValues) {
-  console.log('checked = ', checkedValues);
-}
-const plainOptions = ['已计划', '开始生产', '已完成', '已关闭'];
 //每个table可能不同的变量字段(1)
-const TableName = 'workOrderActivation'
+const TableName = 'workOrderSetting'
 const AddFormLayout = [
   'AddLocationNumber',
   'AddDescription',
@@ -33,81 +30,15 @@ const EditFormLayout = [
   'EditY',
   'EditZ',
   'EditState']
+const handleSubmitLayout = [
+  'WorkOrderNumberDecorator',
+  'StationIdDecorator',
+]
 
-//已激活工单
-//可选工单
-const ActivatedWorkOrderColums = [{
-  title: '工单号',
-  dataIndex: 'WorkOrderNumber',
-}, {
-  title: '站位号',
-  dataIndex: 'StationNumber',
-}, {
-  title: '站位描述',
-  dataIndex: 'StationName',
-}, {
-  title: '料号',
-  dataIndex: 'PartNumber',
-}, {
-  title: '物料描述',
-  dataIndex: 'PartDescription',
-}, {
-  title: '面',
-  dataIndex: 'Layer',
-}, {
-  title: '激活时间',
-  dataIndex: 'SetupActivationDateTime',
-}, {
-  title: '设置状态',
-  dataIndex: 'SetupState',
-}, {
-  title: '查看设置情况',
-  dataIndex: 'Operation',
-}]
-const OptionalWorkOrderColums = [{
-  title: '工单号',
-  dataIndex: 'WorkOrderNumber',
-}, {
-  title: '料号',
-  dataIndex: 'PartNumber',
-}, {
-  title: '产品描述',
-  dataIndex: 'PartDescription',
-}, {
-  title: '计划数量',
-  dataIndex: 'PlannedQuantity',
-}, {
-  title: '已完成数量',
-  dataIndex: 'FinishedQuantity',
-}, {
-  title: '工单备注',
-  dataIndex: 'Comment',
-}, {
-  title: '工单状态',
-  dataIndex: 'WorkOrderState',
-}, {
-  title: '班别',
-  dataIndex: 'ShiftName',
-}, {
-  title: '线体',
-  dataIndex: 'LineName',
-}, {
-  title: '计划生产时间',
-  dataIndex: 'PlanStartDateTime',
-}, {
-  title: '实际生产时间',
-  dataIndex: 'ActualStartDateTime',
-}, {
-  title: '计划完成时间',
-  dataIndex: 'PlanEndDateTime',
-}, {
-  title: '实际完成时间',
-  dataIndex: 'ActualEndDateTime',
-}]
-
-const workOrderActivationColums = [{
+const workOrderSettingColums = [{
   title: '状态',
   dataIndex: 'State',
+  render: (text, record) => <span><Badge status='success' />{record.State}</span>
 }, {
   title: '工站编号',
   dataIndex: 'StationNr',
@@ -161,18 +92,20 @@ const workOrderActivationColums = [{
 //     </span>
 //   ),
 // }
-const WorkOrderActivationComponent = ({
-  workOrderActivation,
+const WorkOrderSettingComponent = ({
+  workOrderSetting,
   dispatch,
   location,
   form
 }) => {
   //每个table可能不同的变量字段(2)
-  const TableModelsData = workOrderActivation
+  const TableModelsData = workOrderSetting
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
-    EditData, DetailsData, AreaList, GetAllLineNamesInitData, TableComponentsValueToActivatedWorkOrder, TableComponentsValueToOptionalWorkOrder } = TableModelsData
+  const { list, TableComponentsValueToWorkOrderSettingState, GetStationInformationInitData,
+    pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList,
+    StationInformationData, StationId,
+    WorkOrderNumber } = TableModelsData
 
   console.log('WorkOrderListComponent-WorkOrderList ', TableModelsData)
   /**
@@ -216,10 +149,9 @@ const WorkOrderActivationComponent = ({
     })
   }
 
-
   /**
-   * formComponent 触发查询
-   */
+ * formComponent 触发查询
+ */
   const handleSearchFormComponents = (Params, modalType) => {
 
     console.log('handleSearchFormComponents', Params, modalType)
@@ -232,63 +164,14 @@ const WorkOrderActivationComponent = ({
     })
   }
   //每个table可能不同的变量字段(4)
-  const formComponentsValueToActivatedWorkOrder = () => {
+  const formComponentsValue = () => {
     const handleChange = (value) => {
       console.log(`selected ${value}`);
     }
     return (
-      <Form>
-        <Row gutter={40}>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`生产线`}>
-              {getFieldDecorator(`field2`)(
-                <Select
-                  style={{ width: 200 }}
-                  onChange={handleChange}
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    )
-  }
-  const formComponentsValueToOptionalWorkOrder = () => {
-    const handleChange = (value) => {
-      console.log(`selected ${value}`);
-    }
-    return (
-      <Form>
-        <Row gutter={40}>
-          <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`工单状态`}>
-              {getFieldDecorator(`WorkOrderStateFieldDecorator`, {
-                initialValue: [],
-              })(
-                <CheckboxGroup options={plainOptions} onChange={onChange} />
-                )}
-
-            </FormItem>
-          </Col>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`时间选择`}>
-              {getFieldDecorator(`PlannedStartDateTimeFieldDecorator`, {
-                initialValue: '',
-              })(
-                <RangePicker
-                  showTime={{ format: 'HH:mm' }}
-                  format="YYYY-MM-DD HH:mm"
-                  placeholder={['计划开始', '计划结束']}
-                />
-                )}
-            </FormItem>
-          </Col>
-
-        </Row>
-      </Form>
+      <div>
+        formComponentsValue
+    </div>
     )
   }
   const addModalValue = () => {
@@ -549,47 +432,81 @@ const WorkOrderActivationComponent = ({
     )
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    validateFields(handleSubmitLayout, (err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        const Params = {
+          // lineName: values.lineNameDecorator
+          WorkOrderNumber: values.WorkOrderNumberDecorator,
+          StationNumber: values.StationIdDecorator
+        }
+        handleSearchFormComponents(Params, 'GetSetupActivationInfor')
+      }
+    });
+  }
+
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponentsValueToActivatedWorkOrder
-          GetAllLineNamesInitData={GetAllLineNamesInitData}
-          handleSearchFormComponents={handleSearchFormComponents}
-        // formComponentsValue={formComponentsValueToActivatedWorkOrder()}
-        />
+
+        <div className="components-form-demo-advanced-search" >
+          <Form
+            className="ant-advanced-search-form"
+            onSubmit={handleSubmit}
+          >
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`工单号`}>
+
+                  {getFieldDecorator('WorkOrderNumberDecorator', {
+                    initialValue: WorkOrderNumber,
+                    rules: [
+                      {
+                        required: true, message: '请输入工单编号',
+                      },
+                    ],
+                  })(<Input />)}
+                </FormItem>
+              </Col>
+              <Col span={8} key={3} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`站位`}>
+                  {getFieldDecorator('StationIdDecorator', {
+                    initialValue: StationId.toString(),
+                    rules: [
+                      {
+                        required: true, message: '清选择站位号',
+                      },
+                    ],
+                  })(<Select
+                    style={{ width: 200 }}
+                  // onChange={this.handleChange}
+                  >
+                    {StationInformationData.map(function (item, index) {
+                      return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                    })}
+                  </Select>)}
+
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24} style={{ textAlign: 'right' }}>
+                <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              </Col>
+            </Row>
+          </Form>
+        </div>
       </div>
-      <h2 style={{ textAlign: 'left' }}>当前已激活工单</h2>
       <div>
         <TableComponents
           tableName={TableName}
-          data={TableComponentsValueToActivatedWorkOrder}
+          data={list}
           tableLoading={tableLoading}
           pagination={pagination}
-          columns={ActivatedWorkOrderColums}
-          TableWidth={1300}
-          addModalValue={addModalValue()}
-          editModalValue={editModalValue()}
-          detailsModalValue={detailsModalValue()}
-          handleAdd={handleAdd}
-          tableModels={TableModelsData}
-        />
-      </div>
-      <hr style={{ border: "3 double black", marginTop: '40px', marginBottom: '40px' }} width="80%" color='#e6e6e6' size='3' />
-      <div style={{ marginTop: '20px', marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponentsValueToOptionalWorkOrder
-          handleSearchFormComponents={handleSearchFormComponents}
-        //formComponentsValue={formComponentsValueToOptionalWorkOrder()}
-        />
-      </div>
-      <h2 style={{ textAlign: 'left' }}>可选工单</h2>
-      <div>
-        <TableComponents
-          tableName={TableName}
-          data={TableComponentsValueToOptionalWorkOrder}
-          tableLoading={tableLoading}
-          pagination={pagination}
-          columns={OptionalWorkOrderColums}
-          TableWidth={1500}
+          columns={workOrderSettingColums}
+          TableWidth={1800}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}
@@ -602,17 +519,32 @@ const WorkOrderActivationComponent = ({
 }
 
 
-export default connect(({ workOrderActivation }) => ({ workOrderActivation }))(Form.create()(WorkOrderActivationComponent))
+export default connect(({ workOrderSetting }) => ({ workOrderSetting }))(Form.create()(WorkOrderSettingComponent))
 
+
+// <FormComponents
+// GetStationInformationInitData={GetStationInformationInitData}
+// handleSearchFormComponents={handleSearchFormComponents}
+// formComponentsValue={formComponentsValue()}
+// />
 
 // <Col span={8} key={3} style={{ display: 'block' }}>
-// <FormItem {...formItemLayout} label={`计划结束`}>
-//   {getFieldDecorator(`PlannedEndDateTimeFieldDecorator`, {
-//     initialValue: '',
-//   })(
-//     <DatePicker
-//       showTime
-//       format="YYYY-MM-DD HH:mm:ss" />
-//     )}
+// <FormItem {...formItemLayout} label={`站位`}>
+//   {getFieldDecorator(`StationNumberDecorator`)(
+//     <Select
+//       style={{ width: 200 }}
+//       onChange={this.handleChange}
+//     >
+//       {this.props.GetStationInformationInitData.map(function (item, index) {
+//         return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+//       })}
+//     </Select>
+//   )}
 // </FormItem>
 // </Col>
+
+
+
+
+
+

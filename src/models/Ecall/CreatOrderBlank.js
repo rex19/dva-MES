@@ -278,7 +278,7 @@ export default modelExtend(pageModel, {
           throw data
         }
       } else if (payload.modalType === 'Revoke') {
-        const data = yield call(PickChosenBillRevocation, payload.record.Id)
+        const data = yield call(PickChosenBillRevocation, payload)
         console.log('Revoke', data)
         if (data.Status === 200 && data.Data === 0) {
           const queryParams = yield select(state => state[TableName].queryParams)

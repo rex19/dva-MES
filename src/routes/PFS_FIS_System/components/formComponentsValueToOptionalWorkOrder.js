@@ -22,6 +22,7 @@ class Forms extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const Params = {
+          LineName: 9,
           WorkOrderState: values.WorkOrderStateFieldDecorator,
           PlannedStartDateTime: moment(values.PlannedStartDateTimeFieldDecorator[0]).format(),
           PlannedEndDateTime: moment(values.PlannedStartDateTimeFieldDecorator[1]).format(),

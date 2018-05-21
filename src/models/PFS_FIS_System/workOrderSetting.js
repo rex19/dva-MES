@@ -18,7 +18,7 @@ import globalConfig from 'utils/config'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'workOrderActivation'
+const TableName = 'workOrderSetting'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -63,18 +63,31 @@ export default modelExtend(pageModel, {
     TableComponentsValueToActivatedWorkOrder: [],
     TableComponentsValueToOptionalWorkOrder: [],
     TableComponentsValueToWorkOrderSettingState: [],
-    lineName: '0'
+    lineName: '0',
+    StationId: 'StationId',
+    WorkOrderNumber: 'WorkOrderNumber',
+    StationInformationData: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/PFS_FIS_System/workOrderActivation` || location.pathname === `/PFS_FIS_System/workOrderSetting`) {
+        if (location.pathname === `/PFS_FIS_System/workOrderSetting`) {
+          console.log('setting====', location)
+          if (location.query) {
+            dispatch({
+              type: 'query',
+              payload: {
+                modalType: 'location_query',
+                queryParams: location.query
+              }
+            })
+          }
+
           dispatch({
-            type: 'query',
+            type: 'ChangerState',
             payload: {
-              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-              [QueryRequestDTO]: null
+              modalType: 'location_query',
+              queryParams: location.query
             }
           })
         }
@@ -88,14 +101,14 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       // yield put({ type: 'loadingChanger', payload: 'showLoading' })
       // yield put({ type: 'tablePaginationChanger', payload: payload })
-      const GetAllLineNamesForActiveWorkOrderComboxData = yield call(GetAllLineNamesForActiveWorkOrderCombox)
-      // const GetStationInformationForSetupInformationData = yield call(GetStationInformationForSetupInformation)
-      console.log('workOrderActivation-model', GetAllLineNamesForActiveWorkOrderComboxData)
+      // const GetAllLineNamesForActiveWorkOrderComboxData = yield call(GetAllLineNamesForActiveWorkOrderCombox)
+      const GetStationInformationForSetupInformationData = yield call(GetStationInformationForSetupInformation, payload.queryParams)
+      console.log('workOrderSetting-model', GetStationInformationForSetupInformationData)
       yield put({
         type: 'showFormData', payload: {
           modalType: 'InitWorkOrderFormData',
-          GetAllLineNamesForActiveWorkOrderComboxData: GetAllLineNamesForActiveWorkOrderComboxData.Data,
-          // GetStationInformationForSetupInformationData: GetStationInformationForSetupInformationData.Data,
+          // GetAllLineNamesForActiveWorkOrderComboxData: GetAllLineNamesForActiveWorkOrderComboxData.Data,
+          GetStationInformationForSetupInformationData: GetStationInformationForSetupInformationData.Data,
         }
       })
 
@@ -246,19 +259,34 @@ export default modelExtend(pageModel, {
 
     * handleSearchFormComponents({
       payload,
-    }, { call, put }) {
-      if (payload.modalType === 'formComponentsValueToActivatedWorkOrder') {
+    }, { call, put, select }) {
+      if (payload.modalType === 'GetSetupActivationInfor') {
 
-        const data = yield call(GetActivedWorkOrderListOfLine, payload.Params)
-        console.log('payload.modalType === formComponentsValueToActivatedWorkOrder', data)
-        yield put({ type: 'showTableData', payload: { modalType: payload.modalType, data: data.Data } })
-      } else if (payload.modalType === 'formComponentsValueToOptionalWorkOrder') {
-        const data = yield call(GetWorkOrderListForActive, payload.Params)
-        console.log('payload.modalType === formComponentsValueToOptionalWorkOrder', data)
-        yield put({ type: 'showTableData', payload: { modalType: payload.modalType, data: data.Data } })
-      } else if (payload.modalType === 'formComponentsValueToSettingState') {
+        // const data = yield call(GetSetupActivationInformationByWorkOrderAndStationNumber, payload.Params)
+        // console.log('payload.modalType === GetSetupActivationInformationByWorkOrderAndStationNumber', data)
+
+
+
+        yield put({ type: 'loadingChanger', payload: 'showLoading' })
+        yield put({ type: 'tablePaginationChanger', payload: payload })
         const data = yield call(GetSetupActivationInformationByWorkOrderAndStationNumber, payload.Params)
-        yield put({ type: 'showTableData', payload: { modalType: payload.modalType, data: data.Data } })
+
+        const pagination = yield select(state => state[TableName].pagination)
+        const result = yield call(addKey, data.Data) //+1
+        console.log('result', result)
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            list: result,
+            pagination: {
+              PageIndex: Number(pagination.PageIndex) || 1,
+              PageSize: Number(pagination.PageSize) || 10,
+              total: 10
+            },
+          },
+        })
+        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+        // yield put({ type: 'showTableData', payload: { modalType: payload.modalType, data: data.Data } })
       } else {
         throw data
       }
@@ -285,7 +313,14 @@ export default modelExtend(pageModel, {
     },
     ChangerState(state, { payload }) {
       console.log('ChangerState', payload)
-      if (payload.modalType === 'lineName') {
+      if (payload.modalType === 'location_query') {
+        console.log('ChangerState-+-', payload)
+        return {
+          ...state, ...payload, [payload]: false,
+          StationId: payload.queryParams.StationId,
+          WorkOrderNumber: payload.queryParams.WorkOrderNumber
+        }
+      } else if (payload.modalType === 'lineName') {
         return {
           ...state, ...payload, [payload]: false, lineName: payload.lineName
         }
@@ -297,7 +332,7 @@ export default modelExtend(pageModel, {
         return {
           ...state,
           ...payload,
-          GetAllLineNamesInitData: payload.GetAllLineNamesForActiveWorkOrderComboxData.LineName,
+          StationInformationData: payload.GetStationInformationForSetupInformationData.StationInformation,
           // GetStationInformationInitData: eval(payload.GetStationInformationForSetupInformationData.StationInformation)
         }
       }

@@ -1,7 +1,7 @@
 import { request } from 'utils'
 import globalConfig from 'utils/config'
 //每个table可能不同的变量字段
-const tableName = globalConfig.api.workOrderActivation
+const tableName = globalConfig.api.workOrderSetting
 
 //激活工单页面-获取生产线列表
 export async function GetAllLineNamesForActiveWorkOrderCombox(params) {
@@ -40,7 +40,7 @@ export async function ActiveWorkOrderToLine(params) {
 export async function GetStationInformationForSetupInformation(params) {
   return request({
     url: `${tableName}/${globalConfig.crudApi.GetStationInformationForSetupInformation}`,
-    method: 'post',
+    method: 'get',
     data: params,
   })
 }

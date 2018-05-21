@@ -249,7 +249,7 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
-        const data = yield call(GetWorkOrderInformationForEdit, payload.record.Id)
+        const data = yield call(GetWorkOrderInformationForEdit, payload)
         // if (data.Status === 200) {
         console.log('showModalAndAjax-edit', data)
         yield put({ type: 'showModal', payload: payload })
@@ -275,14 +275,23 @@ export default modelExtend(pageModel, {
 
         //根据成品半成品料号查询成品半成品列表的下拉菜单数据
       } else if (payload.modalType === 'SearchGetPartInformationListForCreateWorkOrder') {
-        const data = yield call(GetPartInformationListForCreateWorkOrder, payload.params)
-        console.log('SearchGetPartInformationListForCreateWorkOrder', data)
+        const GetPartInformationListForCreateWorkOrderData = yield call(GetPartInformationListForCreateWorkOrder, payload.params)
+        console.log('SearchGetPartInformationListForCreateWorkOrder', GetPartInformationListForCreateWorkOrderData)
         yield put({
           type: 'showModalData', payload: {
-            modalType: payload.modalType,
-            Data: data.Data
+            modalType: 'SearchGetPartInformationListForCreateWorkOrder',
+            Data: GetPartInformationListForCreateWorkOrderData.Data
           }
         })
+
+        const GetProcessListForCreateWorkOrderData = yield call(GetProcessListForCreateWorkOrder, payload.params)
+        yield put({
+          type: 'showModalData', payload: {
+            modalType: 'SearchGetProcessListForCreateWorkOrder',
+            Data: GetProcessListForCreateWorkOrderData.Data
+          }
+        })
+
       } else if (payload.modalType === 'SearchGetProcessListForCreateWorkOrder') {
         const data = yield call(GetProcessListForCreateWorkOrder, payload.params)
         console.log('SearchGetProcessListForCreateWorkOrder', data)
@@ -292,16 +301,17 @@ export default modelExtend(pageModel, {
             Data: data.Data
           }
         })
-      } else if (payload.modalType === 'SearchGetBaseLineInformation') {
-        const data = yield call(GetBaseLineInformation, payload.params)
-        console.log('SearchGetBaseLineInformation', data)
-        yield put({
-          type: 'showModalData', payload: {
-            modalType: payload.modalType,
-            Data: data.Data
-          }
-        })
       }
+      //  else if (payload.modalType === 'SearchGetBaseLineInformation') {
+      //   const data = yield call(GetBaseLineInformation, payload.params)
+      //   console.log('SearchGetBaseLineInformation', data)
+      //   yield put({
+      //     type: 'showModalData', payload: {
+      //       modalType: payload.modalType,
+      //       Data: data.Data
+      //     }
+      //   })
+      // }
     },
   },
   reducers: {
@@ -324,6 +334,7 @@ export default modelExtend(pageModel, {
       } else if (payload.modalType === 'SearchGetProcessListForCreateWorkOrder') {
         return { ...state, ...payload, VMProcessInformation: eval(payload.Data.VMProcessInformation) }
       } else if (payload.modalType === 'SearchGetBaseLineInformation') {
+        console.log('SearchGetBaseLineInformation', payload)
         return { ...state, ...payload, CycleTimeInTheory: payload.Data.CycleTimeInTheory, OEEInTheory: payload.Data.OEEInTheory }
       }
       //edit modal初始化数据

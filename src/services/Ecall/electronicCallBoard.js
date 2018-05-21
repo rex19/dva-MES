@@ -14,8 +14,8 @@ const tableName = globalConfig.api.electronicCallBoard
 //获得找料区域与请求地点   /RequestMaterialBill/RequestNeedView
 export async function RequestNeedView(params) {
   return request({
-    // url: `${tableName}/${globalConfig.crudApi.GetAllLineNamesForActiveWorkOrderCombox}`,
-    url: `http://192.168.1.116:8080/ecall/RequestMaterialBill/RequestNeedView`,
+    url: `${tableName}/${globalConfig.crudApi.RequestNeedView}`,
+    // url: `http://192.168.1.116:8080/ecall/RequestMaterialBill/RequestNeedView`,
     method: 'post',
     data: params,
   })

@@ -50,7 +50,7 @@ const TableComponents = ({
       type: `${tableName}/showModalAndAjax`,
       payload: {
         modalType: modalVisible,
-        record: record
+        materialRequestFormId: record.Id
       },
     })
   }

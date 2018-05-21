@@ -164,7 +164,7 @@ const Routers = function ({ history, app }) {
       component: () => import('./routes/PFS_FIS_System/workOrderActivation/'),
     }, {
       path: '/PFS_FIS_System/workOrderSetting',
-      models: () => [import('./models/PFS_FIS_System/workOrderActivation')],
+      models: () => [import('./models/PFS_FIS_System/workOrderSetting')],
       component: () => import('./routes/PFS_FIS_System/workOrderSetting/'),
     }, {  //SF_PFS_Trace
       path: '/SF_PFS_Trace/TracePartByStation',

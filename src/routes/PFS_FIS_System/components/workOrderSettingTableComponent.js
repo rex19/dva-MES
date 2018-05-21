@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, Button, Icon, Table, Pagination, Popconfirm } from 'antd'
 import { connect } from 'dva'
-import { ModalComponents } from './ModalComponents'
+import { ModalComponents } from './workOrderActivationModalComponent'
 import './index.less'
 
 let column = []
@@ -18,19 +18,10 @@ const TableComponents = ({
   addModalValue,
   editModalValue,
   detailsModalValue,
+  handleAdd,
   tableLoading,
-  addModalLineNames,
-  addModalShiftNames,
-  VMPartInformation,
-  VMProcessInformation,
-  CycleTimeInTheory,
-  OEEInTheory,
 
-  EditAllLineNames,
-  EditAllShiftNames,
-  EditAllWorkOrderStates,
-  EditData,
-  DetailsData
+  lineName
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -40,11 +31,7 @@ const TableComponents = ({
     width: 140,
     render: (text, record) => (
       <span>
-        <a onClick={() => handleModalShow('editModalVisible', record)}>编辑</a>
-        <span className="ant-divider" />
-        <a onClick={() => handleModalShow('detailsModalVisible', record)} className="ant-dropdown-link">
-          详情 <Icon type="down" />
-        </a>
+        <a onClick={() => handleModalShow('ActiveWorkOrderToLine', record)}>激活</a>
       </span>
     ),
   }]
@@ -56,12 +43,18 @@ const TableComponents = ({
   }
   //打开模态框
   const handleModalShow = (modalVisible, record = {}) => {
-    console.log('handleModalShow=--', record)
+    console.log('handleModalShow', modalVisible, tableName)
     dispatch({
       type: `${tableName}/showModalAndAjax`,
       payload: {
         modalType: modalVisible,
-        Id: record.Id
+        record: {
+          // ...record,
+          WorkOrderId: record.WorkOrderId,
+          WorkOrderNumber: record.WorkOrderNumber,
+          LineName: parseInt(lineName),
+          ActiveUserId: 10
+        }
       },
     })
   }
@@ -101,65 +94,14 @@ const TableComponents = ({
       payload: id,
     });
   }
-  const SearchGetPartInformationListForCreateWorkOrder = (params) => {
-    dispatch({
-      type: `${tableName}/showModalAndAjax`,
-      payload: {
-        modalType: 'SearchGetPartInformationListForCreateWorkOrder',
-        params: params
-      },
-    });
-  }
-  const SearchGetProcessListForCreateWorkOrder = (params) => {
-    dispatch({
-      type: `${tableName}/showModalAndAjax`,
-      payload: {
-        modalType: 'SearchGetProcessListForCreateWorkOrder',
-        params: params
-      },
-    });
-  }
-  const SearchGetBaseLineInformation = (params) => {
-    dispatch({
-      type: `${tableName}/showModalAndAjax`,
-      payload: {
-        modalType: 'SearchGetBaseLineInformation',
-        params: params
-      },
-    });
-  }
-  const handleAdd = (Params, modalType) => {
-    console.log('handleAdd', Params, modalType)
-    if (modalType === 'create') {
-      dispatch({
-        type: `${tableName}/${modalType}`,
-        payload: Params,
-      })
-    } else if (modalType === 'edit') {
-      dispatch({
-        type: `${tableName}/${modalType}`,
-        payload: Params,
-      })
-    }
-    // dispatch({
-    //   type: `${tableName}/showModalAndAjax`,
-    //   payload: {
-    //     modalType: 'SearchGetBaseLineInformation',
-    //     params: params
-    //   },
-    // });
-  }
 
   return (
     <div>
-      <Row>
-        <Col span={24} style={{ textAlign: 'left', marginBottom: '5px' }}>
-          <Button type="primary" onClick={() => handleModalShow('addModalVisible')}><Icon type="plus-circle-o" /> 新增</Button>
-        </Col>
-      </Row>
+
       <Row>
         <Table
-          columns={columnFunc(column, columns, ActionColumn)}
+          columns={columns}
+          // columns={columnFunc(column, columns, ActionColumn)}
           dataSource={data}
           scroll={{ x: TableWidth }}
           pagination={false}
@@ -183,12 +125,6 @@ const TableComponents = ({
         </Col>
       </Row>
       <ModalComponents
-        addModalLineNames={addModalLineNames}
-        addModalShiftNames={addModalShiftNames}
-        VMPartInformation={VMPartInformation}
-        VMProcessInformation={VMProcessInformation}
-        CycleTimeInTheory={CycleTimeInTheory}
-        OEEInTheory={OEEInTheory}
         ModalWidth={ModalWidth}
         addModalVisible={addModalVisible}
         editModalVisible={editModalVisible}
@@ -199,15 +135,6 @@ const TableComponents = ({
         editModalValue={editModalValue}
         detailsModalValue={detailsModalValue}
         handleAdd={handleAdd}
-        SearchGetPartInformationListForCreateWorkOrder={SearchGetPartInformationListForCreateWorkOrder}
-        SearchGetProcessListForCreateWorkOrder={SearchGetProcessListForCreateWorkOrder}
-        SearchGetBaseLineInformation={SearchGetBaseLineInformation}
-
-        EditAllLineNames={EditAllLineNames}
-        EditAllShiftNames={EditAllShiftNames}
-        EditAllWorkOrderStates={EditAllWorkOrderStates}
-        EditData={EditData}
-        DetailsData={DetailsData}
       />
     </div>
   )

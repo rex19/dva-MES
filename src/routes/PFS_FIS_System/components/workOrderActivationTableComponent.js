@@ -1,5 +1,6 @@
 import React from 'react'
 import { Row, Col, Button, Icon, Table, Pagination, Popconfirm } from 'antd'
+import { Link } from "react-router-dom"
 import { connect } from 'dva'
 import { ModalComponents } from './workOrderActivationModalComponent'
 import './index.less'
@@ -27,20 +28,13 @@ const TableComponents = ({
     key: (new Date()).valueOf(),
     fixed: 'right',
     width: 140,
-    render: (text, record) => (
-      <span>
-        <a onClick={() => handleModalShow('editModalVisible', record)}>编辑</a>
-        <span className="ant-divider" />
-        <Popconfirm title="确定删除吗?" onConfirm={() => deleteHandler(record)}>
-          <a >删除</a>
-        </Popconfirm>
-        <span className="ant-divider" />
-        <a onClick={() => handleModalShow('detailsModalVisible', record)} className="ant-dropdown-link">
-          详情 <Icon type="down" />
-        </a>
-      </span>
-    ),
-  }]
+    render: (text, record) => <Link to={{ pathname: '/PFS_FIS_System/workOrderSetting', query: { WorkOrderNumber: record.WorkOrderNumber, StationId: record.StationId } }}  >{'查看'}</Link>
+    // render: (text, record) => (
+    //   <span>
+    //     <a onClick={() => handleModalShow('editModalVisible', record)}>查看</a>
+    //   </span>
+    // ),
+  }]//  render: (text, record) => <Link to={{ pathname: '/PFS_FIS_System/workOrderActivation', query: { WorkOrderNumber: record.WorkOrderNumber,StationName:record.StationName } }}  >{'查看'}</Link>
   const columnFunc = (column, columns, ActionColumn) => {
     //父组件传来的表头
     column = []
@@ -92,15 +86,15 @@ const TableComponents = ({
     dispatch({
       type: `${tableName}/delete`,
       payload: id,
-    });
+    })
   }
 
   return (
     <div>
-
       <Row>
         <Table
-          columns={columns}
+          // columns={columns}
+          columns={columnFunc(column, columns, ActionColumn)}
           dataSource={data}
           scroll={{ x: TableWidth }}
           pagination={false}
@@ -108,7 +102,7 @@ const TableComponents = ({
           loading={tableLoading}
         />
       </Row>
-      <Row >
+      <Row>
         <Col span={24} style={{ textAlign: 'center', marginTop: '10px' }}>
           <Pagination
             showQuickJumper//是否可以快速跳转至某页
