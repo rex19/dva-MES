@@ -21,7 +21,6 @@
     })
     JSON.stringify(map)
     ```
-
 */
 let DICT = {
   110000: '北京',
