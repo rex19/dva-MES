@@ -122,8 +122,6 @@ module.exports = {
     electronicCallBoard: `${SFEcall}/RequestMaterialBill`,//电子叫料看板
     creatProductionInitialOrderBlank: `${SFEcall}/BeginningPickBill`,//创建生产初始配货单
     creatOrderBlank: `${SFEcall}/PickBill`,//创建配货单
-
-
   },
   crudApi: {
     postAddData: 'Post',  //新增
