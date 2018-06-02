@@ -188,7 +188,6 @@ module.exports = {
     //工单激活
     GetSetupActivationInformationByWorkOrderAndStationNumber: 'GetSetupActivationInformationByWorkOrderAndStationNumber',
     workOrderConfig: '',
-
     /**
      * SF-PFS-Trace
      */
