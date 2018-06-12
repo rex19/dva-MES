@@ -37,8 +37,8 @@ const handleSubmitLayout = [
 
 const workOrderSettingColums = [{
   title: '状态',
-  dataIndex: 'State',
-  render: (text, record) => <span><Badge status='success' />{record.State}</span>
+  dataIndex: 'StateName',
+  render: (text, record) => <span><Badge status='success' />{record.StateName}</span>
 }, {
   title: '工站编号',
   dataIndex: 'StationNr',

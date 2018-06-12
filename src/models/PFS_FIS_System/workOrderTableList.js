@@ -100,6 +100,7 @@ export default modelExtend(pageModel, {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === `/PFS_FIS_System/${TableName}`) {
+
           dispatch({
             type: 'InitialQuery',
           })
@@ -120,10 +121,9 @@ export default modelExtend(pageModel, {
     * InitialQuery({
       payload,
     }, { call, put, select }) {
-
+      console.log('InitialQuery')
       const data = yield call(InitialQuery, payload)
-      console.log('data---', data)
-      console.log('InitialQuery', data)
+      const pagination = yield select(state => state[TableName].pagination)
       yield put({
         type: 'showModalData',
         payload: {
@@ -137,10 +137,12 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-
-      const data = yield call(query, payload)
-      console.log('SearchTableList-query', payload, data)
       const pagination = yield select(state => state[TableName].pagination)
+      console.log('SearchTableList-query', globalConfig.table.paginationConfig, pagination, payload)
+      // const pagination = yield select(state => state[TableName].pagination)
+      const data = yield call(query, payload)
+
+      // const pagination = yield select(state => state[TableName].pagination)
       const result = yield call(addKey, data.Data.WorkOrderList) //+1
       yield put({
         type: 'querySuccess',

@@ -15,6 +15,7 @@ const TableComponents = ({
   ModalWidth,
   data,
   pagination,
+  PaginationComponentsChanger,
   addModalValue,
   editModalValue,
   detailsModalValue,
@@ -85,15 +86,16 @@ const TableComponents = ({
     })
   }
 
-  const onPaginationChange = (PageIndex, pageSize) => {
-    dispatch({
-      type: `${tableName}/query`,
-      payload: {
-        PageIndex: PageIndex,  //第几页
-        PageSize: pageSize,  //多少行
-        TDto: null,
-      }
-    })
+  const onPaginationChange = (PageIndex, PageSize) => {
+    PaginationComponentsChanger(PageIndex, PageSize)
+    // dispatch({
+    //   type: `${tableName}/query`,
+    //   payload: {
+    //     PageIndex: PageIndex,  //第几页
+    //     PageSize: pageSize,  //多少行
+    //     TDto: null,
+    //   }
+    // })
   }
   const deleteHandler = (id) => {
     dispatch({

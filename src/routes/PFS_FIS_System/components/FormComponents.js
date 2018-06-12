@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment';
 import { Form, Row, Col, Input, Button, Icon, Table, DatePicker, Select, Checkbox } from 'antd';
 import './index.less'
+import globalConfig from 'utils/config'
 
 const { Option } = Select
 const FormItem = Form.Item
@@ -31,8 +32,9 @@ class Forms extends React.Component {
     // this.props.form.validateFields((err, values) => {
     //   console.log('Received values of form: ', values);
     // });
-
+    console.log('validateFields-handleSearch', globalConfig.table.paginationConfig)
     this.props.form.validateFields(SearchValidateFieldsLayout, (err, payload) => {
+
       if (!err) {
         const Params = {
           WorkOrderNumber: payload.WorkOrderNumberFieldDecorator,
@@ -41,9 +43,11 @@ class Forms extends React.Component {
           ShiftName: payload.ShiftNameFieldDecorator,
           LineName: payload.LineNameFieldDecorator,
           // WorkOrderState: 8
-          WorkOrderState: payload.WorkOrderStateFieldDecorator
+          WorkOrderState: payload.WorkOrderStateFieldDecorator,
+          PageIndex: this.props.pagination.PageIndex,
+          PageSize: this.props.pagination.PageSize
         }
-        console.log('Received values of form: ', payload);
+        console.log('Received values of form: ', Params);
         this.props.SearchTableList(Params)
         console.log(payload.PlannedStartDateTimeFieldDecorator.toString())
 

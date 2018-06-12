@@ -64,8 +64,8 @@ export default modelExtend(pageModel, {
     TableComponentsValueToOptionalWorkOrder: [],
     TableComponentsValueToWorkOrderSettingState: [],
     lineName: '0',
-    StationId: 'StationId',
-    WorkOrderNumber: 'WorkOrderNumber',
+    StationId: '',
+    WorkOrderNumber: '',
     StationInformationData: []
   },
   subscriptions: {
@@ -74,6 +74,7 @@ export default modelExtend(pageModel, {
         if (location.pathname === `/PFS_FIS_System/workOrderSetting`) {
           console.log('setting====', location)
           if (location.query) {
+
             dispatch({
               type: 'query',
               payload: {
@@ -81,15 +82,15 @@ export default modelExtend(pageModel, {
                 queryParams: location.query
               }
             })
-          }
 
-          dispatch({
-            type: 'ChangerState',
-            payload: {
-              modalType: 'location_query',
-              queryParams: location.query
-            }
-          })
+            dispatch({
+              type: 'ChangerState',
+              payload: {
+                modalType: 'location_query',
+                queryParams: location.query
+              }
+            })
+          }
         }
       })
     },

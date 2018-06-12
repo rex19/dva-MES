@@ -20,9 +20,10 @@ class Forms extends React.Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
+      console.log('validateFields+-', values)
       if (!err) {
         const Params = {
-          LineName: 9,
+          LineName: this.props.lineName,
           WorkOrderState: values.WorkOrderStateFieldDecorator,
           PlannedStartDateTime: moment(values.PlannedStartDateTimeFieldDecorator[0]).format(),
           PlannedEndDateTime: moment(values.PlannedStartDateTimeFieldDecorator[1]).format(),

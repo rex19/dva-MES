@@ -8,21 +8,31 @@ const APIV2 = '/api/v2'
 const APIV3 = '/api/v3'
 
 
-// //英提尔
-// const Middleware_IP = 'http://192.168.243.118:3009'
-// // const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
+
+//英提尔
+// const Middleware_IP = 'http://192.168.1.180:3009'
+// const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
 // const ADMAPI = 'http://192.168.1.180/SFMES/api'
 // const SFEcall = `http://smart-flow.diskstation.me:8000/ecall`
 
+//dev
+// const Middleware_IP = 'http://192.168.1.117:3009'
+// const ADMAPI = 'http://192.168.1.230/SFMES/api'
+// const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
 
-const Middleware_IP = 'http://192.168.1.127:3009'
+//build
+const Middleware_IP = 'http://192.168.1.117:3009'
+const ADMAPI = 'http://dsm.smart-flow.cn:7001/SFMES/api'
+const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
+
+
 const APIV1 = `${Middleware_IP}/api`
-const ADMAPI = 'http://192.168.1.230/SFMES/api'
 const WMSAPI = `${Middleware_IP}/sfwms`
 const SFPFSFIS = `${Middleware_IP}/sfpfsfis`
 const SFPFSTrace = `${Middleware_IP}/SFPFSTrace`
 const SFToolManager = `${Middleware_IP}/ToolManager`
-const SFEcall = `http://192.168.1.116:8080/ecall`
+// const Middleware_IP = 'http://dsm.smart-flow.cn:9001'
+// const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
 
 module.exports = {
   name: '翊流智能',
@@ -122,6 +132,8 @@ module.exports = {
     electronicCallBoard: `${SFEcall}/RequestMaterialBill`,//电子叫料看板
     creatProductionInitialOrderBlank: `${SFEcall}/BeginningPickBill`,//创建生产初始配货单
     creatOrderBlank: `${SFEcall}/PickBill`,//创建配货单
+
+
   },
   crudApi: {
     postAddData: 'Post',  //新增
@@ -188,10 +200,10 @@ module.exports = {
     //工单激活
     GetSetupActivationInformationByWorkOrderAndStationNumber: 'GetSetupActivationInformationByWorkOrderAndStationNumber',
     workOrderConfig: '',
+
     /**
      * SF-PFS-Trace
      */
-
     //TracePartByStation 通过工站追溯工件
     GetPageInit: 'GetPageInit',
     GetTracePartByStation: 'GetTracePartByStation',

@@ -467,9 +467,11 @@ const WorkOrderActivationComponent = ({
       <hr style={{ border: "3 double black", marginTop: '40px', marginBottom: '40px' }} width="80%" color='#e6e6e6' size='3' />
       <div style={{ marginTop: '20px', marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
         <FormComponentsValueToOptionalWorkOrder
+          lineName={lineName}
           handleSearchFormComponents={handleSearchFormComponents}
         //formComponentsValue={formComponentsValueToOptionalWorkOrder()}
         />
+
       </div>
       <h2 style={{ textAlign: 'left' }}>可选工单</h2>
       <div>

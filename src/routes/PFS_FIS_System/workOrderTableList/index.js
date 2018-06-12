@@ -1,6 +1,7 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, DatePicker, Select, Checkbox } from 'antd'
+import { Form, Input, Row, Col, Radio, DatePicker, Select, Checkbox, Button, Icon } from 'antd'
 import { connect } from 'dva'
+import moment from 'moment';
 import FormComponents from '../components/FormComponents'
 import TableComponents from '../components/TableComponents'
 import globalConfig from 'utils/config'
@@ -30,6 +31,13 @@ const EditFormLayout = [
   'EditY',
   'EditZ',
   'EditState']
+const SearchValidateFieldsLayout = [
+  'WorkOrderNumberFieldDecorator',
+  'PlannedStartDateTimeFieldDecorator',
+  'PlannedEndDateTimeFieldDecorator',
+  'ShiftNameFieldDecorator',
+  'LineNameFieldDecorator',
+  'WorkOrderStateFieldDecorator']
 
 
 const workOrderListColums = [{
@@ -135,12 +143,43 @@ const WorkOrderListComponent = ({
       })
     }
   }
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // this.props.form.validateFields((err, values) => {
+    //   console.log('Received values of form: ', values);
+    // });
+    // console.log('validateFields-handleSearch', globalConfig.table.paginationConfig)
+    validateFields(SearchValidateFieldsLayout, (err, payload) => {
+
+      if (!err) {
+        const Params = {
+          WorkOrderNumber: payload.WorkOrderNumberFieldDecorator,
+          PlannedStartDateTime: moment(payload.PlannedStartDateTimeFieldDecorator).format(),
+          PlannedEndDateTime: moment(payload.PlannedEndDateTimeFieldDecorator).format(),
+          ShiftName: payload.ShiftNameFieldDecorator,
+          LineName: payload.LineNameFieldDecorator,
+          // WorkOrderState: 8
+          WorkOrderState: payload.WorkOrderStateFieldDecorator,
+          // PageIndex: pagination.PageIndex,
+          // PageSize: pagination.PageSize
+        }
+        console.log('Received values of form: ', Params);
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
+        console.log(payload.PlannedStartDateTimeFieldDecorator.toString())
+
+      }
+    })
+  }
 
 
-  const SearchTableList = (payload) => {
+  const SearchTableList = (payload, PageIndex, PageSize) => {
     dispatch({
       type: `${TableName}/query`,
-      payload: payload,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
     })
   }
   /**
@@ -187,15 +226,121 @@ const WorkOrderListComponent = ({
     )
   }
 
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  }
+
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    validateFields(SearchValidateFieldsLayout, (err, payload) => {
+
+      if (!err) {
+        const Params = {
+          WorkOrderNumber: payload.WorkOrderNumberFieldDecorator,
+          PlannedStartDateTime: moment(payload.PlannedStartDateTimeFieldDecorator).format(),
+          PlannedEndDateTime: moment(payload.PlannedEndDateTimeFieldDecorator).format(),
+          ShiftName: payload.ShiftNameFieldDecorator,
+          LineName: payload.LineNameFieldDecorator,
+          WorkOrderState: payload.WorkOrderStateFieldDecorator,
+        }
+        console.log('PaginationComponentsChanger', Params);
+        SearchTableList(Params, PageIndex, PageSize)
+
+      }
+    })
+  }
+
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponents
-          LineNames={LineNames}
-          ShiftNames={ShiftNames}
-          SearchTableList={SearchTableList}
-        // formComponentsValue={formComponentsValue()}
-        />
+        <div className="components-form-demo-advanced-search" >
+          <Form
+            className="ant-advanced-search-form"
+            onSubmit={handleSearch}
+          >
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`工单号`}>
+                  {getFieldDecorator(`WorkOrderNumberFieldDecorator`, {
+                    initialValue: '',
+                  })(
+                    <Input />
+                    )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`计划开始`}>
+                  {getFieldDecorator(`PlannedStartDateTimeFieldDecorator`, {
+                    initialValue: '',
+                  })(
+                    <DatePicker
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss" />
+                    )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={3} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`计划结束`}>
+                  {getFieldDecorator(`PlannedEndDateTimeFieldDecorator`, {
+                    initialValue: '',
+                  })(
+                    <DatePicker
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss" />
+                    )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`班别`}>
+                  {getFieldDecorator(`ShiftNameFieldDecorator`, {
+                    initialValue: '',
+                  })(
+                    <Select
+                      style={{ width: 200 }}
+                      onChange={handleChange}
+                    >
+                      {ShiftNames.map(function (item, index) {
+                        return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                      })}
+                    </Select>
+                    )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`线体`}>
+                  {getFieldDecorator(`LineNameFieldDecorator`, {
+                    initialValue: '',
+                  })(
+                    <Select
+                      style={{ width: 200 }}
+                      onChange={handleChange}
+                    >
+                      {LineNames.map(function (item, index) {
+                        return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                      })}
+                    </Select>
+                    )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={3} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`工单状态`}>
+                  {getFieldDecorator(`WorkOrderStateFieldDecorator`, {
+                    initialValue: [],
+                  })(
+                    <CheckboxGroup options={plainOptions} onChange={onChange} />
+                    )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24} style={{ textAlign: 'right' }}>
+                <Button type="primary" htmlType="submit" ><Icon type="search" />查询</Button>
+              </Col>
+            </Row>
+          </Form>
+        </div>
       </div>
       <div>
         <TableComponents
@@ -209,6 +354,7 @@ const WorkOrderListComponent = ({
           data={list}
           tableLoading={tableLoading}
           pagination={pagination}
+          PaginationComponentsChanger={PaginationComponentsChanger}
           columns={workOrderListColums}
           TableWidth={1800}
           addModalValue={addModalValue()}
@@ -232,3 +378,11 @@ const WorkOrderListComponent = ({
 export default connect(({ workOrderTableList }) => ({ workOrderTableList }))(Form.create()(WorkOrderListComponent))
 
 
+
+// <FormComponents
+// LineNames={LineNames}
+// ShiftNames={ShiftNames}
+// SearchTableList={SearchTableList}
+// pagination={pagination}
+// // formComponentsValue={formComponentsValue()}
+// />
