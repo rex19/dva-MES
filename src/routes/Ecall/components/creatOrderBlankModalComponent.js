@@ -172,18 +172,19 @@ export const ModalComponents = ({
         </div>
       </Modal>
       <Modal
-        title="配货单"
+        title="配货单预览"
         visible={detailsModalVisible}
         width={ModalWidth || 920}
         onOk={() => handleModalClose('detailsModalVisible')}
         onCancel={() => handleModalClose('detailsModalVisible')}
+        footer={null}
       >
         <div style={{ marginBottom: 16 }}>
 
           <InputGroup size="large" style={{ marginBottom: 10 }}>
             <Row style={{ marginBottom: 10 }}>
               <Button style={{ marginBottom: '10px' }} onClick={printFunction}>打印</Button>
-              <Table dataSource={PreviewSubTableList} columns={SubCreatOrderBlankColums} />
+              <Table pagination={false} dataSource={PreviewSubTableList} columns={SubCreatOrderBlankColums} />
             </Row>
           </InputGroup>
 

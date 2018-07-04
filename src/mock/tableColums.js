@@ -403,7 +403,7 @@ const bomTableColumns = [{
   dataIndex: 'Id',
 }, {
   title: '料号',
-  dataIndex: 'MaterieNumber',
+  dataIndex: 'MaterialNumber',
 }, {
   title: '版本号',
   dataIndex: 'Version',

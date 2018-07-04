@@ -21,7 +21,8 @@ const TableComponents = ({
   handleAdd,
   tableLoading,
 
-  PreviewSubTableList//配货单预览table
+  PreviewSubTableList,//配货单预览table
+  PaginationComponentsChanger
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -75,14 +76,15 @@ const TableComponents = ({
   }
 
   const onPaginationChange = (PageIndex, pageSize) => {
-    dispatch({
-      type: `${tableName}/query`,
-      payload: {
-        PageIndex: PageIndex,  //第几页
-        PageSize: pageSize,  //多少行
-        TDto: null,
-      }
-    })
+    PaginationComponentsChanger(PageIndex, pageSize)
+    // dispatch({
+    //   type: `${tableName}/query`,
+    //   payload: {
+    //     PageIndex: PageIndex,  //第几页
+    //     PageSize: pageSize,  //多少行
+    //     TDto: null,
+    //   }
+    // })
   }
   const deleteHandler = (id) => {
     dispatch({

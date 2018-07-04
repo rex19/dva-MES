@@ -60,9 +60,9 @@ const workOrderListColums = [{
   dataIndex: 'WorkOrderComment',
 }, {
   title: '工单状态',
-  dataIndex: 'WorkOrderState',
+  dataIndex: 'WorkOrderStateName',
 }, {
-  title: '班别',
+  title: '厂区',
   dataIndex: 'ShiftName',
 }, {
   title: '总线体',
@@ -171,6 +171,25 @@ const WorkOrderListComponent = ({
     })
   }
 
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    validateFields(SearchValidateFieldsLayout, (err, payload) => {
+
+      if (!err) {
+        const Params = {
+          WorkOrderNumber: payload.WorkOrderNumberFieldDecorator,
+          PlannedStartDateTime: moment(payload.PlannedStartDateTimeFieldDecorator).format(),
+          PlannedEndDateTime: moment(payload.PlannedEndDateTimeFieldDecorator).format(),
+          ShiftName: payload.ShiftNameFieldDecorator,
+          LineName: payload.LineNameFieldDecorator,
+          WorkOrderState: payload.WorkOrderStateFieldDecorator,
+        }
+        console.log('PaginationComponentsChanger', Params);
+        SearchTableList(Params, PageIndex, PageSize)
+
+      }
+    })
+  }
+
 
   const SearchTableList = (payload, PageIndex, PageSize) => {
     dispatch({
@@ -231,24 +250,7 @@ const WorkOrderListComponent = ({
     console.log(`selected ${value}`);
   }
 
-  const PaginationComponentsChanger = (PageIndex, PageSize) => {
-    validateFields(SearchValidateFieldsLayout, (err, payload) => {
 
-      if (!err) {
-        const Params = {
-          WorkOrderNumber: payload.WorkOrderNumberFieldDecorator,
-          PlannedStartDateTime: moment(payload.PlannedStartDateTimeFieldDecorator).format(),
-          PlannedEndDateTime: moment(payload.PlannedEndDateTimeFieldDecorator).format(),
-          ShiftName: payload.ShiftNameFieldDecorator,
-          LineName: payload.LineNameFieldDecorator,
-          WorkOrderState: payload.WorkOrderStateFieldDecorator,
-        }
-        console.log('PaginationComponentsChanger', Params);
-        SearchTableList(Params, PageIndex, PageSize)
-
-      }
-    })
-  }
 
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
@@ -293,7 +295,7 @@ const WorkOrderListComponent = ({
             </Row>
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`班别`}>
+                <FormItem {...formItemLayout} label={`厂区`}>
                   {getFieldDecorator(`ShiftNameFieldDecorator`, {
                     initialValue: '',
                   })(

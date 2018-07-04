@@ -156,6 +156,7 @@ const StationGroupTableComponents = ({
     )
   }
   const editModalValue = () => {
+    console.log('editModalValue--', EditData, EditData.Id, EditData.GroupNumber)
     return (
       <div>
         <Form >
@@ -317,6 +318,7 @@ const StationGroupTableComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          EditData={EditData}
         />
       </div>
     </div>
@@ -327,3 +329,109 @@ const StationGroupTableComponents = ({
 export default connect(({ stationGroupTable }) => ({ stationGroupTable }))(Form.create()(StationGroupTableComponents))
 
 
+
+//  class EditModalValue extends React.Component {
+
+
+//     componentWillReceiveProps = (newProps, props) => {
+//       console.log('Component WILL RECEIVE PROPS!11', newProps, props)
+
+//     }
+
+//     // handleOk = (modalType) => {
+//     //   this.props.handleAdd(modalType)
+//     // }
+//     render() {
+//       const {
+//         EditData,
+//         formItemLayout
+
+//       } =this.props
+//       return(
+//         <div>
+//         <Form >
+//           <FormItem
+//             {...formItemLayout}
+//             label="Id"
+//             hasFeedback
+//           >
+//             {getFieldDecorator('EditId', {
+//               initialValue: EditData.Id,
+//             })(<Input disabled />)}
+//           </FormItem>
+//           <FormItem
+//             {...formItemLayout}
+//             label="工作站组编号"
+//             hasFeedback
+//           >
+//             {getFieldDecorator('EditGroupNumber', {
+//               initialValue: EditData.GroupNumber,
+//               rules: [
+//                 {
+//                   required: true, message: '请输入工作站组编号',
+//                 },
+//               ],
+//             })(<Input />)}
+//           </FormItem>
+//           <FormItem
+//             {...formItemLayout}
+//             label="名称"
+//             hasFeedback
+//           >
+//             {getFieldDecorator('EditDescription', {
+//               initialValue: EditData.Description,
+//               rules: [
+//                 {
+//                   required: true, message: '请输入名称',
+//                 },
+//               ],
+//             })(<Input />)}
+//           </FormItem>
+//           <FormItem
+//             {...formItemLayout}
+//             label="状态"
+//           >
+//             <div>
+//               {getFieldDecorator('EditState', {
+//                 initialValue: EditData.State.toString(),
+//                 rules: [
+//                   {
+//                     required: true, message: '请选择状态',
+//                   },
+//                 ],
+//               })(
+//                 <Select>
+//                   <Option key={0} value='0'>未激活</Option>
+//                   <Option key={1} value='1'>激活</Option>
+//                   <Option key={2} value='-1'>已删除</Option>
+//                 </Select>
+//                 )}
+//             </div>
+//           </FormItem>
+//           <FormItem
+//             {...formItemLayout}
+//             label="可选工站"
+//           >
+//             <div>
+//               {getFieldDecorator('EditStationIdArray', {
+//                 initialValue: SelectedStation,
+//               })(
+//                 <Select
+//                   mode="multiple"
+//                   labelInValue
+//                   style={{ width: '100%' }}
+//                   placeholder="请选择"
+//                 >
+//                   {TotalStation.map(function (item, index) {
+//                     return <Option key={index} value={item.key}>{item.label}</Option>
+//                   })}
+//                 </Select>
+//                 )}
+//             </div>
+//           </FormItem>
+//         </Form>
+//       </div>
+//       )
+//     }
+
+//   }

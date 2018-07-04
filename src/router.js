@@ -265,6 +265,10 @@ const Routers = function ({ history, app }) {
       path: '/Ecall/CreatOrderBlank',
       models: () => [import('./models/Ecall/CreatOrderBlank')],
       component: () => import('./routes/Ecall/CreatOrderBlank/'),
+    }, {
+      path: '/Ecall/InvoiceList',
+      models: () => [import('./models/Ecall/InvoiceList')],
+      component: () => import('./routes/Ecall/InvoiceList/'),
     }
   ]
 

@@ -19,7 +19,8 @@ const TableComponents = ({
   editModalValue,
   detailsModalValue,
   handleAdd,
-  tableLoading
+  tableLoading,
+  EditData
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -136,6 +137,7 @@ const TableComponents = ({
         editModalValue={editModalValue}
         detailsModalValue={detailsModalValue}
         handleAdd={handleAdd}
+        EditData={EditData}
       />
     </div>
   )

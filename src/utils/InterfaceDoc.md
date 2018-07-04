@@ -27,9 +27,6 @@
   ```json
   //Request param
   
-
-  
-  
   //Response
   {
   "TotalRole": "[{key:1,label:\"adm管理\"}]", //所有角色多选框
@@ -48,8 +45,6 @@
     "State": 10
   }
 }
-
-
   ```
   ### http://192.168.1.252/SFMES/api/Staff/GetTById/3
   ```json
@@ -57,7 +52,6 @@
   
   //Response
   ```
-  
 
 ## role
 

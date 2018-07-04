@@ -299,7 +299,7 @@ export class Modals extends React.Component {
             </Row>
             <Row gutter={30}>
               <Col span={10} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`班别`}>
+                <FormItem {...formItemLayout} label={`厂区`}>
                   {getFieldDecorator(`ShiftNameDecorator`, {
                     initialValue: '',
                   })(<Select >
@@ -450,7 +450,7 @@ export class Modals extends React.Component {
               </Row>
               <Row gutter={30}>
                 <Col span={10} key={1} style={{ display: 'block' }}>
-                  <FormItem {...formItemLayout} label={`班别`}>
+                  <FormItem {...formItemLayout} label={`厂区`}>
                     {getFieldDecorator(`ShiftNameEditDecorator`, {
                       initialValue: this.props.EditData.ShiftCode,
                     })(<Select >
@@ -550,7 +550,7 @@ export class Modals extends React.Component {
 
               <FormItem
                 {...formItemLayout}
-                label="班别"
+                label="厂区"
               >
                 <Input disabled value={this.props.DetailsData.ShiftName} />
               </FormItem>

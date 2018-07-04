@@ -21,10 +21,23 @@ const TableComponents = ({
   handleAdd,
   tableLoading,
 
-  PreviewSubTableList//配货单预览table
+  PreviewSubTableList,//配货单预览table
+  PaginationComponentsChanger
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
-
+  const ActionColumn = [{
+    title: '操作',
+    key: (new Date()).valueOf(),
+    fixed: 'right',
+    width: 140,
+    render: (text, record) => (
+      <span >
+        <a onClick={() => handleModalShow('OpenOrClose', record, record.operate)} className="ant-dropdown-link">
+          {record.operate}
+        </a>
+      </span>
+    ),
+  }]
   const columnFunc = (column, columns, ActionColumn) => {
     //父组件传来的表头
     column = []
@@ -32,13 +45,18 @@ const TableComponents = ({
     return TotalColumn
   }
   //打开模态框
-  const handleModalShow = (modalVisible, record = {}) => {
+  const handleModalShow = (modalVisible, record = {}, operate) => {
     console.log('handleModalShow', modalVisible, tableName)
     dispatch({
       type: `${tableName}/showModalAndAjax`,
       payload: {
         modalType: modalVisible,
-        record: record
+        // record: record,
+        // operate: operate==='关闭'?0:1,
+        record: {
+          materialRequestFormItemId: record.Id,
+          "operateType": operate === '关闭' ? 0 : 1,
+        }
       },
     })
   }
@@ -63,14 +81,15 @@ const TableComponents = ({
   }
 
   const onPaginationChange = (PageIndex, pageSize) => {
-    dispatch({
-      type: `${tableName}/query`,
-      payload: {
-        PageIndex: PageIndex,  //第几页
-        PageSize: pageSize,  //多少行
-        TDto: null,
-      }
-    })
+    PaginationComponentsChanger(PageIndex, pageSize)
+    // dispatch({
+    //   type: `${tableName}/query`,
+    //   payload: {
+    //     PageIndex: PageIndex,  //第几页
+    //     PageSize: pageSize,  //多少行
+    //     TDto: null,
+    //   }
+    // })
   }
   const deleteHandler = (id) => {
     dispatch({
@@ -85,7 +104,7 @@ const TableComponents = ({
     <div>
       <Row>
         <Table
-          columns={columns}
+          columns={columnFunc(column, columns, ActionColumn)}
           dataSource={data}
           scroll={{ x: TableWidth }}
           pagination={false}

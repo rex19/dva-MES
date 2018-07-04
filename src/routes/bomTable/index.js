@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, InputNumber, Row, Col, Radio, Select, DatePicker } from 'antd'
+import { Form, Input, InputNumber, Row, Col, Radio, Select, DatePicker, Button, Icon } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents, DetailsTableComponent } from '../../components'
 import globalConfig from 'utils/config'
@@ -11,15 +11,20 @@ import RowEditableAddTable from './subpage/rowEditableforAddModals'
 import RowEditableEditTable from './subpage/rowEditableforEditModals'
 import './index.less'
 
+const TableName = 'bomTable'
+const FieldDecorator = 'FieldDecorator'
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 const { Option } = Select
 const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
-const TableName = 'bomTable'
+
+
 const TableColumns = bomTableColumns
 const AddFormLayout = ['AddMaterialId', 'AddVersion', 'AddValidBegin', 'AddValidEnd']
 const EditFormLayout = ['EditId', 'EditMaterialId', 'EditVersion', 'EditValidBegin', 'EditValidEnd']
+const SearchFormLayout = [`MaterialNumber${FieldDecorator}`]
+
 window.BOMTempRender = false
 
 const BOMTableComponents = ({
@@ -401,12 +406,61 @@ const BOMTableComponents = ({
       </div>
     )
   }
+  const handleSearch = (e) => {
+    e.preventDefault();
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.MaterialNumberFieldDecorator,
+        }
+        console.log('handleSearch-Params', Params)
+        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
+        // dispatch({
+        //   type: `${TableName}/query`,
+        //   payload: Params,
+        // })
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
+      }
+    });
+  }
+
+  const SearchTableList = (Params, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        // ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize,
+        TDto: Params
+      },
+    })
+  }
   return (
     <div className='containerDiv' style={{ background: 'white', padding: '20px', margin: '10px', boxShadow: '0px -3px 7px' }}>
       <div className='formComponentsDiv' style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponents
-          formComponentsValue={formComponentsValue()}
-        />
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`料号`}>
+                  {getFieldDecorator(`MaterialNumber${FieldDecorator}`)(
+                    <Input placeholder="placeholder" />
+                  )}
+                </FormItem>
+              </Col>
+
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+            </Col>
+          </Row>
+        </Form>
+
       </div>
       <div>
         <TableComponents
@@ -433,3 +487,21 @@ export default connect(({ bomTable }) => ({ bomTable }))(Form.create()(BOMTableC
 
 
 
+// <FormComponents
+// formComponentsValue={formComponentsValue()}
+// />
+
+// <Col span={8} key={2} style={{ display: 'block' }}>
+// <FormItem {...formItemLayout} label={`测试2`}>
+//   {getFieldDecorator(`field2`)(
+//     <Input placeholder="placeholder" />
+//   )}
+// </FormItem>
+// </Col>
+// <Col span={8} key={3} style={{ display: 'block' }}>
+// <FormItem {...formItemLayout} label={`测试3`}>
+//   {getFieldDecorator(`field3`)(
+//     <Input placeholder="placeholder" />
+//   )}
+// </FormItem>
+// </Col>

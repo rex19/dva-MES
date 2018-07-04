@@ -57,13 +57,13 @@ const ActivatedWorkOrderColums = [{
   dataIndex: 'PartDescription',
 }, {
   title: '面',
-  dataIndex: 'Layer',
+  dataIndex: 'LayerName',
 }, {
   title: '激活时间',
   dataIndex: 'SetupActivationDateTime',
 }, {
   title: '设置状态',
-  dataIndex: 'SetupState',
+  dataIndex: 'SetupStateName',
 }, {
   title: '查看设置情况',
   dataIndex: 'Operation',
@@ -88,9 +88,9 @@ const OptionalWorkOrderColums = [{
   dataIndex: 'Comment',
 }, {
   title: '工单状态',
-  dataIndex: 'WorkOrderState',
+  dataIndex: 'WorkOrderStateName',
 }, {
-  title: '班别',
+  title: '厂区',
   dataIndex: 'ShiftName',
 }, {
   title: '线体',

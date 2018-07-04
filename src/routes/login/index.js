@@ -18,6 +18,7 @@ const Login = ({
 }) => {
   function handleOk() {
     validateFieldsAndScroll((errors, values) => {
+      console.log('handleOk-login', values)
       // console.log('login-handleOK',  CryptoJS.HmacMD5("smartflow16w", "Secret Passphrase"));
       if (errors) {
         return
@@ -62,8 +63,8 @@ const Login = ({
             Sign in
           </Button>
           <p>
-            <span>Username：guest</span>
-            <span>Password：guest</span>
+            <span>Username：123</span>
+            <span>Password：1</span>
           </p>
         </Row>
 

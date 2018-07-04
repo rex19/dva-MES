@@ -1,10 +1,10 @@
 import modelExtend from 'dva-model-extend'
 import {
-  PickBillLocationList,
-  GetPickBillInChosenLocation,
-  PickChosenBillRevocation,
-  CreatePickBill,
-  PrintPickingBill,
+  GetAreaAndLocationAndMaterialList,
+  PickBillList,
+  OpenOrClose,
+
+  RequestNeedView,
 
   GetAllLineNamesForActiveWorkOrderCombox,
   GetActivedWorkOrderListOfLine,
@@ -12,7 +12,7 @@ import {
   GetSetupActivationInformationByWorkOrderAndStationNumber,
   GetStationInformationForSetupInformation,
   addKey
-} from 'services/Ecall/creatOrderBlank'
+} from 'services/Ecall/invoiceList'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
@@ -24,7 +24,7 @@ import axios from 'axios'
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'creatOrderBlank'
+const TableName = 'invoiceList'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 const EditData = {
@@ -71,27 +71,21 @@ export default modelExtend(pageModel, {
     TableComponentsValueToWorkOrderSettingState: [],
 
     //ecall
-    // tableCellColorl: 'success',
-    queryParams: {},
     areaIdFormData: [],
     locationIdFormData: [],
-    AreaId: 1,
-    LocationId: 1,
+    MaterialFormData: [],
     MaterialRequestFormId: [], //table上多选的行数据 id
-    PreviewSubTableList: [] //配货单预览Table
+    PreviewSubTableList: [], //配货单预览Table
+    TempParam: {}
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/Ecall/CreatOrderBlank`) {
-          console.log('CreatOrderBlank=-')
+        if (location.pathname === `/Ecall/InvoiceList`) {
+          console.log('InvoiceList=-')
           dispatch({
             type: 'InitQuery',
-            payload: {
-              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-              [QueryRequestDTO]: null
-            }
+            payload: {}
           })
         }
       })
@@ -104,31 +98,34 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       // yield put({ type: 'loadingChanger', payload: 'showLoading' })
       // yield put({ type: 'tablePaginationChanger', payload: payload })
-      console.log('PickBillLocationList1')
-      // axios.post('http://192.168.1.111:8080/ecall/PickBill/PickBillLocationList', {})
-      //   .then(function (response) {
-      //     console.log(response);
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error);
-      //   });
 
-
-
-      const data = yield call(PickBillLocationList, {})
-      console.log('PickBillLocationList2', data)
+      const data = yield call(GetAreaAndLocationAndMaterialList, payload)
       yield put({
         type: 'showFormData', payload: {
           modalType: 'InitFormData',
 
           areaIdFormData: data.Data.areaId,
           locationIdFormData: data.Data.locationId,
+          MaterialFormData: data.Data.materialId,
         }
       })
 
+      console.log('InitQuery', data)
+      // // const pagination = yield select(state => state[TableName].pagination)
+      // const result = yield call(addKey, data.Data.requestNeedList) //+1
+      // // console.log('result', result)
+      // yield put({
+      //   type: 'querySuccess',
+      //   payload: {
+      //     list: result,
+      //   },
+      // })
+
+
+
 
       // const GetStationInformationForSetupInformationData = yield call(GetStationInformationForSetupInformation)
-      // console.log('creatOrderBlank-model', GetAllLineNamesForActiveWorkOrderComboxData, GetStationInformationForSetupInformationData)
+      // console.log('invoiceList-model', GetAllLineNamesForActiveWorkOrderComboxData, GetStationInformationForSetupInformationData)
       // yield put({
       //   type: 'showFormData', payload: {
       //     modalType: 'InitWorkOrderFormData',
@@ -160,18 +157,14 @@ export default modelExtend(pageModel, {
     * query({
       payload,
     }, { call, put, select }) {
-      // yield put({ type: 'loadingChanger', payload: 'showLoading' })
-      // yield put({ type: 'tablePaginationChanger', payload: payload })
-      yield put({
-        type: 'ChangerState',
-        payload: {
-          modalType: 'queryParams',
-          Params: payload
-        }
-      })
-      const data = yield call(GetPickBillInChosenLocation, payload)
+      yield put({ type: 'loadingChanger', payload: 'showLoading' })
+      yield put({ type: 'tablePaginationChanger', payload: payload })
+      yield put({ type: 'TempParam', payload: payload })
+
+      const data = yield call(PickBillList, payload)
       const pagination = yield select(state => state[TableName].pagination)
-      const result = yield call(addKey, data.Data.requestFormList) //+1
+      const result = yield call(addKey, data.Data.pickBillList) //+1
+      // console.log('result', result)
       yield put({
         type: 'querySuccess',
         payload: {
@@ -183,7 +176,8 @@ export default modelExtend(pageModel, {
           },
         },
       })
-      // yield put({ type: 'loadingChanger', payload: 'closeLoading' })
+
+      yield put({ type: 'loadingChanger', payload: 'closeLoading' })
     },
 
     // * create({
@@ -269,64 +263,30 @@ export default modelExtend(pageModel, {
         // } else {
         //   throw data
         // }
-      } else if (payload.modalType === 'detailsModalVisible') {  //配货单预览
-        const data = yield call(CreatePickBill, payload)
+      } else if (payload.modalType === 'detailsModalVisible') {
+        console.log('detailsModalVisible--------`', payload.data)
+        // const data = yield call(getDetailsModalData, payload.record.Id)
+        // if (data.Status === 200) {
+        yield put({ type: 'showModal', payload: payload })
+        //   yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        // } else {
+        //   throw data
+        // }
+      } else if (payload.modalType === 'OpenOrClose') {
+        console.log('OpenOrClose--------1`', payload)
+        const data = yield call(OpenOrClose, payload.record)
+        console.log('OpenOrClose--------2`', data)
         if (data.Status === 200) {
-          yield put({ type: 'showModal', payload: payload })
-          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data.requestFormList } })
-        } else {
-          throw data
-        }
-      } else if (payload.modalType === 'Revoke') {
-        const data = yield call(PickChosenBillRevocation, payload)
-        console.log('Revoke', data)
-        if (data.Status === 200 && data.Data === 0) {
-          const queryParams = yield select(state => state[TableName].queryParams)
+          const TempParam = yield select(state => state[TableName].TempParam)
           yield put({
-            type: `${TableName}/query`,
-            payload: queryParams,
+            type: 'query', payload: TempParam
           })
-          return successMessage(data.ErrorMessage || '成功')
-
-        } else if (data.Status === 200 && data.Data !== 0) {
-          return errorMessage(data.ErrorMessage || '失败')
         } else {
           throw data
         }
       }
     },
 
-    //打印配货单
-    * PrintPickingBillFunction({
-      payload,
-    }, { call, put, select }) {
-      const MaterialRequestFormId = yield select(state => state[TableName].MaterialRequestFormId)
-      const AreaId = yield select(state => state[TableName].AreaId)
-      const LocationId = yield select(state => state[TableName].LocationId)
-      const Params = {
-        "MaterialRequestFormId": MaterialRequestFormId,
-        "AreaId": AreaId,
-        "LocationId": LocationId
-      }
-
-      const data = yield call(PrintPickingBill, Params)
-      if (data.Status === 200 && data.Data === 0) {
-        window.print()
-
-        yield put({ type: 'hideModal', payload: 'detailsModalVisible' })
-        return successMessage(data.ErrorMessage || '成功')
-        // yield put({ type: 'showModal', payload: payload })
-        // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data.requestFormList } })
-      } else if (data.Status === 200 && data.Data !== 0) {
-        yield put({ type: 'hideModal', payload: 'detailsModalVisible' })
-        return errorMessage(data.ErrorMessage || '失败')
-        // yield put({ type: 'showModal', payload: payload })
-        // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data.requestFormList } })
-      } else if (data.Status !== 200) {
-        // return errorMessage(data.ErrorMessage || '失败')
-        throw data
-      }
-    },
 
     * handleSearchFormComponents({
       payload,
@@ -365,25 +325,15 @@ export default modelExtend(pageModel, {
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
-      return { ...state, ...payload, [payload]: false, PreviewSubTableList: [] }
+      return { ...state, ...payload, [payload]: false }
     },
-    ChangerState(state, { payload }) {
-      if (payload.modalType === 'queryParams') {
-        return {
-          ...state, ...payload, [payload]: false, queryParams: payload.Params
-        }
-      } else if (payload.modalType === 'areaId') {
-        console.log('ChangerState-areaId')
-        return {
-          ...state, ...payload, [payload]: false, AreaId: payload.areaId
-        }
-      } else if (payload.modalType === 'locationId') {
-        console.log('ChangerState-locationId')
-        return {
-          ...state, ...payload, [payload]: false, LocationId: payload.locationId
-        }
+    TempParam(state, { payload }) {
+      return {
+        ...state, ...payload,
+        TempParam: payload
       }
     },
+
     //Form初始化数据
     showFormData(state, { payload }) {
       if (payload.modalType === 'InitFormData') {
@@ -393,6 +343,7 @@ export default modelExtend(pageModel, {
           ...payload,
           areaIdFormData: payload.areaIdFormData,
           locationIdFormData: payload.locationIdFormData,
+          MaterialFormData: payload.MaterialFormData,
           // GetAllLineNamesInitData: eval(payload.GetAllLineNamesForActiveWorkOrderComboxData.LineName),
           // GetStationInformationInitData: eval(payload.GetStationInformationForSetupInformationData.StationInformation)
         }
@@ -405,11 +356,7 @@ export default modelExtend(pageModel, {
       } else if (payload.modalType === 'addModalVisible') {
         return { ...state, ...payload, AreaList: eval(payload.data.AreaList) }
       } else if (payload.modalType === 'detailsModalVisible') {
-        return {
-          ...state, ...payload,
-          // DetailsData: payload.data
-          PreviewSubTableList: payload.data
-        }
+        return { ...state, ...payload, DetailsData: payload.data }
       }
     },
     //Tables初始化数据

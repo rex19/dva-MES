@@ -26,13 +26,13 @@ export default {
         // });
 
         const {
-           Access_Token,
+          Access_Token,
           Token_Type,
           Expires_In
          } = data.Data
         Cookies.set('token', Access_Token);
 
-        console.log(Cookies.get('token'))
+        console.log('cookie', Cookies.get('token'), locationQuery)
 
         const { from } = locationQuery
         yield put({ type: 'app/query' })
@@ -46,7 +46,4 @@ export default {
       }
     },
   },
-
-
-
 }

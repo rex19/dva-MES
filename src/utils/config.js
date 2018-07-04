@@ -9,21 +9,25 @@ const APIV3 = '/api/v3'
 
 
 
-//英提尔
-// const Middleware_IP = 'http://192.168.1.180:3009'
-// const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
+// //英提尔
+// const Middleware_IP = 'http://192.168.221.120:3009'
 // const ADMAPI = 'http://192.168.1.180/SFMES/api'
-// const SFEcall = `http://smart-flow.diskstation.me:8000/ecall`
+// const SFEcall = `http://192.168.1.180:8088/ecall`
+
+// // 瑞阳
+// const Middleware_IP = 'http://192.168.1.239:3009'
+// const ADMAPI = 'http://192.168.1.230/SFMES/api'
+// const SFEcall = 'http://192.168.1.239:8089'
 
 //dev
-// const Middleware_IP = 'http://192.168.1.117:3009'
-// const ADMAPI = 'http://192.168.1.230/SFMES/api'
-// const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
-
-//build
-const Middleware_IP = 'http://192.168.1.117:3009'
-const ADMAPI = 'http://dsm.smart-flow.cn:7001/SFMES/api'
+const Middleware_IP = 'http://192.168.1.132:3009'
+const ADMAPI = 'http://192.168.1.230/SFMES/api'
 const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
+
+// //build
+// const Middleware_IP = 'http://192.168.1.117:3009'
+// const ADMAPI = 'http://dsm.smart-flow.cn:7001/SFMES/api'
+// const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
 
 
 const APIV1 = `${Middleware_IP}/api`
@@ -132,7 +136,7 @@ module.exports = {
     electronicCallBoard: `${SFEcall}/RequestMaterialBill`,//电子叫料看板
     creatProductionInitialOrderBlank: `${SFEcall}/BeginningPickBill`,//创建生产初始配货单
     creatOrderBlank: `${SFEcall}/PickBill`,//创建配货单
-
+    invoiceList: `${SFEcall}/PickBill`,//配货单列表
 
   },
   crudApi: {
@@ -200,7 +204,6 @@ module.exports = {
     //工单激活
     GetSetupActivationInformationByWorkOrderAndStationNumber: 'GetSetupActivationInformationByWorkOrderAndStationNumber',
     workOrderConfig: '',
-
 
     /**
      * SF-PFS-Trace
@@ -275,8 +278,10 @@ module.exports = {
     PickChosenBillRevocation: `PickChosenBillRevocation`,
     CreatePickBill: `CreatePickBill`,
     PrintPickingBill: `PrintPickingBill`,
-
-
+    //配货单列表 invoiceList
+    GetAreaAndLocationAndMaterialList: `GetAreaAndLocationAndMaterialList`,
+    PickBillList: `PickBillList`,
+    OpenOrClose: `OpenOrClose`,
 
     // postAddData: 'Post',  //新增
     // postEditData: 'Put',  //编辑
