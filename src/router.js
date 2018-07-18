@@ -151,6 +151,10 @@ const Routers = function ({ history, app }) {
       models: () => [import('./models/wmsSystem/putStorageOfFinishedProduct')],
       component: () => import('./routes/wmsSystem/putStorageOfFinishedProduct/'),
     }, {
+      path: '/wmsSystem/checkList',
+      models: () => [import('./models/wmsSystem/checkList')],
+      component: () => import('./routes/wmsSystem/checkList/'),
+    }, {
       path: '/PFS_FIS_System/workOrderList',
       models: () => [import('./models/PFS_FIS_System/workOrderList')],
       component: () => import('./routes/PFS_FIS_System/workOrderList/'),

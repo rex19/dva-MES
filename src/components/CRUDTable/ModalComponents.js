@@ -101,7 +101,7 @@ export class ModalComponents extends React.Component {
     const handleOk = this.handleOk
     // const handleOk = this.handleOk
     console.log(
-      'ModalComponents-render', EditData
+      'ModalComponents-render', EditData, editModalValue
     )
 
 

@@ -16,7 +16,7 @@ export async function RequestNeedView(params) {
   return request({
     url: `${tableName}/${globalConfig.crudApi.RequestNeedView}`,
     // url: `http://192.168.1.116:8080/ecall/RequestMaterialBill/RequestNeedView`,
-    method: 'post',
+    method: 'get',
     data: params,
   })
 }

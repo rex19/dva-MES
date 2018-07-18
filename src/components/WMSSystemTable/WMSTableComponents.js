@@ -164,7 +164,7 @@ class WMSTableComponents extends PureComponent {
           <Table
             columns={this.props.columns}
             dataSource={this.props.data}
-            scroll={{ x: this.props.TableWidth }}
+            scroll={{ x: this.props.TableWidth, y: this.props.TableHight }}
             pagination={false}
             onChange={this.onChange}
             loading={this.state.tableLoading}

@@ -44,17 +44,19 @@ const workOrderSettingColums = [{
   dataIndex: 'StationNr',
 }, {
   title: '物料号',
-  dataIndex: 'Layer',
-}, {
-  title: '物料描述',
-  dataIndex: 'StationDescription',
-}, {
-  title: '产品位置',
   dataIndex: 'MaterialNumber',
 }, {
-  title: '料道位置',
-  dataIndex: 'FeederLocation',
+  title: '物料描述',
+  dataIndex: 'MaterialDescription',
 }, {
+  title: '位置',
+  dataIndex: 'Designator',
+},
+//  {
+//   title: '料道位置',
+//   dataIndex: 'FeederLocation',
+// },
+{
   title: '物料容器号',
   dataIndex: 'MaterialContainerNumber',
 }, {

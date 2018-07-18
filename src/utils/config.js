@@ -9,29 +9,31 @@ const APIV3 = '/api/v3'
 
 
 
-// //英提尔
-// const Middleware_IP = 'http://192.168.221.120:3009'
-// const ADMAPI = 'http://192.168.1.180/SFMES/api'
-// const SFEcall = `http://192.168.1.180:8088/ecall`
+//英提尔
+const Middleware_IP = 'http://192.168.1.132:3009'
+// const Middleware_IP = 'http://192.168.221.103:3009'
+const ADMAPI = 'http://192.168.1.180/SFMES/api'
+const SFEcall = `http://192.168.1.180:8088/ecall`
 
 // // 瑞阳
 // const Middleware_IP = 'http://192.168.1.239:3009'
 // const ADMAPI = 'http://192.168.1.230/SFMES/api'
 // const SFEcall = 'http://192.168.1.239:8089'
 
-//dev
-const Middleware_IP = 'http://192.168.1.132:3009'
-const ADMAPI = 'http://192.168.1.230/SFMES/api'
-const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
+// //dev
+// const Middleware_IP = 'http://192.168.1.132:3009'
+// const ADMAPI = 'http://192.168.1.230/SFMES/api'
+// const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
 
-// //build
-// const Middleware_IP = 'http://192.168.1.117:3009'
+//build
+// const Middleware_IP = 'http://dsm.smart-flow.cn:8081'
 // const ADMAPI = 'http://dsm.smart-flow.cn:7001/SFMES/api'
 // const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
 
 
 const APIV1 = `${Middleware_IP}/api`
 const WMSAPI = `${Middleware_IP}/sfwms`
+const WMSAPI1 = `http://192.168.1.180/SFMESWMS`
 const SFPFSFIS = `${Middleware_IP}/sfpfsfis`
 const SFPFSTrace = `${Middleware_IP}/SFPFSTrace`
 const SFToolManager = `${Middleware_IP}/ToolManager`
@@ -91,13 +93,14 @@ module.exports = {
     productionMaterialCollarOrderTable: `${WMSAPI}/ProductionMaterialCollarOrder`,  //生产物料领用单
     retreatingRecordsOfProductionMaterialsTable: `${WMSAPI}/ManufacturingMaterialReturn`,//生产物料退料记录
     putStorageOfFinishedProductTable: `${WMSAPI}/ProductInStocking`,//成品入库单
+    checkListTable: `${WMSAPI}/MaterialCheckBill`,  //盘点单
     //未做
     rawMaterialReturnListTable: `${WMSAPI}/ProductInStocking`,//原材料退货单
     workOrderBookingTable: `${WMSAPI}/ProductInStocking`,//工单报工
     retreatingRecordsOfFinishedProductTable: `${WMSAPI}/ProductInStocking`,//成品退货单
     inventoryListTable: `${WMSAPI}/ProductInStocking`,//盘点单
 
-    //SF-PFS-FIS
+    //SF-PFS-FISs
     workOrder: `${SFPFSFIS}/workOrder`,
     workOrderActivation: `${SFPFSFIS}/workOrderActivation`,
     workOrderSetting: `${SFPFSFIS}/workOrderActivation`,
@@ -171,7 +174,16 @@ module.exports = {
     //成品入库单
     GetProductInStockingFormItemByFormIdRequest: 'GetProductInStockingFormItemByFormIdForList',
     GetMovementRecordProductInStockingByWMSFormIdRequest: 'GetMovementRecordProductInStockingByWMSFormId',
+    //盘点单
+    WMS_GetAreaListWeb: 'GetAreaListWeb',//下拉菜单初始化数据
+    WMS_GetMaterialCheckBillGroupByFormId: 'GetMaterialCheckBillGroupByFormId',  //查看
+    WMS_SetMateriallCheckBillFormEnd: 'SetMateriallCheckBillFormEnd',  //固化报告
+    WMS_GetMaterialCheckBillGroupByFormId: 'GetMaterialCheckBillGroupByFormId',    //【生成文件】链接
+    WMS_GetMaterialCheckInformationByMaterialIdForList: 'GetMaterialCheckInformationByMaterialIdForList', //根据物料代码拉第三表
+    WMS_DoMateriallCheckBillContainerAdjust: 'DoMateriallCheckBillContainerAdjust', //调整
+    WMS_SaveFileMaterialCheckBillGroupByFormId: 'SaveFileMaterialCheckBillGroupByFormId',//生成文件
 
+    // http://192.168.1.180/SFMESWMS/Api/api/MaterialCheckBill/SetMateriallCheckBillFormEnd
 
     /**
      * SF-PFS-FIS

@@ -84,7 +84,7 @@ export default modelExtend(pageModel, {
           dispatch({
             type: 'InitQuery',
             payload: {
-              locationId: '8'
+              areaNumber: '301'
             }
           })
         }
