@@ -166,7 +166,6 @@ module.exports = {
     GetMaterialReceivingFormItemByFormIdForList: 'GetMaterialReceivingFormItemByFormIdForList',
     GetContainerGenerateRecordByFormItemNumberForList: 'GetContainerGenerateRecordByFormItemNumberForList',
 
-
     //生产物料领用单
     GetMaterialPickingFormItemByFormId: 'GetMaterialPickingFormItemByFormIdForList',
     GetMovementRecordMaterialPickingByWMSFormId: 'GetMovementRecordMaterialPickingByWMSFormId',

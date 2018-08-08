@@ -127,6 +127,7 @@ export default {
       yield put(routerRedux.push({
         pathname: '/login',
       }))
+      console.log('logout')
       // const data = yield call(logout, parse(payload))   //call ajax=>  /api/v1/logout
       // if (data.success) {
       //   yield put({ type: 'query' })
