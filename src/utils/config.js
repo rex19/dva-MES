@@ -125,6 +125,7 @@ module.exports = {
     TraceMachineAbnormalRecord: `${SFPFSTrace}/TraceMachineAbnormalRecord`,
     TraceMaterialSetupRecord: `${SFPFSTrace}/TraceMaterialSetupRecord`,
 
+    //test
     //SF-ToolManager  web
     ToolingInfo: `${SFToolManager}/Tooling`,
     ProgramToolSetting: `${SFToolManager}/ProgramToolSetting`,
