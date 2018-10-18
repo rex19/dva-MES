@@ -202,6 +202,7 @@ module.exports = {
     CreateWorkOrder: 'CreateWorkOrder',
     GetBaseLineInformation: 'GetBaseLineInformation',
     //修改工单页面
+
     GetWorkOrderInformationForEdit: 'GetWorkOrderInformationForEdit',
     EditWorkOrder: 'EditWorkOrder',
     //激活工单
