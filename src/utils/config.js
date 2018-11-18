@@ -84,7 +84,8 @@ module.exports = {
     supplierTable: `${ADMAPI}/Supplier`,
     failureTypeTable: `${ADMAPI}/FailureType`,
     bomTable: `${ADMAPI}/BOM`,
-    //sfwms
+
+    //sfmeswms
     rawMaterialReceiptsTable: `${WMSAPI}/MaterialReceiving`,//原材料收货单
     containerInfoTable: `${WMSAPI}/Container`,//容器信息
     packingFlagTable: `${WMSAPI}/PackingFlag`,//成品箱信息查询
