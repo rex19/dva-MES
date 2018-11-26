@@ -368,7 +368,7 @@ const StaffTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label="用户名"
+          label="员工姓名"
         >
           <Input disabled value={DetailsData.UserName} />
         </FormItem>

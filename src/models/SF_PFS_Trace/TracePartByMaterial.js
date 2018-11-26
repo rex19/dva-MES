@@ -135,7 +135,8 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-      const data = yield call(GetPartInformationListByContainerNumber, payload.ContainerNumber)
+      console.log('GetPartInformationListByContainerNumber', payload)
+      const data = yield call(GetPartInformationListByContainerNumber, payload)
       console.log('GetPartInformationListByContainerNumber-query', data)
       // const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {

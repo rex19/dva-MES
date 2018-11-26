@@ -45,6 +45,8 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
+    FactoryList: [],
+    EditFactoryList: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -168,6 +170,7 @@ export default modelExtend(pageModel, {
         }
       } else if (payload.modalType === 'addModalVisible') {
         const data = yield call(getAddModalData)
+
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
@@ -197,9 +200,13 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, EditData: payload.data.areaDto == null ? state.EditData : payload.data.areaDto }
+        return {
+          ...state, ...payload,
+          EditData: payload.data.areaDto == null ? state.EditData : payload.data.areaDto,
+          EditFactoryList: payload.data.FactoryList
+        }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload }
+        return { ...state, ...payload, FactoryList: payload.data.FactoryList }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

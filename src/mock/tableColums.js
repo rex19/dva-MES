@@ -87,6 +87,9 @@ const staffTableColumns = [{
   title: '账号',
   dataIndex: 'Account',
 }, {
+  title: '员工姓名',
+  dataIndex: 'UserName',
+}, {
   title: '模块',
   dataIndex: 'PlatformName',
 }, {

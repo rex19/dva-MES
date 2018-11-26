@@ -24,6 +24,7 @@ const ProductionMaterialCollarOrderTableComponents = ({
   form
 }) => {
   const {
+    pagination,
     ProductionMaterialCollarOrderTableList,
     ProductionMaterialCollarOrder_DetailsTableList,
     ProductionMaterialCollarOrder_Details_InfoTableList
@@ -127,7 +128,10 @@ const ProductionMaterialCollarOrderTableComponents = ({
     dataIndex: 'CurrentLocationNumber',
   }]
 
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
 
+  }
 
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
@@ -138,6 +142,9 @@ const ProductionMaterialCollarOrderTableComponents = ({
           data={ProductionMaterialCollarOrderTableList}
           columns={wmsProductionMaterialCollarOrderColums}
           TableWidth={1000}
+          paginationDisplay={'yes'}
+          pagination={pagination}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -148,6 +155,8 @@ const ProductionMaterialCollarOrderTableComponents = ({
           data={ProductionMaterialCollarOrder_DetailsTableList}
           columns={wmsProductionMaterialCollarOrder_DetailsColums}
           TableWidth={1000}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
       <h2 style={{ margin: '20px' }}>原材料已收货信息</h2>
@@ -157,6 +166,8 @@ const ProductionMaterialCollarOrderTableComponents = ({
           data={ProductionMaterialCollarOrder_Details_InfoTableList}
           columns={wmsProductionMaterialCollarOrder_Details_InfoColums}
           TableWidth={1000}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
     </div>

@@ -36,6 +36,7 @@ const LineTableComponents = ({
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
         const createParam = { CellNumber: payload.AddCellNumber, Description: payload.AddDescription, State: parseInt(payload.AddState) }
+        console.log('lineTable-createParam', createParam)
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -47,6 +48,7 @@ const LineTableComponents = ({
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
         const editParam = { Id: payload.EditId, CellNumber: payload.EditCellNumber, Description: payload.EditDescription, State: parseInt(payload.EditState), Station: payload.EditStation.map(item => parseInt(item.key)) }
+        console.log('lineTable-editParam', editParam)
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -206,7 +208,7 @@ const LineTableComponents = ({
             label="状态"
           >
             <div>
-              {getFieldDecorator('AddState', {
+              {getFieldDecorator('EditState', {
                 initialValue: EditData.State.toString(),
                 rules: [
                   {

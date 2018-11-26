@@ -163,6 +163,17 @@ class RowEditableAddTable extends React.Component {
       count: 1
     };
     this.columns = [{
+      title: '操作',
+      key: (new Date()).valueOf(),
+      fixed: 'left',
+      width: 70,
+      render: (text, record) => (
+        <span>
+          <a >搜索</a>
+
+        </span>
+      ),
+    }, {
       title: '料号|名称|版本',
       dataIndex: 'MaterialId',
       render: (text, record) => (
@@ -356,8 +367,8 @@ class RowEditableAddTable extends React.Component {
     console.log('RowEditableTable', this.props, 'this.state.data-----', this.state.data)
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
         <Table bordered size={'small'} dataSource={this.state.data} columns={this.columns} />
+        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)} style={{ margin: '10px' }}>添加一行</Button>
       </div>
     )
   }

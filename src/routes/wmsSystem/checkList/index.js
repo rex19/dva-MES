@@ -25,6 +25,7 @@ const CheckListTableComponents = ({
 }) => {
   const TableModelsData = checkList
   const {
+
     PutStorageOfFinishedProductList,
     PutStorageOfFinishedProduct_ProjectInfoList,
     PutStorageOfFinishedProduct_OutputMaterialBoxInfoList,
@@ -204,6 +205,10 @@ const CheckListTableComponents = ({
     })
   }
 
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
+
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -272,6 +277,9 @@ const CheckListTableComponents = ({
           data={checkListTableList}
           columns={wmsCheckListColums}
           TableWidth={800}
+          paginationDisplay={'yes'}
+          pagination={pagination}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -283,6 +291,8 @@ const CheckListTableComponents = ({
           columns={wmsCheckList_ClassificationInfoColums}
           TableWidth={800}
           TableHight={240}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -293,6 +303,8 @@ const CheckListTableComponents = ({
           data={CheckList_ScanRecordList}
           columns={wmsCheckList_ScanRecordColums}
           TableWidth={800}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
     </div>

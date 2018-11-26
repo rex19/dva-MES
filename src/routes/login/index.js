@@ -4,7 +4,8 @@ import { connect } from 'dva'
 import { Button, Row, Form, Input } from 'antd'
 import { config } from 'utils'
 import styles from './index.less'
-// import CryptoJS from 'crypto-js';
+import md5 from 'js-md5';
+
 const FormItem = Form.Item
 
 
@@ -19,17 +20,17 @@ const Login = ({
   function handleOk() {
     validateFieldsAndScroll((errors, values) => {
       console.log('handleOk-login', values)
-      // console.log('login-handleOK',  CryptoJS.HmacMD5("smartflow16w", "Secret Passphrase"));
+      console.log('login-handleOK', md5.hex(values.password));
       if (errors) {
         return
       }
-      // const params = {
-      //   grant_type: 'password',
-      //   UserName: values.username,
-      //   password: values.password,
-      // }
-      // dispatch({ type: 'login/login', payload: params })
-      dispatch({ type: 'login/login', payload: values })
+      const params = {
+        username: values.username,
+        // password: values.password,
+        password: md5.hex(values.password),
+      }
+      console.log('密码--', values, params)
+      dispatch({ type: 'login/login', payload: params })
     })
   }
 

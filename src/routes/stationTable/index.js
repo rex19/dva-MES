@@ -131,6 +131,7 @@ const StationTableComponents = ({
               ],
             })(<Input />)}
           </FormItem>
+
           <FormItem
             {...formItemLayout}
             label="工站类型"
@@ -221,6 +222,8 @@ const StationTableComponents = ({
               ],
             })(<Input />)}
           </FormItem>
+
+
           <FormItem
             {...formItemLayout}
             label="工站类型"
@@ -373,3 +376,17 @@ const StationTableComponents = ({
 export default connect(({ stationTable }) => ({ stationTable }))(Form.create()(StationTableComponents))
 
 
+// <FormItem
+// {...formItemLayout}
+// label="工厂"
+// hasFeedback
+// >
+// {getFieldDecorator('EditFactroy', {
+//   initialValue: '',
+// })(
+//   <Select>
+//     {Factroy.map(function (item, index) {
+//       return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+//     })}
+//   </Select>)}
+// </FormItem>

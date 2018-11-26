@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/bomTable'
+import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, GetMaterialByMaterialNumber, addKey } from 'services/bomTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -49,7 +49,9 @@ export default modelExtend(pageModel, {
       BomItemStatistics: []
     },
     //每个table可能不同的变量字段
+    Name_Version: '',
     MaterialList: [],
+    MaterialListDataSource: [],
     MaterialItemList: [],
     StationGroup: [],
     BomItemDto: [],
@@ -181,18 +183,26 @@ export default modelExtend(pageModel, {
           throw data
         }
       } else if (payload.modalType === 'addModalVisible') {
-        const data = yield call(getAddModalData)
+        // const data = yield call(getAddModalData)
+        // if (data.Status === 200) {
+        yield put({ type: 'showModal', payload: payload })
+        // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        // } else {
+        //   throw data
+        // }
+      } else if (payload.modalType === 'detailsModalVisible') {
+        const data = yield call(getDetailsModalData, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
           throw data
         }
-      } else if (payload.modalType === 'detailsModalVisible') {
-        const data = yield call(getDetailsModalData, payload.record.Id)
+      } else if (payload.modalType === 'getName_Version') {
+        const data = yield call(GetMaterialByMaterialNumber, payload.Params)
+        console.log('GetMaterialByMaterialNumber', data)
         if (data.Status === 200) {
-          yield put({ type: 'showModal', payload: payload })
-          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+          yield put({ type: 'ChangeVersion', payload: { modalType: 'GetMaterialByMaterialNumber', data: data.Data } })
         } else {
           throw data
         }
@@ -226,9 +236,9 @@ export default modelExtend(pageModel, {
       } else if (payload.modalType === 'addModalVisible') {
         return {
           ...state, ...payload,
-          MaterialList: eval(payload.data.MaterialList),
-          // MaterialItemList: payload.data.MaterialItemList,
-          StationGroup: eval(payload.data.StationGroup)
+          // MaterialList: eval(payload.data.MaterialList),
+          // StationGroup: eval(payload.data.StationGroup),
+          MaterialListDataSource: payload.data,
         }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
@@ -257,7 +267,12 @@ export default modelExtend(pageModel, {
     //改变 Version
     ChangeVersion(state, { payload }) {
       console.log('ChangeVersion', payload)
-      return { ...state, ...payload, Version: payload.Version }
+
+      if (payload.modalType === 'GetMaterialByMaterialNumber') {
+        return { ...state, ...payload, Name_Version: `${payload.data.version}/${payload.data.materialName}` }
+      } else if (payload.modalType === '') {
+        // return { ...state, ...payload, Name_Version: `${payload.data.Version}/${payload.data.MaterialName}` }
+      }
     },
   },
 })

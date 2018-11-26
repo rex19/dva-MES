@@ -514,13 +514,13 @@ const SupplierTableComponents = ({
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.EditDateTime} />
+          <Input disabled value={DetailsData.CreationDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建人"
         >
-          <Input disabled value={DetailsData.Editor} />
+          <Input disabled value={DetailsData.Creator} />
         </FormItem>
         <FormItem
           {...formItemLayout}

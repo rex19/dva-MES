@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts'
+
 import Container from '../Container'
 
 const data = [
@@ -265,6 +266,50 @@ const EditorPage = () => (
     >
       <a href="http://recharts.org/#/en-US/examples/TinyBarChart" target="blank">Show More</a>
     </Button>
+    <Row gutter={32}>
+      <Col {...colProps}>
+        <Card title="SimpleAreaChart">
+          <SimpleAreaChart />
+        </Card>
+      </Col>
+      <Col {...colProps}>
+        <Card title="StackedAreaChart">
+          <StackedAreaChart />
+        </Card>
+      </Col>
+      <Col {...colProps}>
+        <Card title="PercentAreaChart">
+          <PercentAreaChart />
+        </Card>
+      </Col>
+      <Col {...colProps}>
+        <Card title="CardinalAreaChart">
+          <CardinalAreaChart />
+        </Card>
+      </Col>
+    </Row>
+    <Row gutter={32}>
+      <Col {...colProps}>
+        <Card title="SimpleAreaChart">
+          <SimpleAreaChart />
+        </Card>
+      </Col>
+      <Col {...colProps}>
+        <Card title="StackedAreaChart">
+          <StackedAreaChart />
+        </Card>
+      </Col>
+      <Col {...colProps}>
+        <Card title="PercentAreaChart">
+          <PercentAreaChart />
+        </Card>
+      </Col>
+      <Col {...colProps}>
+        <Card title="CardinalAreaChart">
+          <CardinalAreaChart />
+        </Card>
+      </Col>
+    </Row>
     <Row gutter={32}>
       <Col {...colProps}>
         <Card title="SimpleAreaChart">

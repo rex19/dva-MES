@@ -57,7 +57,7 @@ const CustomerTableComponents = ({
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData } = TableModelsData
 
-  console.log('CustomerTableComponents-customerTable ', TableModelsData)
+  console.log('CustomerTableComponents-customerTable ', EditData)
   /**
    * crud modal
    */
@@ -555,13 +555,13 @@ const CustomerTableComponents = ({
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.EditDateTime} />
+          <Input disabled value={DetailsData.CreationDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}
           label="创建人"
         >
-          <Input disabled value={DetailsData.Editor} />
+          <Input disabled value={DetailsData.Creator} />
         </FormItem>
         <FormItem
           {...formItemLayout}

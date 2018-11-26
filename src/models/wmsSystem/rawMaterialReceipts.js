@@ -35,6 +35,7 @@ export default modelExtend(pageModel, {
     // list: []
     //每个table可能不同的变量字段
 
+    queryParams: {},
     rawMaterialReceiptsTableList: [],//原材料收货通知单
     rawMaterialReceipts_DetailsTableList: [], //项目明细
     rawMaterialReceipts_Details_InfoTableList: [] // 原材料已收货信息
@@ -43,14 +44,15 @@ export default modelExtend(pageModel, {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === `/wmsSystem/${TableName}`) {
-          dispatch({
-            type: 'query',
-            payload: {
-              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-              [QueryRequestDTO]: null
-            }
-          })
+          console.log('rawMaterialReceipts-subscriptions')
+          // dispatch({
+          //   type: 'query',
+          //   payload: {
+          //     PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
+          //     PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
+          //     [QueryRequestDTO]: null
+          //   }
+          // })
         }
       })
     },
@@ -62,7 +64,13 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-
+      yield put({
+        type: 'ChangerState',
+        payload: {
+          modalType: 'queryParams',
+          Params: payload
+        }
+      })
       const data = yield call(query, payload)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
@@ -160,7 +168,13 @@ export default modelExtend(pageModel, {
       }
 
     },
-
+    ChangerState(state, { payload }) {
+      if (payload.modalType === 'queryParams') {
+        return {
+          ...state, ...payload, [payload]: false, queryParams: payload.Params
+        }
+      }
+    },
     //teble loading处理
     loadingChanger(state, { payload }) {
       if (payload === 'showLoading') {

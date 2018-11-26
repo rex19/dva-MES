@@ -12,8 +12,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'regionTable'
 const TableColumns = regionTableColumns
-const AddFormLayout = ['AddAreaNumber', 'AddName', 'AddDescription', 'AddState']
-const EditFormLayout = ['EditId', 'EditAreaNumber', 'EditName', 'EditDescription', 'EditState']
+const AddFormLayout = ['AddAreaNumber', 'AddName', 'AddFactoryId', 'AddDescription', 'AddState']
+const EditFormLayout = ['EditId', 'EditFactoryId', 'EditAreaNumber', 'EditName', 'EditDescription', 'EditState']
 
 const RegionTableComponents = ({
   regionTable,
@@ -25,7 +25,7 @@ const RegionTableComponents = ({
   const TableModelsData = regionTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, FactoryList, EditFactoryList } = TableModelsData
 
   console.log('RegionTableComponents-regionTable ', TableModelsData)
   /**
@@ -35,7 +35,7 @@ const RegionTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { AreaNumber: payload.AddAreaNumber, Name: payload.AddName, Description: payload.AddDescription, State: parseInt(payload.AddState) }
+        const createParam = { AreaNumber: payload.AddAreaNumber, Name: payload.AddName, FactoryId: payload.AddFactoryId, Description: payload.AddDescription, State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -46,7 +46,7 @@ const RegionTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, AreaNumber: payload.EditAreaNumber, Name: payload.EditName, Description: payload.EditDescription, State: parseInt(payload.EditState) }
+        const editParam = { Id: payload.EditId, FactoryId: payload.EditFactoryId, AreaNumber: payload.EditAreaNumber, Name: payload.EditName, Description: payload.EditDescription, State: parseInt(payload.EditState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -129,6 +129,23 @@ const RegionTableComponents = ({
               initialValue: '',
             })(<Input />)}
           </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('AddFactoryId', {
+                initialValue: ''
+              })(
+                <Select>
+                  {FactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
           <FormItem
             {...formItemLayout}
             label="状态"
@@ -176,6 +193,22 @@ const RegionTableComponents = ({
             {getFieldDecorator('EditAreaNumber', {
               initialValue: EditData.AreaNumber,
             })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('EditFactoryId', {
+                initialValue: EditData.FactoryId.toString(),
+              })(
+                <Select>
+                  {EditFactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
           </FormItem>
           <FormItem
             {...formItemLayout}

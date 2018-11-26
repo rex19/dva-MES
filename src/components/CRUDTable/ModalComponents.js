@@ -86,6 +86,7 @@ export class ModalComponents extends React.Component {
   }
   render() {
 
+
     const { addModalVisible,
       handleModalClose,
       addModalValue,
@@ -97,6 +98,7 @@ export class ModalComponents extends React.Component {
       handleAdd,
       ModalWidth,
       EditData } = this.props
+
 
     const handleOk = this.handleOk
     // const handleOk = this.handleOk
@@ -123,7 +125,15 @@ export class ModalComponents extends React.Component {
           onOk={() => handleOk('edit')}
           onCancel={() => handleModalClose('editModalVisible')}
         >
-          {editModalValue}
+
+
+          {
+            editModalVisible === false
+              ?
+              ''
+              :
+              editModalValue
+          }
         </Modal>
         <Modal
           title="详细"
@@ -146,3 +156,4 @@ export class ModalComponents extends React.Component {
     )
   }
 }
+// {editModalValue}

@@ -42,16 +42,16 @@ export default modelExtend(pageModel, {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/wmsSystem/${TableName}`) {
-          dispatch({
-            type: 'query',
-            payload: {
-              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-              [QueryRequestDTO]: null
-            }
-          })
-        }
+        // if (location.pathname === `/wmsSystem/${TableName}`) {
+        //   dispatch({
+        //     type: 'query',
+        //     payload: {
+        //       PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
+        //       PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
+        //       [QueryRequestDTO]: null
+        //     }
+        //   })
+        // }
       })
     },
   },

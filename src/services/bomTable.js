@@ -43,6 +43,16 @@ export async function getAddModalData(params) {
     data: params,
   })
 }
+//获取新增Modal初始化数据
+export async function GetMaterialByMaterialNumber(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetMaterialByMaterialNumberUrl}`,
+    method: 'post',
+    data: params,
+  })
+}
+
+
 //获取修改Modal初始化数据
 export async function getEditModalData(params) {
   return request({

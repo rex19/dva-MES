@@ -23,6 +23,7 @@ const PutStorageOfFinishedProductTableComponents = ({
   form
 }) => {
   const {
+    pagination,
     PutStorageOfFinishedProductList,
     PutStorageOfFinishedProduct_ProjectInfoList,
     PutStorageOfFinishedProduct_OutputMaterialBoxInfoList
@@ -114,6 +115,10 @@ const PutStorageOfFinishedProductTableComponents = ({
     dataIndex: 'CurrentLocationNumber',
   }]
 
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
+
+  }
 
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
@@ -124,6 +129,9 @@ const PutStorageOfFinishedProductTableComponents = ({
           data={PutStorageOfFinishedProductList}
           columns={wmsPutStorageOfFinishedProductColums}
           TableWidth={1500}
+          paginationDisplay={'yes'}
+          pagination={pagination}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -134,6 +142,8 @@ const PutStorageOfFinishedProductTableComponents = ({
           data={PutStorageOfFinishedProduct_ProjectInfoList}
           columns={wmsPutStorageOfFinishedProduct_ProjectInfoColums}
           TableWidth={1300}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -144,6 +154,8 @@ const PutStorageOfFinishedProductTableComponents = ({
           data={PutStorageOfFinishedProduct_OutputMaterialBoxInfoList}
           columns={wmsPutStorageOfFinishedProduct_OutputMaterialBoxInfoColums}
           TableWidth={1000}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
     </div>

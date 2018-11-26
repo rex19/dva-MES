@@ -74,21 +74,22 @@ const PartMaterialRecordComponents = ({
     dataIndex: 'StationName',
   }, {
     title: '工单',
-    AssigneeCode: 'WorkOrder',
+    AssigneeCode: 'WorkOrderNumber',
   }, {
     title: '产品料号',
     dataIndex: 'PartPartNumber',
   }, {
     title: '上料时间',
     dataIndex: 'MaterialSetupDateTime',
-  }, {
-    title: '上料人员工',
-    AssigneeCode: 'OperatorCode',
-  }, {
-    title: '上料人姓名',
-    dataIndex: 'OperatorName',
   }]
 
+  // , {
+  //   title: '上料人员工',
+  //   AssigneeCode: 'OperatorCode',
+  // }, {
+  //   title: '上料人姓名',
+  //   dataIndex: 'OperatorName',
+  // }
 
   /**
    * crud modal

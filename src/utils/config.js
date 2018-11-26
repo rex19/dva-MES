@@ -1,6 +1,4 @@
 
-
-// const APIV1 = 'http://dsm.smart-flow.cn:7002/sfmes/api'
 // const APIV1 = '/api'
 // const APIV3 = '/sfmeswms/api'
 // const APIV1 = '/api/v1'
@@ -10,35 +8,39 @@ const APIV3 = '/api/v3'
 
 
 //英提尔
-const Middleware_IP = 'http://192.168.1.132:3009'
-// const Middleware_IP = 'http://192.168.221.103:3009'
-const ADMAPI = 'http://192.168.1.180/SFMES/api'
-const SFEcall = `http://192.168.1.180:8088/ecall`
+// const Middleware_IP = 'http://192.168.1.132:3009'
+// const ADMAPI = 'http://192.168.1.180/SFMES/api'
+// const SFEcall = `http://192.168.1.180:8088/ecall`
 
-// // 瑞阳
+// 瑞阳
 // const Middleware_IP = 'http://192.168.1.239:3009'
-// const ADMAPI = 'http://192.168.1.230/SFMES/api'
+// const ADMAPI = 'http://192.168.1.211:8080/SFMES/api'
 // const SFEcall = 'http://192.168.1.239:8089'
 
-// //dev
-// const Middleware_IP = 'http://192.168.1.132:3009'
-// const ADMAPI = 'http://192.168.1.230/SFMES/api'
+//dev
+// const TestServer_IP = 'http://192.168.1.211:8080'
+// const Middleware_IP = 'http://192.168.1.158:3009'
+// const SFEcall = `http://192.168.1.252:8088/ecall`
+// const ADMAPI = 'http://192.168.1.252/SFMES/api'
+// const ADMAPI = 'http://192.168.1.141:8080/SFMES/api'
+// const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
 // const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
 
-//build
-// const Middleware_IP = 'http://dsm.smart-flow.cn:8081'
-// const ADMAPI = 'http://dsm.smart-flow.cn:7001/SFMES/api'
-// const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
+//外网
+const TestServer_IP = 'http://smartflow.diskstation.me:8083'
+const Middleware_IP = 'http://smartflow.diskstation.me:8091'
 
+// 宁波恒辉
+// const TestServer_IP = 'http://192.168.3.2:80'
+// const Middleware_IP = 'http://192.168.3.2:3009'
 
+const ADMAPI = `${TestServer_IP}/SFMES/api`
 const APIV1 = `${Middleware_IP}/api`
 const WMSAPI = `${Middleware_IP}/sfwms`
-const WMSAPI1 = `http://192.168.1.180/SFMESWMS`
 const SFPFSFIS = `${Middleware_IP}/sfpfsfis`
 const SFPFSTrace = `${Middleware_IP}/SFPFSTrace`
 const SFToolManager = `${Middleware_IP}/ToolManager`
-// const Middleware_IP = 'http://dsm.smart-flow.cn:9001'
-// const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
+const SFEcall = `${TestServer_IP}/ecall`
 
 module.exports = {
   name: '翊流智能',
@@ -56,12 +58,13 @@ module.exports = {
   APIV3,
   api: {
     userLogin: `${APIV1}/user/login`,
-    GetTokenForLogin: `${APIV1}/user/GetTokenForLogin`,
+    GetTokenForLogin: `${ADMAPI}/user/GetTokenForLogin`,
+    user: `${ADMAPI}/user/:id`,
     userLogout: `${APIV1}/user/logout`,
     userInfo: `${APIV1}/userInfo`,
     users: `${APIV1}/users`,
     posts: `${APIV1}/posts`,
-    user: `${APIV1}/user/:id`,
+
     dashboard: `${APIV1}/dashboard`,
     menus: `${APIV1}/menus`,
     weather: `${APIV1}/weather`,
@@ -84,8 +87,7 @@ module.exports = {
     supplierTable: `${ADMAPI}/Supplier`,
     failureTypeTable: `${ADMAPI}/FailureType`,
     bomTable: `${ADMAPI}/BOM`,
-
-    //sfmeswms
+    //sfwms
     rawMaterialReceiptsTable: `${WMSAPI}/MaterialReceiving`,//原材料收货单
     containerInfoTable: `${WMSAPI}/Container`,//容器信息
     packingFlagTable: `${WMSAPI}/PackingFlag`,//成品箱信息查询
@@ -126,7 +128,6 @@ module.exports = {
     TraceMachineAbnormalRecord: `${SFPFSTrace}/TraceMachineAbnormalRecord`,
     TraceMaterialSetupRecord: `${SFPFSTrace}/TraceMaterialSetupRecord`,
 
-    //test
     //SF-ToolManager  web
     ToolingInfo: `${SFToolManager}/Tooling`,
     ProgramToolSetting: `${SFToolManager}/ProgramToolSetting`,
@@ -150,9 +151,11 @@ module.exports = {
     postDeleteData: 'Delete',   //删除
 
     getAddModalInitData: 'GetAddInitialize',  //新增Modals初始化数据api
-    getEditModalInitData: 'GetEditinitialize', //编辑Modals初始化数据api
+    getEditModalInitData: 'GetEditInitialize', //编辑Modals初始化数据api
     getDetailsModalInitData: 'GetTById', //详细信息Modals初始化数据api
     getTableInitData: 'GetTByCondition',//表格初始化数据api
+    //bom
+    GetMaterialByMaterialNumberUrl: 'GetMaterialByMaterialNumber',  //获取
 
     //wms 容器
     GetMovementRecordByContainer: 'GetMovementRecordByContainer',
@@ -185,6 +188,7 @@ module.exports = {
     WMS_DoMateriallCheckBillContainerAdjust: 'DoMateriallCheckBillContainerAdjust', //调整
     WMS_SaveFileMaterialCheckBillGroupByFormId: 'SaveFileMaterialCheckBillGroupByFormId',//生成文件
 
+
     // http://192.168.1.180/SFMESWMS/Api/api/MaterialCheckBill/SetMateriallCheckBillFormEnd
 
     /**
@@ -203,7 +207,6 @@ module.exports = {
     CreateWorkOrder: 'CreateWorkOrder',
     GetBaseLineInformation: 'GetBaseLineInformation',
     //修改工单页面
-
     GetWorkOrderInformationForEdit: 'GetWorkOrderInformationForEdit',
     EditWorkOrder: 'EditWorkOrder',
     //激活工单
@@ -269,7 +272,7 @@ module.exports = {
     GetMaterialSetupRecordByCondition: `GetMaterialSetupRecordByCondition`,
 
 
-    // //刀具管理
+    // 刀具管理
     getInitDataQuery: 'GetKeyLableListForToolType',
 
     // ProgramToolSetting

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Input, Row, Col, Button, Select, DatePicker, Table, Badge } from 'antd'
+import PrintProvider, { Print, NoPrint } from 'react-easy-print';
 import './index.less'
 
 const InputGroup = Input.Group;
@@ -57,6 +58,168 @@ export const ModalComponents = ({
   const printFunction = () => {
     handlePrintFunction()
   }
+  const columns = [{
+    title: 'Name',
+    dataIndex: 'name',
+    render: text => <a href="javascript:;">{text}</a>,
+  }, {
+    title: 'Age',
+    dataIndex: 'age',
+  }, {
+    title: 'Address',
+    dataIndex: 'address',
+  }];
+  const data = [{
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  }, {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  }, {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '4',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '5',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  }, {
+    key: '6',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  }, {
+    key: '7',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '8',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '9',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  }, {
+    key: '10',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  }, {
+    key: '11',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '12',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '13',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  }, {
+    key: '14',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  }, {
+    key: '15',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '16',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '17',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  }, {
+    key: '18',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  }, {
+    key: '19',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '20',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '21',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  }, {
+    key: '22',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  }, {
+    key: '23',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '24',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '25',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  }, {
+    key: '26',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  }, {
+    key: '27',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  }, {
+    key: '28',
+    name: 'Disabled User',
+    age: 99,
+    address: 'Sidney No. 1 Lake Park',
+  }];
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    getCheckboxProps: record => ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+
   return (
     <div>
       <Modal
@@ -179,16 +342,19 @@ export const ModalComponents = ({
         onCancel={() => handleModalClose('detailsModalVisible')}
         footer={null}
       >
-        <div style={{ marginBottom: 16 }}>
-
-          <InputGroup size="large" style={{ marginBottom: 10 }}>
+        <PrintProvider>
+          <div style={{ marginBottom: 16 }} id="pageBreak">
             <Row style={{ marginBottom: 10 }}>
-              <Button style={{ marginBottom: '10px' }} onClick={printFunction}>打印</Button>
-              <Table pagination={false} dataSource={PreviewSubTableList} columns={SubCreatOrderBlankColums} />
-            </Row>
-          </InputGroup>
+              <NoPrint>
+                <Button id="print-mount" style={{ marginBottom: '10px' }} onClick={printFunction}>打印</Button>
+              </NoPrint>
+              <Table rowSelection={rowSelection} columns={columns} dataSource={data} pagination={false} />,
 
-        </div>
+            </Row>
+            <Row >
+            </Row>
+          </div>
+        </PrintProvider>
       </Modal>
       <Modal
         title="删除提示"
@@ -225,3 +391,33 @@ const dataSource = [{
   "RequestItemDataArra": 0
 }];
 
+
+
+// <PrintTemplate>
+// <div>
+//   <Table pagination={false} dataSource={PreviewSubTableList} columns={SubCreatOrderBlankColums} />
+// </div>
+// </PrintTemplate>
+
+
+// <Modal
+// title="配货单预览"
+// visible={detailsModalVisible}
+// width={ModalWidth || 920}
+// onOk={() => handleModalClose('detailsModalVisible')}
+// onCancel={() => handleModalClose('detailsModalVisible')}
+// footer={null}
+// >
+// <div style={{ marginBottom: 16 }}>
+
+//   <InputGroup size="large" style={{ marginBottom: 10 }}>
+//     <Row style={{ marginBottom: 10 }}>
+//       <Button  style={{ marginBottom: '10px' }} onClick={printFunction}>打印</Button>
+//       <Table pagination={false} dataSource={PreviewSubTableList} columns={SubCreatOrderBlankColums} />
+//     </Row>
+//   </InputGroup>
+// </div>
+// </Modal>
+
+
+// <Table pagination={false} dataSource={PreviewSubTableList} columns={SubCreatOrderBlankColums} />

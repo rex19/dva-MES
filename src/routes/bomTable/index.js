@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, InputNumber, Row, Col, Radio, Select, DatePicker, Button, Icon } from 'antd'
+import { Form, Input, InputNumber, Row, Col, Radio, Select, DatePicker, Button, Icon, AutoComplete } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents, DetailsTableComponent } from '../../components'
 import globalConfig from 'utils/config'
@@ -9,6 +9,7 @@ import EditableforEditModals from './subpage/editableforEditModals'
 import EditableforAddModals from './subpage/editableforAddModals'
 import RowEditableAddTable from './subpage/rowEditableforAddModals'
 import RowEditableEditTable from './subpage/rowEditableforEditModals'
+import AutoCompleteComponent from './subpage/autoComplete'
 import './index.less'
 
 const TableName = 'bomTable'
@@ -19,9 +20,10 @@ const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 
-
+const dataSource = ['abcdef', 'decek', 'rex', 'jie.zhang', 'wendy'];
 const TableColumns = bomTableColumns
-const AddFormLayout = ['AddMaterialId', 'AddVersion', 'AddValidBegin', 'AddValidEnd']
+const GetNameFormLayout = ['AddMaterialNumber']
+const AddFormLayout = ['AddMaterialNumber', 'AddVersion', 'AddValidBegin', 'AddValidEnd']
 const EditFormLayout = ['EditId', 'EditMaterialId', 'EditVersion', 'EditValidBegin', 'EditValidEnd']
 const SearchFormLayout = [`MaterialNumber${FieldDecorator}`]
 
@@ -37,7 +39,7 @@ const BOMTableComponents = ({
   const TableModelsData = bomTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialList, StationGroup, BomItemDto, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, Name_Version, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialListDataSource, MaterialList, StationGroup, BomItemDto, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
 
   console.log('BOMTableComponents-bomTable ', TableModelsData)
   /**
@@ -47,8 +49,9 @@ const BOMTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { MaterialId: parseInt(payload.AddMaterialId), Version: parseInt(payload.AddVersion), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, BomItemList: AddBomItemDtoDataSource }
+        const createParam = { MaterialNumber: payload.AddMaterialNumber, Version: parseInt(payload.AddVersion), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, BomItemList: AddBomItemDtoDataSource }
         if (!err) {
+          console.log('handleAdd_ceshi', createParam)
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
@@ -58,7 +61,7 @@ const BOMTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, MaterialId: parseInt(payload.EditMaterialId), Version: parseInt(payload.EditVersion), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource.length > 0 ? EditBomItemDtoDataSource : BomItemDto }
+        const editParam = { Id: payload.EditId, MaterialId: payload.EditMaterialId, Version: parseInt(payload.EditVersion), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource.length > 0 ? EditBomItemDtoDataSource : BomItemDto }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -135,39 +138,70 @@ const BOMTableComponents = ({
   //     },
   //   })
   // }
+  const getName_Version = (e) => {
+    e.preventDefault();
+    console.log('getName_Version', AddFormLayout)
+
+
+    validateFields(GetNameFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.AddMaterialNumber
+        }
+        console.log('getName_Version-', Params)
+        dispatch({
+          type: `${TableName}/showModalAndAjax`,
+          payload: {
+            Params: Params,
+            modalType: 'getName_Version'
+          },
+        })
+      } else {
+        console.log('validateFields-err', err)
+      }
+    })
+  }
 
   const addModalValue = () => {
 
     return (
       <div>
         <Form >
+
           <FormItem
             {...formItemLayout}
-            label="料号|名称|版本"
+            label="物料号"
           >
-            {getFieldDecorator('AddMaterialId', {
+            {getFieldDecorator(`AddMaterialNumber`, {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入料号|名称|版本',
+                  required: true, message: '请输入料号',
                 },
               ],
-            })(<Select >
-              {MaterialList.map(function (item, index) {
-                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-              })}
-            </Select>)}
+            })(
+              <Input />
+              )}
+            <Button onClick={getName_Version} style={{ marginTop: '2px' }}>搜索</Button>
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="版本"
+            label="名称/版本号"
+          >
+            <Input value={Name_Version} disabled />
+          </FormItem>
+
+
+          <FormItem
+            {...formItemLayout}
+            label="BOM版本"
             hasFeedback
           >
             {getFieldDecorator('AddVersion', {
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入版本',
+                  required: true, message: '请输入BOM版本',
                 },
               ],
             })(<InputNumber />)}
@@ -210,21 +244,27 @@ const BOMTableComponents = ({
               <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
               )}
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="全视图"
-          >
-            <RowEditableAddTable
-              onEditableCellChange={onEditableCellChange}
-              StationGroup={StationGroup}
-              MaterialList={MaterialList}
-            // MaterialItemList={MaterialItemList}
-            />
-          </FormItem>
+          <RowEditableAddTable
+            onEditableCellChange={onEditableCellChange}
+            StationGroup={StationGroup}
+            MaterialList={MaterialList}
+          // MaterialItemList={MaterialItemList}
+          />
         </Form>
       </div>
     )
   }
+  //   <FormItem
+  //   {...formItemLayout}
+  //   label="全视图"
+  // >
+  // <RowEditableAddTable
+  //   onEditableCellChange={onEditableCellChange}
+  //   StationGroup={StationGroup}
+  //   MaterialList={MaterialList}
+  // // MaterialItemList={MaterialItemList}
+  // />
+  // </FormItem>
   const editModalValue = () => {
     return (
       <div>
@@ -451,7 +491,6 @@ const BOMTableComponents = ({
                   )}
                 </FormItem>
               </Col>
-
             </Row>
           </Form>
           <Row>
@@ -505,3 +544,43 @@ export default connect(({ bomTable }) => ({ bomTable }))(Form.create()(BOMTableC
 //   )}
 // </FormItem>
 // </Col>
+
+
+// <FormItem
+// {...formItemLayout}
+// label="料号|名称|版本"
+// >
+// {getFieldDecorator('AddMaterialId', {
+//   initialValue: '',
+//   rules: [
+//     {
+//       required: true, message: '请输入料号|名称|版本',
+//     },
+//   ],
+// })(<Select >
+//   {MaterialList.map(function (item, index) {
+//     return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+//   })}
+// </Select>)}
+// </FormItem>
+
+
+
+// <Col span={8} key={2} style={{ display: 'block' }}>
+// <AutoCompleteComponent dataSource={dataSource} />
+// </Col>
+
+
+// <FormItem
+// {...formItemLayout}
+// label="料号"
+// >
+// {getFieldDecorator('AddMaterialId', {
+//   initialValue: [],
+//   rules: [
+//     {
+//       required: true, message: '请输入料号',
+//     },
+//   ],
+// })(<AutoCompleteComponent dataSource={MaterialListDataSource} />)}
+// </FormItem>

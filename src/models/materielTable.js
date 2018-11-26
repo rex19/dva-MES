@@ -222,14 +222,14 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         return {
           ...state, ...payload,
-          MaterialType: eval(payload.data.MaterialType),
-          Unit: eval(payload.data.Unit),
-          ProcurementType: eval(payload.data.ProcurementType),
-          Location: eval(payload.data.Location),
-          MSL: eval(payload.data.MSL),
-          StationGroup: eval(payload.data.StationGroup),
-          Company: eval(payload.data.Company),
-          Factory: eval(payload.data.Factory),
+          MaterialType: payload.data.MaterialType,
+          Unit: payload.data.Unit,
+          ProcurementType: payload.data.ProcurementType,
+          Location: payload.data.Location,
+          MSL: payload.data.MSL,
+          StationGroup: payload.data.StationGroup,
+          Company: payload.data.Company,
+          Factory: payload.data.Factory,
           EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto
         }
       } else if (payload.modalType === 'addModalVisible') {

@@ -42,7 +42,9 @@ const TracePartByMaterialComponents = ({
     dispatch({
       type: `${TableName}/GetPartInformationListByContainerNumber`,
       payload: {
-        RepairRecordId: id
+        ContainerNumber: id,
+        PageIndex: 1,
+        PageSize: 10
       },
     })
   }
@@ -62,38 +64,35 @@ const TracePartByMaterialComponents = ({
     title: '供应商料号',
     dataIndex: 'SupplierMaterialPartNumber',
   }, {
-    title: '供应商代码',
-    dataIndex: 'SupplierName',
-  }, {
     title: '供应商名',
-    dataIndex: 'StationName',
+    dataIndex: 'SupplierName',
   }, {
     title: '物料批次号',
     dataIndex: 'BatchNumber',
-  }, {
-    title: '货运单号',
-    dataIndex: 'DeliveryNoteFormNumber',
-  }, {
-    title: '收货单号',
-    dataIndex: 'GoodReceivingFormNumber',
-  }, {
-    title: '到货时间',
-    AssigneeCode: 'ArrivalDateTime',
-  }, {
-    title: '收货时间',
-    dataIndex: 'ReceivingDateTime',
-  }, {
-    title: '注册时间',
-    dataIndex: 'RegisterDateTime',
-  }, {
-    title: '注册员工号',
-    dataIndex: 'RegisterOperatorCode',
-  }, {
-    title: '注册员工姓名',
-    AssigneeCode: 'RegisterOperatorName',
   }]
 
-
+  // , {
+  //   title: '货运单号',
+  //   dataIndex: 'DeliveryNoteFormNumber',
+  // }, {
+  //   title: '收货单号',
+  //   dataIndex: 'GoodReceivingFormNumber',
+  // }, {
+  //   title: '到货时间',
+  //   AssigneeCode: 'ArrivalDateTime',
+  // }, {
+  //   title: '收货时间',
+  //   dataIndex: 'ReceivingDateTime',
+  // }, {
+  //   title: '注册时间',
+  //   dataIndex: 'RegisterDateTime',
+  // }, {
+  //   title: '注册员工号',
+  //   dataIndex: 'RegisterOperatorCode',
+  // }, {
+  //   title: '注册员工姓名',
+  //   AssigneeCode: 'RegisterOperatorName',
+  // }
 
   const TracePartByMaterialColums2 = [{
     title: '序列号',
@@ -113,30 +112,30 @@ const TracePartByMaterialComponents = ({
   }, {
     title: '描述',
     dataIndex: 'PartDescription',
-  }, {
-    title: '成品箱号',
-    dataIndex: 'FinishBoxNumber',
-  }, {
-    title: '货运单号',
-    dataIndex: 'DeliveryNoteFormNumber',
-  }, {
-    title: '发货时间',
-    dataIndex: 'DeliveryDateTime',
-  }, {
-    title: '操作员工号',
-    AssigneeCode: 'OperatorCode',
-  }, {
-    title: '操作员姓名',
-    dataIndex: 'OperatorName',
-  }, {
-    title: '发货员工号',
-    dataIndex: 'DeliveryOperatorCode',
-  }, {
-    title: '发货员工姓名',
-    dataIndex: 'DeliveryOperatorName',
   }]
 
-
+  // , {
+  //   title: '成品箱号',
+  //   dataIndex: 'FinishBoxNumber',
+  // }, {
+  //   title: '货运单号',
+  //   dataIndex: 'DeliveryNoteFormNumber',
+  // }, {
+  //   title: '发货时间',
+  //   dataIndex: 'DeliveryDateTime',
+  // }, {
+  //   title: '操作员工号',
+  //   AssigneeCode: 'OperatorCode',
+  // }, {
+  //   title: '操作员姓名',
+  //   dataIndex: 'OperatorName',
+  // }, {
+  //   title: '发货员工号',
+  //   dataIndex: 'DeliveryOperatorCode',
+  // }, {
+  //   title: '发货员工姓名',
+  //   dataIndex: 'DeliveryOperatorName',
+  // }
 
   /**
    * crud modal
@@ -204,8 +203,8 @@ const TracePartByMaterialComponents = ({
           DeliveryNoteFormCode: values.DeliveryNoteFormCodeDecorator,
           ReceivingFormCode: values.ReceivingFormCodeDecorator,
           SupplierMaterialPartNumber: values.SupplierMaterialPartNumberDecorator,
-          PageIndex: 8,
-          PageSize: 9
+          PageIndex: 1,
+          PageSize: 10
         }
         console.log('-Params', Params)
         dispatch({

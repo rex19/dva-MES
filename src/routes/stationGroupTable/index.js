@@ -274,7 +274,7 @@ const StationGroupTableComponents = ({
           {...formItemLayout}
           label="创建时间"
         >
-          <Input disabled value={DetailsData.CreateDateTime} />
+          <Input disabled value={DetailsData.CreationDateTime} />
         </FormItem>
         <FormItem
           {...formItemLayout}

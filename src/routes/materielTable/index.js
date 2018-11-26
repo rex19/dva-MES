@@ -632,7 +632,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditMaterialGroupType', {
-                initialValue: EditData.MaterialGroupTypeId.toString(),
+                initialValue: EditData.MaterialGroupTypeId,
               })(
                 <Select>
                   {MaterialType.map(function (item, index) {
@@ -764,7 +764,7 @@ const MaterielTableComponents = ({
             label="默认库位编号"
           >
             {getFieldDecorator('EditDefaultStorageLocation', {
-              initialValue: EditData.DefaultStorageLocationId.toString(),
+              initialValue: EditData.DefaultStorageLocationId,
               // initialValue: '7'
             })(
               <Select>
@@ -788,7 +788,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditMSL', {
-                initialValue: EditData.MSLId.toString(),
+                initialValue: EditData.MSLId.toString()
                 // initialValue: '4',
               })(
                 <Select>
@@ -821,8 +821,7 @@ const MaterielTableComponents = ({
             label="默认工站组"
           >
             {getFieldDecorator('EditDefaultStationGroup', {
-              initialValue: EditData.DefaultStationGroupId.toString(),
-              // initialValue: '4'
+              initialValue: EditData.DefaultStationGroupId != null ? EditData.DefaultStationGroupId.toString() : '',
             })(
               <Select>
                 {StationGroup.map(function (item, index) {
@@ -837,8 +836,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditCompanyNumber', {
-                initialValue: EditData.CompanyId.toString(),
-                // initialValue: '1'
+                initialValue: EditData.CompanyId.toString()
               })(
                 <Select>
                   {Company.map(function (item, index) {
@@ -1115,45 +1113,3 @@ const MaterielTableComponents = ({
 
 
 export default connect(({ materielTable }) => ({ materielTable }))(Form.create()(MaterielTableComponents))
-
-
-// <FormItem
-// {...formItemLayout}
-// label="生效日期"
-// >
-// {getFieldDecorator('AddValidBegin', {
-//   initialValue: moment('2015/01/01', dateFormat),
-// })(
-//   <DatePicker format={dateFormat} />
-//   )}
-// </FormItem>
-// <FormItem
-// {...formItemLayout}
-// label="失效日期"
-// >
-// {getFieldDecorator('ValidEnd', {
-//   initialValue: moment('2015/01/01', dateFormat),
-// })(
-//   <DatePicker format={dateFormat} />
-//   )}
-// </FormItem>
-
-// <FormItem
-// {...formItemLayout}
-// label="生效时间"
-// wrapperCol={{
-//   xs: { span: 24 },
-//   sm: { span: 15 },
-// }}
-// >
-// {getFieldDecorator('AddValidBegin', {
-//   initialValue: moment("2017-12-14T15:08:00", dateFormat),
-//   rules: [
-//     {
-//       type: 'object', required: true, message: '请输入生效时间',
-//     },
-//   ],
-// })(
-//   <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-//   )}
-// </FormItem>

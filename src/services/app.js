@@ -28,28 +28,3 @@ export async function query(params) {
     data: params,
   })
 }
-
-
-//sfmes
-/**
- * getUserInfo = user api
- * postLogin = login api
- * getUserInfo = user api
- */
-export async function getUserInfo(params) {
-  console.log('getUserInfo-services', params, user)
-  return request({
-    url: user.replace('/:id', ''),
-    method: 'get',
-    data: params,
-  })
-}
-export async function postLogin(params) {
-  console.log('postLogin-services--', params, userLogin)
-  return request({
-    url: userLogin,
-    method: 'post',
-    data: params,
-  })
-}
-

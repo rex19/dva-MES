@@ -157,7 +157,30 @@ class WMSTableComponents extends PureComponent {
 
   }
 
+  onPaginationChange = (PageIndex, pageSize) => {
+    console.log('onPaginationChange', PageIndex, pageSize)
+    this.props.PaginationComponentsChanger(PageIndex, pageSize)
+
+  }
+
+
+  onShowSizeChange = (PageIndex = 1, pageSize = 20) => {
+    console.log('onShowSizeChange')
+    // dispatch({
+    //   type: `${tableName}/query`,
+    //   payload: {
+    //     PageIndex: PageIndex,  //第几页
+    //     PageSize: pageSize,  //多少行
+    //     TDto: null,
+    //   }
+    // })
+
+  }
+
+
   render() {
+    // console.log('onShowSizeChange')
+    const { pagination, paginationDisplay } = this.props
     return (
       <div>
         <Row>
@@ -170,6 +193,24 @@ class WMSTableComponents extends PureComponent {
             loading={this.state.tableLoading}
           />
         </Row>
+        {paginationDisplay === 'no' ? <Row></Row> :
+          <Row >
+            <Col span={24} style={{ textAlign: 'center', marginTop: '10px' }}>
+              <Pagination
+                showQuickJumper//是否可以快速跳转至某页
+                // current={pagination.current}
+                onChange={this.onPaginationChange}//页码改变的回调，参数是改变后的页码及每页条数
+                // showSizeChanger={this.props.showSizeChanger}//是否可以改变 pageSize
+                onShowSizeChange={this.onShowSizeChange}//pageSize 变化的回调
+                defaultCurrent={1}//默认的当前页数
+                total={pagination.total}//数据总数
+                showTotal={(total, range) => `每页${pagination.PageSize}条,共${total}条`}
+              // current={this.props.currentPage}  //当前页数
+              />
+            </Col>
+          </Row>
+        }
+
       </div>
     )
   }

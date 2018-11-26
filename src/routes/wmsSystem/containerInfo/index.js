@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
+import { Form, Button, Input, Row, Col, Radio, Icon, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { WMSTableComponents } from '../../../components'
 import globalConfig from 'utils/config'
@@ -14,6 +14,11 @@ import './index.less'
 //每个table可能不同的变量字段(1)
 const TableName = 'containerInfo'
 // const TableColumns = wmsContainerInfoColums
+const FormItem = Form.Item
+const dateFormat = 'YYYY-MM-DD';
+const SearchFormLayout = [
+  'MaterialNumberForm'
+]
 
 const ContainerInfoTableComponents = ({
   containerInfo,
@@ -21,8 +26,10 @@ const ContainerInfoTableComponents = ({
   location,
   form
 }) => {
-  const { ContainerInfoTableList, ContainerInfo_MoveRecordContainerInfoTableList } = containerInfo
+  const { pagination, ContainerInfoTableList, ContainerInfo_MoveRecordContainerInfoTableList } = containerInfo
   console.log('ContainerInfoTableComponents--', containerInfo)
+  const formItemLayout = globalConfig.table.formItemLayout
+  const { getFieldDecorator, validateFields, resetFields } = form
 
   const getContainerNumberRequest = (Id) => {
     console.log('getContainerNumberRequest', Id)
@@ -109,11 +116,66 @@ const ContainerInfoTableComponents = ({
     title: '单据子项号',
     dataIndex: 'OperationFormItemNumber',
   }]
+  const handleSearch = (e) => {
+    console.log('handleSearch')
+    e.preventDefault();
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.MaterialNumberForm || ''
+        }
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
+      }
+    });
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        pageIndex: PageIndex,
+        pageSize: PageSize
+      },
+    })
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
+    validateFields(SearchFormLayout, (err, payload) => {
 
-
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.MaterialNumberForm
+        }
+        SearchTableList(Params, PageIndex, PageSize)
+      }
+    })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
+      <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`物料号`}>
+                  {getFieldDecorator(`MaterialNumberForm`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+            </Col>
+          </Row>
+        </Form>
 
+      </div>
       <h2 style={{ margin: '20px' }}>容器信息</h2>
       <div>
         <WMSTableComponents
@@ -121,6 +183,9 @@ const ContainerInfoTableComponents = ({
           data={ContainerInfoTableList}
           columns={wmsContainerInfoColums}
           TableWidth={1600}
+          paginationDisplay={'yes'}
+          pagination={pagination}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -131,6 +196,8 @@ const ContainerInfoTableComponents = ({
           data={ContainerInfo_MoveRecordContainerInfoTableList}
           columns={wmsContainerInfo_MoveRecordColums}
           TableWidth={1000}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
     </div>
@@ -138,6 +205,4 @@ const ContainerInfoTableComponents = ({
 }
 
 
-export default connect(({ containerInfo }) => ({ containerInfo }))(ContainerInfoTableComponents)
-
-
+export default connect(({ containerInfo }) => ({ containerInfo }))(Form.create()(ContainerInfoTableComponents))

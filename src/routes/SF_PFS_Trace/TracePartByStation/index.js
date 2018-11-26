@@ -52,17 +52,17 @@ const TracePartByStationComponents = ({
   }, {
     title: '结果',
     dataIndex: 'PartState',
-  }, {
-    title: '操作员工号',
-    dataIndex: 'OperatorCode',
-  }, {
-    title: '操作员姓名',
-    dataIndex: 'OperatorName',
-  }, {
-    title: '成品箱号',
-    dataIndex: 'FinishBoxNumber',
   }]
-
+  // , {
+  //   title: '操作员工号',
+  //   dataIndex: 'OperatorCode',
+  // }, {
+  //   title: '操作员姓名',
+  //   dataIndex: 'OperatorName',
+  // }, {
+  //   title: '成品箱号',
+  //   dataIndex: 'FinishBoxNumber',
+  // }
 
   /**
    * crud modal
@@ -127,8 +127,8 @@ const TracePartByStationComponents = ({
           StartDateTime: moment(values.StartDateTimeFieldDecorator[0]).format(),
           EndDateTime: moment(values.StartDateTimeFieldDecorator[1]).format(),
           IsOnlyShowFinalResult: values.IsOnlyShowFinalResultFieldDecorator,
-          PageIndex: 5,
-          PageSize: 6
+          PageIndex: 1,
+          PageSize: 10
         }
         console.log('handleSearch-Params', Params)
         // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')

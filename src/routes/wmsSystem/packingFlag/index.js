@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
+import { Form, Button, Input, Row, Col, Radio, Icon, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { WMSTableComponents } from '../../../components'
 import globalConfig from 'utils/config'
@@ -15,6 +15,11 @@ import './index.less'
 //每个table可能不同的变量字段(1)
 const TableName = 'packingFlag'
 // const TableColumns = wmsPackingFlagColums
+const FormItem = Form.Item
+const dateFormat = 'YYYY-MM-DD';
+const SearchFormLayout = [
+  'MaterialNumberForm'
+]
 
 const PackingFlagTableComponents = ({
   packingFlag,
@@ -23,11 +28,14 @@ const PackingFlagTableComponents = ({
   form
 }) => {
   const {
+    pagination,
     PackingFlagTableList,
     PackingFlag_MoveRecordContainerInfoTableList,
     PackingInformatioByContainerList
   } = packingFlag
   console.log('PackingFlagTableComponents', packingFlag)
+  const formItemLayout = globalConfig.table.formItemLayout
+  const { getFieldDecorator, validateFields, resetFields } = form
 
 
   const getNumberRequest = (Id) => {
@@ -137,9 +145,66 @@ const PackingFlagTableComponents = ({
   const onClick = (x) => {
     console.log('onClick---', x)
   }
+  const handleSearch = (e) => {
+    console.log('handleSearch')
+    e.preventDefault();
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.MaterialNumberForm || ''
+        }
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
+      }
+    });
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        pageIndex: PageIndex,
+        pageSize: PageSize
+      },
+    })
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
+    validateFields(SearchFormLayout, (err, payload) => {
 
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.MaterialNumberForm
+        }
+        SearchTableList(Params, PageIndex, PageSize)
+      }
+    })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
+      <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`物料号`}>
+                  {getFieldDecorator(`MaterialNumberForm`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+            </Col>
+          </Row>
+        </Form>
+
+      </div>
       <h2 style={{ margin: '20px' }}>材料容器信息</h2>
       <div>
         <WMSTableComponents
@@ -147,6 +212,9 @@ const PackingFlagTableComponents = ({
           data={PackingFlagTableList}
           columns={wmsPackingFlagColums}
           TableWidth={1500}
+          paginationDisplay={'yes'}
+          pagination={pagination}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -157,6 +225,8 @@ const PackingFlagTableComponents = ({
           data={PackingFlag_MoveRecordContainerInfoTableList}
           columns={wmsPackingFlag_MoveRecordColums}
           TableWidth={1300}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
       <div style={{ margin: '20px' }}></div>
@@ -167,6 +237,8 @@ const PackingFlagTableComponents = ({
           data={PackingInformatioByContainerList}
           columns={wmsPackingFlag_ProductInfoColums}
           TableWidth={1000}
+          paginationDisplay={'no'}
+          pagination={pagination}
         />
       </div>
     </div>
@@ -174,5 +246,6 @@ const PackingFlagTableComponents = ({
 }
 
 
-export default connect(({ packingFlag }) => ({ packingFlag }))(PackingFlagTableComponents)
 
+
+export default connect(({ packingFlag }) => ({ packingFlag }))(Form.create()(PackingFlagTableComponents))

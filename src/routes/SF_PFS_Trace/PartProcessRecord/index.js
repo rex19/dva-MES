@@ -87,18 +87,18 @@ const PartProcessRecordComponents = ({
   }, {
     title: '结果',
     dataIndex: 'PartState',
-  }, {
-    title: '操作员工号',
-    dataIndex: 'OperatorNumber',
-  }, {
-    title: '操作员姓名',
-    dataIndex: 'OperatorName',
-  }, {
-    title: '容器号',
-    dataIndex: 'ContainerNumber',
   }]
 
-
+  // , {
+  //   title: '操作员工号',
+  //   dataIndex: 'OperatorNumber',
+  // }, {
+  //   title: '操作员姓名',
+  //   dataIndex: 'OperatorName',
+  // }, {
+  //   title: '容器号',
+  //   dataIndex: 'ContainerNumber',
+  // }
   /**
    * crud modal
    */

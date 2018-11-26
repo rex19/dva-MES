@@ -18,7 +18,7 @@ const RetreatingRecordsOfProductionMaterialsTableComponents = ({
   location,
   form
 }) => {
-  const {
+  const { pagination,
     RetreatingRecordsOfProductionMaterialsTableList
   } = retreatingRecordsOfProductionMaterials
   console.log('RetreatingRecordsOfProductionMaterialsTableComponents', retreatingRecordsOfProductionMaterials)
@@ -73,7 +73,10 @@ const RetreatingRecordsOfProductionMaterialsTableComponents = ({
     title: '创建人',
     dataIndex: 'CreatorUserName',
   }]
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
 
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <h2 style={{ margin: '20px' }}>生产物料退料记录</h2>
@@ -83,6 +86,9 @@ const RetreatingRecordsOfProductionMaterialsTableComponents = ({
           data={RetreatingRecordsOfProductionMaterialsTableList}
           columns={wmsRetreatingRecordsOfProductionMaterialsColums}
           TableWidth={1000}
+          paginationDisplay={'yes'}
+          pagination={pagination}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

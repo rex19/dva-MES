@@ -6,7 +6,8 @@ import { parse } from 'qs'
 import config from 'config'
 import { EnumRoleType } from 'enums'
 import { query, logout } from 'services/app'
-import * as menusService from 'services/menus'
+// import * as menusService from 'services/menus'
+import menusJson from '../mock/menus.json'
 import queryString from 'query-string'
 import Cookies from 'js-cookie'
 
@@ -62,19 +63,79 @@ export default {
 
   },
   effects: {
+    // * query({
+    //   payload,
+    // }, { call, put, select }) {
+    //   // const { Status, Data } = yield call(query, payload)     //call ajax=>  /api/v1/user/:id
+    //   const { locationPathname } = yield select(_ => _.app)
+    //   //new
+    //   const Status = true
+    //   const Data = {
+    //     user: {
+    //       permissions: {
+    //         role: ["guest"],
+    //         visit: ["1", "621", "6", "626", "61", "62", "63"]
+    //       },
+    //       userId: 42,
+    //       username: 'guest'
+    //     }
+    //     // permissions: {role: ["swj"], visit: ["1", "621", "6", "626", "61", "62", "63"]}
+    //     // userId: 42
+    //     // username: "swj"
+    //   }
+    //   if (Status && Data) {
+
+    //     const { user } = Data
+    //     const { permissions } = user
+    //     let menu = menusJson
+    //     console.log('menus==1', menu)
+    //     //update
+    //     menu = menusJson.filter((item) => {
+    //       const cases = [
+    //         permissions.visit.includes(item.id),
+    //         item.mpid ? permissions.visit.includes(item.mpid) || item.mpid === '-1' : true,
+    //         item.bpid ? permissions.visit.includes(item.bpid) : true,
+    //       ]
+    //       return cases.every(_ => _)
+    //     })
+    //     yield put({
+    //       type: 'updateState',
+    //       payload: {
+    //         user,
+    //         permissions,
+    //         menu,
+    //       },
+    //     })
+    //     if (location.pathname === '/login') {
+    //       yield put(routerRedux.push({
+    //         pathname: '/welcome',
+    //       }))
+    //     }
+    //   } else if (config.openPages && config.openPages.indexOf(locationPathname) < 0) {
+    //     yield put(routerRedux.push({
+    //       pathname: '/login',
+    //       search: queryString.stringify({
+    //         from: locationPathname,
+    //       }),
+    //     }))
+    //   }
+    // },
 
     * query({
       payload,
     }, { call, put, select }) {
-      const { success, user } = yield call(query, payload)     //call ajax=>  /api/v1/user/:id
+      const { Status, Data } = yield call(query, payload)     //call ajax=>  /api/v1/user/:id
       const { locationPathname } = yield select(_ => _.app)
-      if (success && user) {
-        const { list } = yield call(menusService.query)        //call ajax=>  /api/v1/menus
+      if (Status && Data) {
+        // const data1 = yield call(menusService.query)
+        // const { list } = yield call(menusService.query)        //call ajax=>  /api/v1/menus
+        // console.log('menus-new', data1, list, menusJson)
+        const { user } = Data
         const { permissions } = user
-        let menu = list
+        let menu = menusJson
         console.log('menus==1', menu)
         //update
-        menu = list.filter((item) => {
+        menu = menusJson.filter((item) => {
           const cases = [
             permissions.visit.includes(item.id),
             item.mpid ? permissions.visit.includes(item.mpid) || item.mpid === '-1' : true,

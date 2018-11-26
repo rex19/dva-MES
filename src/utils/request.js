@@ -100,7 +100,7 @@ export default function request(options) {
   const optionsParams = {
     ...options,
     headers: {
-      Authorization: tokenParams == null ? null : `bear ${tokenParams}`
+      Authorization: tokenParams == null ? null : `Bearer ${tokenParams}`
     }
   }
   return fetch(optionsParams).then((response) => {
