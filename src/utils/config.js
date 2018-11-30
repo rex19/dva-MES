@@ -158,6 +158,7 @@ module.exports = {
     GetMaterialByMaterialNumberUrl: 'GetMaterialByMaterialNumber',  //获取
 
     //wms 容器
+
     GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     GetPackingInformatioByContainer: 'GetPackingInformatioByContainer',
     //销售发货单
