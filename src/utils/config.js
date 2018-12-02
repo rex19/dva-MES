@@ -159,6 +159,7 @@ module.exports = {
 
     //wms 容器
 
+
     GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     GetPackingInformatioByContainer: 'GetPackingInformatioByContainer',
     //销售发货单
