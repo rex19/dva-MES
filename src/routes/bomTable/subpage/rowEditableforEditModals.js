@@ -54,9 +54,9 @@ class EditableCellSelect extends React.Component {
       return temp.label
       // return '请选择'
     } else if (type === 'StationGroupId' && this.props.StationGroup.length > 0 && value !== '') {
-      console.log('else if (type === StationGroupId && this.props.StationGroup) {', value)
+      console.log('StationGroupId_1', value)
       if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
-        console.log('else if (type === StationGroupId this.props.StationGroup.length > 0 && Number.isInteger(value)')
+        console.log('StationGroupId_2')
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
@@ -64,7 +64,21 @@ class EditableCellSelect extends React.Component {
       // const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
       // return temp.label
     } else if (type === 'StationGroupId' && !this.props.StationGroup) {
-      console.log('else if (type === StationGroupId && !this.props.StationGroup) {', value)
+      console.log('StationGroupId_3')
+      return '请选择2'
+    } else if (type === 'UnitId' && this.props.Unit.length > 0 && value !== '') {
+      console.log('UnitId1', value)
+      // console.log('else if (type === StationGroupId && this.props.StationGroup) {', value)
+      if (this.props.Unit.length > 0 && Number.isInteger(value)) {
+        console.log('UnitId2', value)
+        const temp = this.props.Unit.find((item, index) => item.key === parseInt(value))
+        return temp.label
+      }
+      return '请选择'
+      // const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
+      // return temp.label
+    } else if (type === 'UnitId' && !this.props.Unit) {
+      console.log('UnitId3', value)
       return '请选择2'
     } else if (type === 'Layer') {
       switch (value) {
@@ -111,6 +125,16 @@ class EditableCellSelect extends React.Component {
           </Select>
         </div>
         : this.valueToString(this.props.value, 'Layer')
+    } else if (this.props.type === 'UnitId') {
+      return this.props.editable === true ?
+        <div className="editable-cell-input-wrapper">
+          <Select defaultValue='请选择' onChange={this.handleStationGroupOnChange}>
+            {this.props.Unit.map(function (item, index) {
+              return <Option key={index} value={item.key}>{item.label}</Option>
+            })}
+          </Select>
+        </div>
+        : this.valueToString(this.props.value, 'UnitId')
     }
   }
   render() {
@@ -167,115 +191,137 @@ class RowEditableEditTable extends React.Component {
     super(props);
     this.state = {
       data: this.props.EditDataSource,
-      count: 1
+      // count: 1
+      count: this.props.BomItemListCount
+
     };
-    this.columns = [{
-      title: '料号|名称|版本',
-      dataIndex: 'MaterialId',
-      render: (text, record) => (
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'MaterialId')}
-          MaterialList={this.props.MaterialList}
-          MaterialIdValue={record.MaterialId}
-          type='MaterialId'
-        />
-      ),
-    }, {
-      title: '版本',
-      dataIndex: 'Version',
-      render: (text, record) => (
-        <EditableCellInputTypeOfInt
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'Version')}
-        />
-      ),
-    }, {
-      title: '设备组',
-      dataIndex: 'StationGroupId',
-      render: (text, record) => (
-        console.log('设备组', text, record),
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'StationGroupId')}
-          StationGroup={this.props.StationGroup}
-          StationGroupIdValue={record.StationGroupId}
-          type='StationGroupId'
-        />
-      ),
-    }, {
-      title: '定位号',
-      dataIndex: 'Designator',
-      render: (text, record) => this.renderColumns(text, record, 'Designator'),
-    }, {
-      title: '正反面',
-      dataIndex: 'Layer',
-      render: (text, record) => (
-        <EditableCellSelect
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'Layer')}
-          type='Layer'
-        />
-      ),
-    }, {
-      title: '是否是产出品',
-      dataIndex: 'IsAlternative',
-      render: (text, record) => (
-        <EditableCellRadio
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'IsAlternative')}
-        />
-      ),
-    }, {
-      title: '用量',
-      dataIndex: 'Quantity',
-      render: (text, record) => (
-        <EditableCellInputTypeOfInt
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'Quantity')}
-        />
-      ),
-    }, {
-      title: '是否上料检测',
-      dataIndex: 'IsNeedSetupCheck',
-      render: (text, record) => (
-        <EditableCellRadio
-          editable={record.editable}
-          value={text}
-          onChange={value => this.handleChange(value, record.key, 'IsNeedSetupCheck')}
-        />
-      ),
-    }, {
-      title: '操作',
-      dataIndex: 'operation',
-      render: (text, record) => {
-        const { editable } = record;
-        return (
-          <div className="editable-row-operations">
-            {
-              editable ?
-                <span>
-                  <a onClick={() => this.save(record.key)}>保存</a>
-                  <Popconfirm title="确定取消?" onConfirm={() => this.cancel(record.key)}>
-                    <a>取消</a>
-                  </Popconfirm>
-                </span>
-                : <span><a onClick={() => this.edit(record.key)}>编辑</a>
-                  <span className="ant-divider" />
-                  <Popconfirm title="确定删除?" onConfirm={() => this.onDelete(record.key)}>
-                    <a href="#">删除</a>
-                  </Popconfirm></span>
-            }
-          </div>
-        );
-      },
-    }];
+    this.columns = [
+      //   {
+      //   title: '料号|名称|版本',
+      //   dataIndex: 'MaterialId',
+      //   render: (text, record) => (
+      //     <EditableCellSelect
+      //       editable={record.editable}
+      //       value={text}
+      //       onChange={value => this.handleChange(value, record.key, 'MaterialId')}
+      //       MaterialList={this.props.MaterialList}
+      //       MaterialIdValue={record.MaterialId}
+      //       type='MaterialId'
+      //     />
+      //   ),
+      // },
+      {
+        title: '料号',
+        dataIndex: 'MaterialNumber',
+        render: (text, record) => this.renderColumns(text, record, 'MaterialNumber'),
+      }, {
+        title: '版本',
+        dataIndex: 'Version',
+        render: (text, record) => (
+          <EditableCellInputTypeOfInt
+            editable={record.editable}
+            value={text}
+            onChange={value => this.handleChange(value, record.key, 'Version')}
+          />
+        ),
+      }, {
+        title: '设备组',
+        dataIndex: 'StationGroupId',
+        render: (text, record) => (
+          console.log('设备组', text, record),
+          <EditableCellSelect
+            editable={record.editable}
+            value={text}
+            onChange={value => this.handleChange(value, record.key, 'StationGroupId')}
+            StationGroup={this.props.StationGroup}
+            StationGroupIdValue={record.StationGroupId}
+            type='StationGroupId'
+          />
+        ),
+      }, {
+        title: '单位',
+        dataIndex: 'UnitId',
+        render: (text, record) => (
+          <EditableCellSelect
+            editable={record.editable}
+            value={text}
+            onChange={value => this.handleChange(value, record.key, 'UnitId')}
+            UnitValue={record.UnitId}
+            Unit={this.props.Unit}
+            type='UnitId'
+          />
+        ),
+      }, {
+        title: '定位号',
+        dataIndex: 'Designator',
+        render: (text, record) => this.renderColumns(text, record, 'Designator'),
+      }, {
+        title: '正反面',
+        dataIndex: 'Layer',
+        render: (text, record) => (
+          <EditableCellSelect
+            editable={record.editable}
+            value={text}
+            onChange={value => this.handleChange(value, record.key, 'Layer')}
+            type='Layer'
+          />
+        ),
+      }, {
+        title: '是否是产出品',
+        dataIndex: 'IsAlternative',
+        render: (text, record) => (
+          <EditableCellRadio
+            editable={record.editable}
+            value={text}
+            onChange={value => this.handleChange(value, record.key, 'IsAlternative')}
+          />
+        ),
+      }, {
+        title: '用量',
+        dataIndex: 'Quantity',
+        render: (text, record) => (
+          <EditableCellInputTypeOfInt
+            editable={record.editable}
+            value={text}
+            onChange={value => this.handleChange(value, record.key, 'Quantity')}
+          />
+        ),
+      }, {
+        title: '是否上料检测',
+        dataIndex: 'IsNeedSetupCheck',
+        render: (text, record) => (
+          <EditableCellRadio
+            editable={record.editable}
+            value={text}
+            onChange={value => this.handleChange(value, record.key, 'IsNeedSetupCheck')}
+          />
+        ),
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          const { editable } = record;
+          return (
+            <div className="editable-row-operations">
+              {
+                editable ?
+                  <span>
+                    <a onClick={() => this.save(record.key)}>保存</a>
+                    <span className="ant-divider" />
+                    <Popconfirm title="确定取消?" onConfirm={() => this.cancel(record.key)}>
+                      <a>取消</a>
+                    </Popconfirm>
+                  </span>
+                  : <span><a onClick={() => this.edit(record.key)}>编辑</a>
+                    <span className="ant-divider" />
+                    <Popconfirm title="确定删除?" onConfirm={() => this.onDelete(record.key)}>
+                      <a href="#">删除</a>
+                    </Popconfirm></span>
+              }
+            </div>
+          );
+        },
+      }];
 
     this.cacheData = data.map(item => ({ ...item }));
   }
@@ -344,14 +390,16 @@ class RowEditableEditTable extends React.Component {
     const newData = {
       key: count,
       MaterialId: 1,
-      StationGroupId: '请选择',
       Version: count,
       Designator: `PCB`, //不能超过10位
       Quantity: 0,
       IsNeedSetupCheck: true,
+      Unit: '1',
+      UnitId: '请选择',
       Layer: 1,
       IsAlternative: true,
       StationGroup: `1`,
+      StationGroupId: '请选择',
       MaterialName: `MaterialName${count}`,
       MaterialNumber: `MaterialNumber${count}`,
     };
@@ -366,8 +414,8 @@ class RowEditableEditTable extends React.Component {
     console.log('RowEditableTable', this.props, 'this.state.data-----', this.state.data)
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
         <Table bordered size={'small'} dataSource={this.state.data} columns={this.columns} />
+        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
       </div>
     )
   }

@@ -19,7 +19,7 @@ const APIV3 = '/api/v3'
 
 //dev
 // const TestServer_IP = 'http://192.168.1.211:8080'
-// const Middleware_IP = 'http://192.168.1.158:3009'
+const Middleware_IP = 'http://192.168.1.158:3009'
 // const SFEcall = `http://192.168.1.252:8088/ecall`
 // const ADMAPI = 'http://192.168.1.252/SFMES/api'
 // const ADMAPI = 'http://192.168.1.141:8080/SFMES/api'
@@ -28,7 +28,7 @@ const APIV3 = '/api/v3'
 
 //外网
 const TestServer_IP = 'http://smartflow.diskstation.me:8083'
-const Middleware_IP = 'http://smartflow.diskstation.me:8091'
+// const Middleware_IP = 'http://smartflow.diskstation.me:8091'
 
 // 宁波恒辉
 // const TestServer_IP = 'http://192.168.3.2:80'
@@ -158,8 +158,6 @@ module.exports = {
     GetMaterialByMaterialNumberUrl: 'GetMaterialByMaterialNumber',  //获取
 
     //wms 容器
-
-
     GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     GetPackingInformatioByContainer: 'GetPackingInformatioByContainer',
     //销售发货单

@@ -122,28 +122,7 @@ const ToolingInfoComponents = ({
     })
   }
 
-  const handleSearch = (e) => {
-    e.preventDefault();
 
-    validateFields(SearchFormLayout, (err, payload) => {
-      if (!err) {
-        const Params = {
-          // ToolingCode: payload.FormToolingCode,
-          // ToolingTypeId: payload.FormToolingTypeId,
-          // State: payload.FormState,
-          PageIndex: 1,
-          PageSize: 2,
-          Tdto: null
-        }
-        console.log('handleSearch-Params', Params)
-        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
-        dispatch({
-          type: `${TableName}/query`,
-          payload: Params,
-        })
-      }
-    });
-  }
   const ToolTypeSelectDataChange = (key) => {
 
     ToolTypeSelectData.map(function (item, index) {
@@ -154,7 +133,30 @@ const ToolingInfoComponents = ({
     })
     console.log('ToolTypeSelectDataChange--', key, SpecificationData, LifeRuleData)
   }
+  const handleSearch = (e) => {
+    e.preventDefault();
 
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          PageIndex: 1,
+          PageSize: 10,
+          // Tdto: {
+          ToolingCode: payload.FormToolingCode,
+          ToolingTypeId: payload.FormToolingTypeId,
+          // State: payload.FormState
+          State: parseInt(payload.FormState)
+          // }
+        }
+        console.log('handleSearch-Params', Params)
+        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
+        dispatch({
+          type: `${TableName}/query`,
+          payload: Params,
+        })
+      }
+    });
+  }
   //每个table可能不同的变量字段(4)
   const formComponentsValue = () => {
     return (
@@ -162,14 +164,14 @@ const ToolingInfoComponents = ({
         <Row gutter={40}>
           <Col span={8} key={1} style={{ display: 'block' }}>
             <FormItem {...formItemLayout} label={`刀具编号`}>
-              {getFieldDecorator(`ToolingCode`)(
+              {getFieldDecorator(`FormToolingCode`)(
                 <Input placeholder="placeholder" />
               )}
             </FormItem>
           </Col>
           <Col span={8} key={2} style={{ display: 'block' }}>
             <FormItem {...formItemLayout} label={`刀具类型`}>
-              {getFieldDecorator(`ToolingTypeId`)(
+              {getFieldDecorator(`FormToolingTypeId`)(
                 <Select>
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
@@ -180,7 +182,7 @@ const ToolingInfoComponents = ({
           </Col>
           <Col span={8} key={3} style={{ display: 'block' }}>
             <FormItem {...formItemLayout} label={`刀具状态`}>
-              {getFieldDecorator(`State`)(
+              {getFieldDecorator(`FormState`)(
                 <Select>
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
@@ -438,8 +440,8 @@ const ToolingInfoComponents = ({
                 <FormItem {...formItemLayout} label={`刀具状态`}>
                   {getFieldDecorator(`FormState`)(
                     <Select>
-                      <Option key={0} value='0'>正常</Option>
-                      <Option key={1} value='1'>失效</Option>
+                      <Option key={0} value='1'>正常</Option>
+                      <Option key={1} value='-1'>失效</Option>
                     </Select>
                   )}
                 </FormItem>

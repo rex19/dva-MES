@@ -23,8 +23,8 @@ const FormItem = Form.Item
 const dataSource = ['abcdef', 'decek', 'rex', 'jie.zhang', 'wendy'];
 const TableColumns = bomTableColumns
 const GetNameFormLayout = ['AddMaterialNumber']
-const AddFormLayout = ['AddMaterialNumber', 'AddVersion', 'AddValidBegin', 'AddValidEnd']
-const EditFormLayout = ['EditId', 'EditMaterialId', 'EditVersion', 'EditValidBegin', 'EditValidEnd']
+const AddFormLayout = ['AddMaterialNumber', 'AddVersion', 'AddFactoryId', 'AddValidBegin', 'AddValidEnd']
+const EditFormLayout = ['EditId', 'EditMaterialNumber', 'EditFactoryId', 'EditVersion', 'EditValidBegin', 'EditValidEnd']
 const SearchFormLayout = [`MaterialNumber${FieldDecorator}`]
 
 window.BOMTempRender = false
@@ -39,7 +39,9 @@ const BOMTableComponents = ({
   const TableModelsData = bomTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, Name_Version, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialListDataSource, MaterialList, StationGroup, BomItemDto, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
+  const { list, pagination, tableLoading, addModalVisible, Name_Version, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialListDataSource, MaterialList,
+    FactoryList,
+    UnitList, StationGroup, BomItemList, BomItemListCount, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
 
   console.log('BOMTableComponents-bomTable ', TableModelsData)
   /**
@@ -49,9 +51,9 @@ const BOMTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { MaterialNumber: payload.AddMaterialNumber, Version: parseInt(payload.AddVersion), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, BomItemList: AddBomItemDtoDataSource }
+        const createParam = { MaterialNumber: payload.AddMaterialNumber, Version: parseInt(payload.AddVersion), FactoryId: parseInt(payload.AddFactoryId), ValidBegin: payload.AddValidBegin, ValidEnd: payload.AddValidEnd, BomItemList: AddBomItemDtoDataSource }
         if (!err) {
-          console.log('handleAdd_ceshi', createParam)
+          console.log('bom-handleAdd_ceshi', createParam)
           dispatch({
             type: `${TableName}/${modalType}`,
             payload: createParam,
@@ -61,7 +63,7 @@ const BOMTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, MaterialId: payload.EditMaterialId, Version: parseInt(payload.EditVersion), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource.length > 0 ? EditBomItemDtoDataSource : BomItemDto }
+        const editParam = { Id: payload.EditId, MaterialNumber: payload.EditMaterialNumber, Version: parseInt(payload.EditVersion), FactoryId: parseInt(payload.EditFactoryId), ValidBegin: payload.EditValidBegin, ValidEnd: payload.EditValidEnd, BomItemList: EditBomItemDtoDataSource.length > 0 ? EditBomItemDtoDataSource : BomItemList }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -208,6 +210,22 @@ const BOMTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('AddFactoryId', {
+                initialValue: ''
+              })(
+                <Select>
+                  {FactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="生效时间"
             wrapperCol={{
               xs: { span: 24 },
@@ -248,23 +266,19 @@ const BOMTableComponents = ({
             onEditableCellChange={onEditableCellChange}
             StationGroup={StationGroup}
             MaterialList={MaterialList}
+            Unit={UnitList}
           // MaterialItemList={MaterialItemList}
           />
         </Form>
       </div>
     )
   }
-  //   <FormItem
-  //   {...formItemLayout}
-  //   label="全视图"
-  // >
-  // <RowEditableAddTable
+  //   <RowEditableAddTable
   //   onEditableCellChange={onEditableCellChange}
   //   StationGroup={StationGroup}
   //   MaterialList={MaterialList}
   // // MaterialItemList={MaterialItemList}
   // />
-  // </FormItem>
   const editModalValue = () => {
     return (
       <div>
@@ -285,20 +299,16 @@ const BOMTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="料号|名称|版本"
+            label="料号/名称/版本号"
           >
-            {getFieldDecorator('EditMaterialId', {
-              initialValue: EditData.MaterialId.toString(),
+            {getFieldDecorator('EditMaterialNumber', {
+              initialValue: `${EditData.MaterialNumber}`,
               rules: [
                 {
                   required: true, message: '请输入料号',
                 },
               ],
-            })(<Select >
-              {MaterialList.map(function (item, index) {
-                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-              })}
-            </Select>)}
+            })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -313,6 +323,22 @@ const BOMTableComponents = ({
                 },
               ],
             })(<InputNumber />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('EditFactoryId', {
+                initialValue: EditData.Factory,
+              })(
+                <Select>
+                  {FactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -352,22 +378,31 @@ const BOMTableComponents = ({
               <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
               )}
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="全视图"
-          >
-            <RowEditableEditTable
-              onEditableCellChange={onEditableCellChange}
-              EditDataSource={BomItemDto}
-              StationGroup={StationGroup}
-              MaterialList={MaterialList}
+          <RowEditableEditTable
+            onEditableCellChange={onEditableCellChange}
+            EditDataSource={BomItemList}
+            StationGroup={StationGroup}
+            BomItemListCount={BomItemListCount}
+            // MaterialList={MaterialList}
+            Unit={UnitList}
+          />
 
-            />
-          </FormItem>
         </Form>
       </div>
     )
   }
+  //   <FormItem
+  //   {...formItemLayout}
+  //   label="全视图"
+  // >
+  //   <RowEditableEditTable
+  //     onEditableCellChange={onEditableCellChange}
+  //     EditDataSource={BomItemList}
+  //     StationGroup={StationGroup}
+  //     // MaterialList={MaterialList}
+  //     Unit={UnitList}
+  //   />
+  // </FormItem>
   const detailsModalValue = () => {
     return (
       <div>
@@ -509,7 +544,7 @@ const BOMTableComponents = ({
           pagination={pagination}
           columns={TableColumns}
           TableWidth={1300}
-          ModalWidth={1300}
+          ModalWidth={1500}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}

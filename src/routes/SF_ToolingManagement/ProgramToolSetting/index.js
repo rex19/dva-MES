@@ -152,7 +152,7 @@ const ProgramToolSettingComponents = ({
           // ToolingTypeId: payload.FormToolingTypeId,
           // State: payload.FormState,
           PageIndex: 1,
-          PageSize: 2,
+          PageSize: 10,
           Tdto: null
         }
         console.log('handleSearch-Params', Params)

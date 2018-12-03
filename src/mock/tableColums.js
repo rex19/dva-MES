@@ -414,6 +414,9 @@ const bomTableColumns = [{
   title: '名称',
   dataIndex: 'Name',
 }, {
+  title: '工厂',
+  dataIndex: 'Factory',
+}, {
   title: '生效日期',
   dataIndex: 'ValidBegin',
   sorter: true,

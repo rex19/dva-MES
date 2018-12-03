@@ -50,11 +50,15 @@ export default modelExtend(pageModel, {
     },
     //每个table可能不同的变量字段
     Name_Version: '',
+    FactoryList: [],
+    UnitList: [],
+    StationGroup: [],
     MaterialList: [],
     MaterialListDataSource: [],
     MaterialItemList: [],
     StationGroup: [],
-    BomItemDto: [],
+    BomItemList: [],
+    BomItemListCount: 0,
     Version: '',
     AddBomItemDtoDataSource: [],
     EditBomItemDtoDataSource: [],
@@ -183,13 +187,13 @@ export default modelExtend(pageModel, {
           throw data
         }
       } else if (payload.modalType === 'addModalVisible') {
-        // const data = yield call(getAddModalData)
-        // if (data.Status === 200) {
-        yield put({ type: 'showModal', payload: payload })
-        // yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
-        // } else {
-        //   throw data
-        // }
+        const data = yield call(getAddModalData)
+        if (data.Status === 200) {
+          yield put({ type: 'showModal', payload: payload })
+          yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+        } else {
+          throw data
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         const data = yield call(getDetailsModalData, payload.record.Id)
         if (data.Status === 200) {
@@ -225,19 +229,25 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
+        console.log('editModalVisible-showModalData', payload)
         return {
           ...state, ...payload,
-          MaterialList: eval(payload.data.MaterialList),
+          // MaterialList: payload.data.MaterialList,
           // MaterialItemList: payload.data.MaterialItemList,
-          StationGroup: eval(payload.data.StationGroup),
-          BomItemDto: payload.data.BomItemDto,
-          EditData: payload.data.BomHeadDto == null ? state.EditData : payload.data.BomHeadDto
+          StationGroup: payload.data.StationGroup,
+          FactoryList: payload.data.FactoryList,
+          BomItemList: payload.data.BomItemList,
+          UnitList: payload.data.UnitList,
+          BomItemListCount: payload.data.BomItemListCount,
+          EditData: payload.data.BomHead == null ? state.EditData : payload.data.BomHead
         }
       } else if (payload.modalType === 'addModalVisible') {
         return {
           ...state, ...payload,
+          UnitList: payload.data.UnitList,
+          FactoryList: payload.data.FactoryList,
           // MaterialList: eval(payload.data.MaterialList),
-          // StationGroup: eval(payload.data.StationGroup),
+          StationGroup: payload.data.StationGroup,
           MaterialListDataSource: payload.data,
         }
       } else if (payload.modalType === 'detailsModalVisible') {
