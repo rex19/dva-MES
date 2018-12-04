@@ -141,12 +141,12 @@ const ToolingInfoComponents = ({
         const Params = {
           PageIndex: 1,
           PageSize: 10,
-          // Tdto: {
-          ToolingCode: payload.FormToolingCode,
-          ToolingTypeId: payload.FormToolingTypeId,
-          // State: payload.FormState
-          State: parseInt(payload.FormState)
-          // }
+          Tdto: {
+            ToolingCode: payload.FormToolingCode,
+            ToolingTypeId: payload.FormToolingTypeId,
+            // State: payload.FormState
+            State: parseInt(payload.FormState)
+          }
         }
         console.log('handleSearch-Params', Params)
         // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')

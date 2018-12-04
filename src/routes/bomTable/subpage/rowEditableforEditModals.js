@@ -54,9 +54,7 @@ class EditableCellSelect extends React.Component {
       return temp.label
       // return '请选择'
     } else if (type === 'StationGroupId' && this.props.StationGroup.length > 0 && value !== '') {
-      console.log('StationGroupId_1', value)
       if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
-        console.log('StationGroupId_2')
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
@@ -64,13 +62,10 @@ class EditableCellSelect extends React.Component {
       // const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
       // return temp.label
     } else if (type === 'StationGroupId' && !this.props.StationGroup) {
-      console.log('StationGroupId_3')
       return '请选择2'
     } else if (type === 'UnitId' && this.props.Unit.length > 0 && value !== '') {
-      console.log('UnitId1', value)
       // console.log('else if (type === StationGroupId && this.props.StationGroup) {', value)
       if (this.props.Unit.length > 0 && Number.isInteger(value)) {
-        console.log('UnitId2', value)
         const temp = this.props.Unit.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
@@ -78,7 +73,6 @@ class EditableCellSelect extends React.Component {
       // const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
       // return temp.label
     } else if (type === 'UnitId' && !this.props.Unit) {
-      console.log('UnitId3', value)
       return '请选择2'
     } else if (type === 'Layer') {
       switch (value) {
@@ -139,7 +133,6 @@ class EditableCellSelect extends React.Component {
   }
   render() {
     // this.props.value === 2 ? '全面' : (this.props === 0 ? '反面' : '正面') || '空'
-    console.log('EditableCellSelect', this.props)
     // const { value } = this.state;
     // const { editable, onChange } = this.props;
     // onChange={this.handleChange} onPressEnter={this.check}
@@ -192,7 +185,7 @@ class RowEditableEditTable extends React.Component {
     this.state = {
       data: this.props.EditDataSource,
       // count: 1
-      count: this.props.BomItemListCount
+      count: this.props.BomItemListCount + 1
 
     };
     this.columns = [
@@ -228,7 +221,6 @@ class RowEditableEditTable extends React.Component {
         title: '设备组',
         dataIndex: 'StationGroupId',
         render: (text, record) => (
-          console.log('设备组', text, record),
           <EditableCellSelect
             editable={record.editable}
             value={text}
@@ -326,10 +318,12 @@ class RowEditableEditTable extends React.Component {
     this.cacheData = data.map(item => ({ ...item }));
   }
   componentWillReceiveProps(nextProps) {
+    console.log('bom-componentWillReceiveProps', nextProps, this.state, this.props)
     if (window.BOMTempRender) {
+      this.setState({ count: nextProps.BomItemListCount + 1 })
       return true
     } else if (!window.BOMTempRender) {
-      this.setState({ data: this.props.EditDataSource })
+      this.setState({ data: this.props.EditDataSource, count: nextProps.BomItemListCount + 1 })
     }
   }
 
@@ -343,7 +337,6 @@ class RowEditableEditTable extends React.Component {
     );
   }
   handleChange(value, key, column) {
-    console.log('handleChange', value, key, column)
     const newData = [...this.state.data];
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
@@ -411,7 +404,7 @@ class RowEditableEditTable extends React.Component {
 
 
   render() {
-    console.log('RowEditableTable', this.props, 'this.state.data-----', this.state.data)
+    console.log('RowEditableTable++++', this.props, 'this.state.data+++++', this.state)
     return (
       <div>
         <Table bordered size={'small'} dataSource={this.state.data} columns={this.columns} />

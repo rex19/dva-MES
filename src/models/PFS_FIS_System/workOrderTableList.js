@@ -95,6 +95,9 @@ export default modelExtend(pageModel, {
     EditAllShiftNames: [],
     EditAllWorkOrderStates: [],
     EditData: EditData,
+
+    //查询条件
+    FromParams: {}
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -137,21 +140,21 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
+      yield put({ type: 'FromParamsChanger', payload: payload })
       const pagination = yield select(state => state[TableName].pagination)
       console.log('SearchTableList-query', globalConfig.table.paginationConfig, pagination, payload)
-      // const pagination = yield select(state => state[TableName].pagination)
+
       const data = yield call(query, payload)
 
-      // const pagination = yield select(state => state[TableName].pagination)
       const result = yield call(addKey, data.Data.WorkOrderList) //+1
       yield put({
         type: 'querySuccess',
         payload: {
           list: result,
           pagination: {
-            PageIndex: Number(pagination.PageIndex) || 1,
-            PageSize: Number(pagination.PageSize) || 10,
-            total: data.Data.RowCount,
+            PageIndex: Number(pagination.PageIndex),
+            PageSize: Number(pagination.PageSize),
+            total: data.Data.RowCount
           },
         },
       })
@@ -165,18 +168,25 @@ export default modelExtend(pageModel, {
 
       const data = yield call(CreateWorkOrder, payload)
       console.log('create----', payload, data)
-      // const pagination = yield select(state => state[TableName].pagination)
+      const pagination = yield select(state => state[TableName].pagination)
       if (data.ReturnCode !== 0) {
         return errorMessage(data.ErrorMessage || '创建失败')
       } else if (data.ReturnCode === 0) {
+        const FromParams = yield select(state => state[TableName].FromParams)
         yield put({ type: 'hideModal', payload: 'addModalVisible' })
-        // yield put({
-        //   type: 'query', payload: {
-        //     PageIndex: Number(pagination.PageIndex),
-        //     PageSize: Number(pagination.PageSize),
-        //     [QueryRequestDTO]: null
-        //   }
-        // })
+        yield put({
+          type: 'query',
+          // payload: {
+          //   PageIndex: Number(pagination.PageIndex),
+          //   PageSize: Number(pagination.PageSize),
+          //   [QueryRequestDTO]: null
+          // }
+          payload: {
+            ...payload,
+            PageIndex: Number(pagination.PageIndex),
+            PageSize: Number(pagination.PageSize),
+          },
+        })
         return successMessage(data.ErrorMessage || '创建成功')
       } else {
         throw data
@@ -368,6 +378,10 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
+    },
+    // 改变table 查询条件
+    FromParamsChanger(state, { payload }) {
+      return { ...state, ...payload, FromParams: payload.Params }
     }
   },
 })

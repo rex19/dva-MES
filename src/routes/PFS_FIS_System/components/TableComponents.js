@@ -57,7 +57,6 @@ const TableComponents = ({
   }
   //打开模态框
   const handleModalShow = (modalVisible, record = {}) => {
-    console.log('handleModalShow=--', record)
     dispatch({
       type: `${tableName}/showModalAndAjax`,
       payload: {
@@ -123,7 +122,6 @@ const TableComponents = ({
     });
   }
   const handleAdd = (Params, modalType) => {
-    console.log('handleAdd', Params, modalType)
     if (modalType === 'create') {
       dispatch({
         type: `${tableName}/${modalType}`,

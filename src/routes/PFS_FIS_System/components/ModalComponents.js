@@ -105,11 +105,9 @@ export class Modals extends React.Component {
   }
 
   handleVMPartInformationChange = (Params) => {//onChange={this.handleVMPartInformationChange}
-    console.log('handleVMPartInformationChange', Params)
     this.props.SearchGetProcessListForCreateWorkOrder(Params)
   }
   handleAddModalLineNamesChange = (Params) => {
-    console.log('handleAddModalLineNamesChange', Params)
     this.props.SearchGetBaseLineInformation(Params)
   }
 
@@ -171,7 +169,6 @@ export class Modals extends React.Component {
   }
 
   render() {
-    console.log('ModalComponents-render', this.props)
     const { getFieldDecorator } = this.props.form;
     const {
       addModalVisible,
