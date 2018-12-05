@@ -165,7 +165,7 @@ const roleTableColumns = [{
   render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
 }, {
   title: '最后编辑人',
-  dataIndex: 'EditorId',
+  dataIndex: 'Editor',
 }]
 
 const materielTableColumns = [{

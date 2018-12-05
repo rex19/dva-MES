@@ -135,7 +135,7 @@ const ProductionMaterialCollarOrderTableComponents = ({
 
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
-      <h2 style={{ margin: '20px' }}>材料容器信息</h2>
+      <h2 style={{ margin: '20px' }}>生产物料领用单</h2>
       <div>
         <WMSTableComponents
           tableName={TableName}

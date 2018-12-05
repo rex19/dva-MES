@@ -176,7 +176,7 @@ const ContainerInfoTableComponents = ({
         </Form>
 
       </div>
-      <h2 style={{ margin: '20px' }}>容器信息</h2>
+      <h2 style={{ margin: '20px' }}>容器信息查询</h2>
       <div>
         <WMSTableComponents
           tableName={TableName}

@@ -241,7 +241,7 @@ const RawMaterialReceiptsTableComponents = ({
 
       </div>
 
-      <h2 style={{ margin: '20px' }}>材料容器信息</h2>
+      <h2 style={{ margin: '20px' }}>原材料收货单</h2>
       <div>
         <WMSTableComponents
           tableName={TableName}

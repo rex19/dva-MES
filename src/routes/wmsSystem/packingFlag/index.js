@@ -151,7 +151,8 @@ const PackingFlagTableComponents = ({
     validateFields(SearchFormLayout, (err, payload) => {
       if (!err) {
         const Params = {
-          MaterialNumber: payload.MaterialNumberForm || ''
+          MaterialNumber: payload.MaterialNumberForm || '',
+          PackingFlag: 1
         }
         SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
       }
@@ -173,7 +174,8 @@ const PackingFlagTableComponents = ({
 
       if (!err) {
         const Params = {
-          MaterialNumber: payload.MaterialNumberForm
+          MaterialNumber: payload.MaterialNumberForm,
+          PackingFlag: 1
         }
         SearchTableList(Params, PageIndex, PageSize)
       }
@@ -205,7 +207,7 @@ const PackingFlagTableComponents = ({
         </Form>
 
       </div>
-      <h2 style={{ margin: '20px' }}>材料容器信息</h2>
+      <h2 style={{ margin: '20px' }}>成品箱信息查询</h2>
       <div>
         <WMSTableComponents
           tableName={TableName}

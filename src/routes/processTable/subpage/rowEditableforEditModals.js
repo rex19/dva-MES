@@ -148,7 +148,7 @@ class RowEditableEditTable extends React.Component {
     super(props);
     this.state = {
       data: this.props.EditDataSource || [],
-      count: this.props.EditDataSource.length || 1
+      count: this.props.ProcessStepListCount + 1
     };
     this.columns = [{
       title: '序列号',
@@ -234,6 +234,7 @@ class RowEditableEditTable extends React.Component {
               editable ?
                 <span>
                   <a onClick={() => this.save(record.key)}>保存</a>
+                  <span className="ant-divider" />
                   <Popconfirm title="确定取消?" onConfirm={() => this.cancel(record.key)}>
                     <a>取消</a>
                   </Popconfirm>
@@ -254,9 +255,10 @@ class RowEditableEditTable extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (window.ProcessTempRender) {
+      this.setState({ count: nextProps.ProcessStepListCount + 1 })
       return true
     } else if (!window.ProcessTempRender) {
-      this.setState({ data: this.props.EditDataSource })
+      this.setState({ data: this.props.EditDataSource, count: nextProps.ProcessStepListCount + 1 })
     }
   }
   renderColumns(text, record, column) {
@@ -273,7 +275,7 @@ class RowEditableEditTable extends React.Component {
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
       target[column] = value;
-      this.setState({ data: newData }, console.log('handleChange-this.state.data', target, this.state.data));
+      this.setState({ data: newData });
     }
   }
   onDelete = (key) => {
@@ -335,8 +337,8 @@ class RowEditableEditTable extends React.Component {
     console.log('RowEditableTable', this.state.data, 'this.state.data-----', this.props)
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
         <Table bordered size={'small'} dataSource={this.state.data} columns={this.columns} />
+        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
       </div>
     )
   }

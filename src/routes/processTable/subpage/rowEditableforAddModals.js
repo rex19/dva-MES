@@ -50,7 +50,7 @@ class EditableCellSelect extends React.Component {
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
-      return '空'
+      return '请选择'
     } else if (type === 'StationGroupId' && this.props.StationGroup !== true) {
       return '请选择'
     } else if (type === 'Side') {
@@ -223,6 +223,7 @@ class RowEditableAddTable extends React.Component {
               editable ?
                 <span>
                   <a onClick={() => this.save(record.key)}>保存</a>
+                  <span className="ant-divider" />
                   <Popconfirm title="确定取消?" onConfirm={() => this.cancel(record.key)}>
                     <a>取消</a>
                   </Popconfirm>
@@ -320,11 +321,11 @@ class RowEditableAddTable extends React.Component {
 
 
   render() {
-    console.log('RowEditableTable', this.state, 'this.state.data-----', this.state.data)
+    // console.log('RowEditableTable', this.state, 'this.state.data-----', this.state.data)
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
         <Table bordered size={'small'} dataSource={this.state.data} columns={this.columns} />
+        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
       </div>
     )
   }

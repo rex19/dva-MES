@@ -43,7 +43,7 @@ export async function getAddModalData(params) {
     data: params,
   })
 }
-//获取新增Modal初始化数据
+//根据料号获取名称版本号
 export async function GetMaterialByMaterialNumber(params) {
   return request({
     url: `${tableName}/${globalConfig.crudApi.GetMaterialByMaterialNumberUrl}`,

@@ -2,6 +2,7 @@ import { request } from 'utils'
 import globalConfig from 'utils/config'
 //每个table可能不同的变量字段
 const tableName = globalConfig.api.processTable
+const bomTable = globalConfig.api.bomTable
 
 //查询整表
 export async function query(params) {
@@ -59,6 +60,15 @@ export async function getDetailsModalData(params) {
     data: params,
   })
 }
+//根据料号获取名称版本号 =>公用的bom api
+export async function GetMaterialByMaterialNumber(params) {
+  return request({
+    url: `${bomTable}/${globalConfig.crudApi.GetMaterialByMaterialNumberUrl}`,
+    method: 'post',
+    data: params,
+  })
+}
+
 //给数据加key
 export async function addKey(params) {
   for (let i = 0; i < params.length; i++) {

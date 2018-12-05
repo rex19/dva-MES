@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, DatePicker, InputNumber } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
@@ -106,26 +106,26 @@ const MaterielTableComponents = ({
       validateFields(AddFormLayout, (err, payload) => {
         const createParam = {
           MaterialNumber: payload.AddMaterialNumber,
-          Version: payload.AddVersion,
+          Version: parseInt(payload.AddVersion),
           Description: payload.AddDescription,
           Specification: payload.AddSpecification,
           CustomerMaterialNumber: payload.AddCustomerMaterialNumber,
           SupplierMaterialNumber: payload.AddSupplierMaterialNumber,
-          MaterialGroupType: payload.AddMaterialGroupType,
+          MaterialGroupType: parseInt(payload.AddMaterialGroupType),
           IsProduct: payload.AddIsProduct,
           IsMultiPanel: payload.AddIsMultiPanel,
           RequireBackflush: payload.AddRequireBackflush,
-          NumberOfPanels: payload.AddNumberOfPanels,
-          Unit: payload.AddUnit,
+          NumberOfPanels: parseInt(payload.AddNumberOfPanels),
+          Unit: parseInt(payload.AddUnit),
           SetupFlag: payload.AddSetupFlag,
-          ProcurementType: payload.AddProcurementType,
+          ProcurementType: parseInt(payload.AddProcurementType),
           MinimumPackageQuantity: payload.AddMinimumPackageQuantity,
           ExpirationTime: payload.AddExpirationTime,
           SafetyStock: payload.AddSafetyStock,
           DefaultStorageLocationId: payload.AddDefaultStorageLocationId,
-          ContainerSize: payload.AddContainerSize,
-          MSL: payload.AddMSL,
-          State: payload.AddState,
+          ContainerSize: parseInt(payload.AddContainerSize),
+          MSL: parseInt(payload.AddMSL),
+          State: parseInt(payload.AddState),
           DefaultStationGroupId: payload.AddDefaultStationGroupId,
           CompanyId: payload.AddCompanyId,
           FactoryId: payload.AddFactoryId,
@@ -145,26 +145,26 @@ const MaterielTableComponents = ({
         const editParam = {
           Id: payload.EditId,
           MaterialNumber: payload.EditMaterialNumber,
-          Version: payload.EditVersion,
+          Version: parseInt(payload.EditVersion),
           Description: payload.EditDescription,
           Specification: payload.EditSpecification,
           CustomerMaterialNumber: payload.EditCustomerMaterialNumber,
           SupplierMaterialNumber: payload.EditSupplierMaterialNumber,
-          MaterialGroupType: payload.EditMaterialGroupType,
+          MaterialGroupType: parseInt(payload.EditMaterialGroupType),
           IsProduct: payload.EditIsProduct,
           IsMultiPanel: payload.EditIsMultiPanel,
           RequireBackflush: payload.EditRequireBackflush,
-          NumberOfPanels: payload.EditNumberOfPanels,
-          Unit: payload.EditUnit,
+          NumberOfPanels: parseInt(payload.EditNumberOfPanels),
+          Unit: parseInt(payload.EditUnit),
           SetupFlag: payload.EditSetupFlag,
-          ProcurementType: payload.EditProcurementType,
+          ProcurementType: parseInt(payload.EditProcurementType),
           MinimumPackageQuantity: payload.EditMinimumPackageQuantity,
           ExpirationTime: payload.EditExpirationTime,
           SafetyStock: payload.EditSafetyStock,
           DefaultStorageLocationId: payload.EditDefaultStorageLocationId,
-          ContainerSize: payload.EditContainerSize,
-          MSL: payload.EditMSL,
-          State: payload.EditState,
+          ContainerSize: parseInt(payload.EditContainerSize),
+          MSL: parseInt(payload.EditMSL),
+          State: parseInt(payload.EditState),
           DefaultStationGroupId: payload.EditDefaultStationGroupId,
           CompanyId: payload.EditCompanyId,
           FactoryId: payload.EditFactoryId,
@@ -408,7 +408,7 @@ const MaterielTableComponents = ({
           >
             {getFieldDecorator('AddMinimumPackageQuantity', {
               initialValue: '',
-            })(<Input />)}
+            })(<InputNumber min={0} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -416,7 +416,7 @@ const MaterielTableComponents = ({
           >
             {getFieldDecorator('AddExpirationTime', {
               initialValue: '',
-            })(<Input />)}
+            })(<InputNumber min={0} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -424,7 +424,7 @@ const MaterielTableComponents = ({
           >
             {getFieldDecorator('AddSafetyStock', {
               initialValue: '',
-            })(<Input />)}
+            })(<InputNumber min={0} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -540,7 +540,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="失效日期"
           >
-            {getFieldDecorator('ValidEnd', {
+            {getFieldDecorator('AddValidEnd', {
               initialValue: '',
             })(
               <DatePicker format={dateFormat} />
@@ -632,7 +632,7 @@ const MaterielTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditMaterialGroupType', {
-                initialValue: EditData.MaterialGroupTypeId,
+                initialValue: EditData.MaterialGroupTypeId.toString(),
               })(
                 <Select>
                   {MaterialType.map(function (item, index) {
@@ -741,7 +741,7 @@ const MaterielTableComponents = ({
           >
             {getFieldDecorator('EditMinimumPackageQuantity', {
               initialValue: EditData.MinimumPackageQuantity
-            })(<Input />)}
+            })(<InputNumber min={0} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -749,7 +749,7 @@ const MaterielTableComponents = ({
           >
             {getFieldDecorator('EditExpirationTime', {
               initialValue: EditData.ExpirationTime
-            })(<Input />)}
+            })(<InputNumber min={0} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -757,7 +757,7 @@ const MaterielTableComponents = ({
           >
             {getFieldDecorator('EditSafetyStock', {
               initialValue: EditData.ExpirationTime
-            })(<Input />)}
+            })(<InputNumber min={0} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -820,7 +820,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="默认工站组"
           >
-            {getFieldDecorator('EditDefaultStationGroup', {
+            {getFieldDecorator('EditDefaultStationGroupId', {
               initialValue: EditData.DefaultStationGroupId != null ? EditData.DefaultStationGroupId.toString() : '',
             })(
               <Select>
@@ -835,7 +835,7 @@ const MaterielTableComponents = ({
             label="公司"
           >
             <div>
-              {getFieldDecorator('EditCompanyNumber', {
+              {getFieldDecorator('EditCompanyId', {
                 initialValue: EditData.CompanyId.toString()
               })(
                 <Select>
@@ -851,7 +851,7 @@ const MaterielTableComponents = ({
             label="工厂"
           >
             <div>
-              {getFieldDecorator('EditFactory', {
+              {getFieldDecorator('EditFactoryId', {
                 initialValue: EditData.FactoryId
               })(
                 <Select>
@@ -1060,25 +1060,25 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="创建时间"
           >
-            <Input disabled value={DetailsData.ValidEnd} />
+            <Input disabled value={DetailsData.CreationDateTime} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="创建人"
           >
-            <Input disabled value={DetailsData.ValidBegin} />
+            <Input disabled value={DetailsData.Creator} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="最后编辑时间"
           >
-            <Input disabled value={DetailsData.ValidEnd} />
+            <Input disabled value={DetailsData.EditDateTime} />
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="编辑人"
+            label="最后编辑人"
           >
-            <Input disabled value={DetailsData.ValidBegin} />
+            <Input disabled value={DetailsData.Editor} />
           </FormItem>
         </Form>
       </div>

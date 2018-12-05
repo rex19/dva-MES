@@ -393,10 +393,21 @@ const WorkOrderActivationComponent = ({
   }
 
   const handleSubmit = (e) => {
+    console.log('autoHandleSubmit-end', e)
     e.preventDefault();
     validateFields(handleSubmitLayout, (err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        const Params = {
+          lineName: values.lineNameDecorator
+        }
+        handleSearchFormComponents(Params, 'formComponentsValueToActivatedWorkOrder')
+      }
+    });
+  }
+  const Table2AutoSubmit = () => {
+    validateFields(handleSubmitLayout, (err, values) => {
+      if (!err) {
         const Params = {
           lineName: values.lineNameDecorator
         }
@@ -488,6 +499,8 @@ const WorkOrderActivationComponent = ({
           handleAdd={handleAdd}
           tableModels={TableModelsData}
           lineName={lineName}
+
+          autoHandleSubmit={Table2AutoSubmit}
         />
       </div>
 

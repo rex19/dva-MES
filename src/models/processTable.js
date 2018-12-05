@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/processTable'
+import { query, create, deleted, edit, GetMaterialByMaterialNumber, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/processTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -26,20 +26,7 @@ const EditData = {
     "EditDateTime": "0001-01-01T00:00:00",
     "Editor": null
   },
-  "ProcessStep": [
-    {
-      "Secquence": 1,
-      "Description": "teststep",
-      "StationGroupId": "0010401",
-      "IsMandatory": "True",
-      "IsNeedSetupCheck": "True",
-      "IsBackflush": "True",
-      "Side": 1,
-      "MaximumTestCount": 10,
-      "Editor": "admin",
-      "EditDateTime": "0001-01-01T00:00:00"
-    }
-  ]
+
 }
 // const isClose = () => {
 //   return Cookie.get('user_session') && Cookie.get('user_session') > new Date().getTime()
@@ -66,11 +53,17 @@ export default modelExtend(pageModel, {
       ProcessStep: [{}]
     },
     //每个table可能不同的变量字段
-    MaterialNumber: [],
-    StationGroup: [],
+    // MaterialNumber: [],
     AddProcessStepDataSource: [],
     EditProcessStepDataSource: [],
     // ModalsClosed: !!isClose(),  https://github.com/pmg1989/dva-admin/blob/master/src/models/app.js
+
+    //工艺菜单
+    Name_Version: '',
+    FactoryList: [],
+    StationGroup: [],
+    ProcessStepListCount: 0,
+    ProcessStepList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -219,6 +212,13 @@ export default modelExtend(pageModel, {
         } else {
           throw data
         }
+      } else if (payload.modalType === 'getName_Version') {
+        const data = yield call(GetMaterialByMaterialNumber, payload.Params)
+        if (data.Status === 200) {
+          yield put({ type: 'ChangeVersion', payload: { modalType: 'GetMaterialByMaterialNumber', data: data.Data } })
+        } else {
+          throw data
+        }
       }
     },
   },
@@ -234,9 +234,22 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, MaterialNumber: eval(payload.data.MaterialNumber), StationGroup: eval(payload.data.StationGroup), EditData: payload.data.ProcessAndProcessStep == null ? state.EditData : payload.data.ProcessAndProcessStep }
+        console.log('editModalVisible哇咔咔', payload)
+        return {
+          ...state, ...payload,
+          StationGroup: payload.data.StationGroup,
+          FactoryList: payload.data.FactoryList,
+
+          ProcessStepListCount: payload.data.ProcessStepListCount,
+          ProcessStepList: payload.data.ProcessStepList,
+          EditData: payload.data.Process == null ? state.EditData : payload.data.Process
+        }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, MaterialNumber: eval(payload.data.MaterialNumber), StationGroup: eval(payload.data.StationGroup) }
+        return {
+          ...state, ...payload,
+          StationGroup: payload.data.StationGroup,
+          FactoryList: payload.data.FactoryList,
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }
@@ -262,5 +275,13 @@ export default modelExtend(pageModel, {
         return { ...state, ...payload, EditProcessStepDataSource: payload.ProcessStepDataSource }
       }
     },
+    //改变 Version
+    ChangeVersion(state, { payload }) {
+      if (payload.modalType === 'GetMaterialByMaterialNumber') {
+        return { ...state, ...payload, Name_Version: `${payload.data.version}/${payload.data.materialName}` }
+      } else if (payload.modalType === '') {
+        // return { ...state, ...payload, Name_Version: `${payload.data.Version}/${payload.data.MaterialName}` }
+      }
+    }
   },
 })

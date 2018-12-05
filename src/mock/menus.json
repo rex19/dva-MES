@@ -85,7 +85,7 @@
     "route": "/masterdata/locationTable"
   },
   {
-    "id": "90",
+    "id": "810",
     "bpid": "8",
     "mpid": "8",
     "name": "客户信息",
@@ -93,7 +93,7 @@
     "route": "/masterdata/customerTable"
   },
   {
-    "id": "91",
+    "id": "811",
     "bpid": "8",
     "mpid": "8",
     "name": "供应商信息",
@@ -101,7 +101,7 @@
     "route": "/masterdata/supplierTable"
   },
   {
-    "id": "93",
+    "id": "812",
     "bpid": "8",
     "mpid": "8",
     "name": "BOM",
@@ -133,7 +133,7 @@
     "id": "23",
     "bpid": "2",
     "mpid": "2",
-    "name": "容器库位查询",
+    "name": "容器信息查询",
     "icon": "user",
     "route": "/wmsSystem/containerInfo"
   },

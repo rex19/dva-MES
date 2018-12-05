@@ -163,9 +163,7 @@ const WorkOrderListComponent = ({
           // PageIndex: pagination.PageIndex,
           // PageSize: pagination.PageSize
         }
-        console.log('Received values of form: ', Params);
         SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
-        console.log(payload.PlannedStartDateTimeFieldDecorator.toString())
 
       }
     })

@@ -21,7 +21,8 @@ const TableComponents = ({
   handleAdd,
   tableLoading,
 
-  lineName
+  lineName,
+  autoHandleSubmit
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -57,6 +58,7 @@ const TableComponents = ({
         }
       },
     })
+    setTimeout(() => autoHandleSubmit(), 2000);
   }
   const handleModalClose = (modalVisible) => {
     dispatch({
