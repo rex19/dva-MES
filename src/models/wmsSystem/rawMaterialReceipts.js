@@ -162,7 +162,11 @@ export default modelExtend(pageModel, {
           rawMaterialReceipts_Details_InfoTableList: []
         }
       } else if (payload.type === 'GetMaterialReceivingFormItemByFormIdForList') {
-        return { ...state, ...payload, rawMaterialReceipts_DetailsTableList: payload.rawMaterialReceipts_DetailsTableList }
+        return {
+          ...state, ...payload,
+          rawMaterialReceipts_DetailsTableList: payload.rawMaterialReceipts_DetailsTableList,
+          rawMaterialReceipts_Details_InfoTableList: []
+        }
       } else if (payload.type === 'GetContainerGenerateRecordByFormItemNumberForList') {
         return { ...state, ...payload, rawMaterialReceipts_Details_InfoTableList: payload.rawMaterialReceipts_Details_InfoTableList }
       }

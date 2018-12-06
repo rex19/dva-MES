@@ -122,7 +122,7 @@ const MaterielTableComponents = ({
           MinimumPackageQuantity: payload.AddMinimumPackageQuantity,
           ExpirationTime: payload.AddExpirationTime,
           SafetyStock: payload.AddSafetyStock,
-          DefaultStorageLocationId: payload.AddDefaultStorageLocationId,
+          DefaultStorageLocationId: parseInt(payload.AddDefaultStorageLocationId),
           ContainerSize: parseInt(payload.AddContainerSize),
           MSL: parseInt(payload.AddMSL),
           State: parseInt(payload.AddState),
@@ -161,7 +161,7 @@ const MaterielTableComponents = ({
           MinimumPackageQuantity: payload.EditMinimumPackageQuantity,
           ExpirationTime: payload.EditExpirationTime,
           SafetyStock: payload.EditSafetyStock,
-          DefaultStorageLocationId: payload.EditDefaultStorageLocationId,
+          DefaultStorageLocationId: parseInt(payload.EditDefaultStorageLocationId),
           ContainerSize: parseInt(payload.EditContainerSize),
           MSL: parseInt(payload.EditMSL),
           State: parseInt(payload.EditState),
@@ -430,7 +430,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="默认库位编号"
           >
-            {getFieldDecorator('AddDefaultStorageLocation', {
+            {getFieldDecorator('AddDefaultStorageLocationId', {
               initialValue: '',
             })(
               <Select>
@@ -763,7 +763,7 @@ const MaterielTableComponents = ({
             {...formItemLayout}
             label="默认库位编号"
           >
-            {getFieldDecorator('EditDefaultStorageLocation', {
+            {getFieldDecorator('EditDefaultStorageLocationId', {
               initialValue: EditData.DefaultStorageLocationId,
               // initialValue: '7'
             })(

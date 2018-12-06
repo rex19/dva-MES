@@ -140,6 +140,7 @@ export default modelExtend(pageModel, {
   reducers: {
     querySuccessed(state, { payload }) {
       if (payload.type === 'Init') {
+        console.log('querySuccessed1111', payload)
         return {
           ...state, ...payload,
           ProductDeliveryRequestList: payload.result,
@@ -149,6 +150,7 @@ export default modelExtend(pageModel, {
       } else if (payload.type === 'ProductDeliveryRequest_ProjectInfoList') {
         return {
           ...state, ...payload,
+          ProductDeliveryRequest_OutputMaterialBoxInfoList: [],
           ProductDeliveryRequest_ProjectInfoList: payload.ProductDeliveryRequest_ProjectInfoList,
 
         }

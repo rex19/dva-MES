@@ -157,7 +157,7 @@ export default modelExtend(pageModel, {
         return {
           ...state, ...payload,
           PutStorageOfFinishedProduct_ProjectInfoList: payload.PutStorageOfFinishedProduct_ProjectInfoList,
-
+          PutStorageOfFinishedProduct_OutputMaterialBoxInfoList: []
         }
       } else if (payload.type === 'PutStorageOfFinishedProduct_OutputMaterialBoxInfoList') {
         return {

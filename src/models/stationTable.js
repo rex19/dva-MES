@@ -44,8 +44,9 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     //每个table可能不同的变量字段
-    TotalStationGroup: [], //所有的stationtype(工站类型)
-    SelectedStationGroup: [],//已选的stationtype(工站类型)
+    TotalStationGroup: [], //所有的
+    SelectedStationGroup: [],//已选的
+    StationType: [],//所有的stationtype(工站类型)
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -161,6 +162,7 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
+
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
@@ -198,9 +200,19 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalStationGroup: eval(payload.data.TotalStationGroup), SelectedStationGroup: eval(payload.data.SelectedStationGroup), EditData: payload.data.Station == null ? state.EditData : payload.data.Station }
+        return {
+          ...state, ...payload,
+          StationType: payload.data.StationType,
+          TotalStationGroup: eval(payload.data.TotalStationGroup),
+          SelectedStationGroup: eval(payload.data.SelectedStationGroup),
+          EditData: payload.data.Station == null ? state.EditData : payload.data.Station
+        }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, TotalStationGroup: eval(payload.data.TotalStationGroup) }
+        return {
+          ...state, ...payload,
+          StationType: payload.data.StationType,
+          TotalStationGroup: eval(payload.data.TotalStationGroup)
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }

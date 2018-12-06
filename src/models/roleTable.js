@@ -47,7 +47,8 @@ export default modelExtend(pageModel, {
     TotalMultiselectData: [],
     AllocatedMultiselectData: [],
     platform: [],
-
+    PermissionList: [],
+    EditPermissionList: [] //菜单权限的 编辑初始化数据
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -161,11 +162,13 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
+        yield put({ type: 'permissionListhandleChanger', payload: { type: 'clearPermissionList' } })
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
           console.log('showModalAndAjax-edit', data)
-          yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
+          yield put({ type: 'showModal', payload: payload })
+
         } else {
           throw data
         }
@@ -200,12 +203,24 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), AllocatedMultiselectData: eval(payload.data.AllocatedUser), platform: eval(payload.data.TotalPlatform), EditData: payload.data.Role == null ? state.EditData : payload.data.Role }
+        return {
+          ...state, ...payload,
+          TotalMultiselectData: eval(payload.data.TotalUser),
+          AllocatedMultiselectData: eval(payload.data.AllocatedUser),
+          platform: eval(payload.data.TotalPlatform),
+          EditPermissionList: payload.data.Menu != null ? payload.data.Menu.map(item => item.toString()) : [],
+          EditData: payload.data.Role == null ? state.EditData : payload.data.Role
+        }
       } else if (payload.modalType === 'addModalVisible') {
-        console.log('else if (payload.modalType === addModalVisible)', payload)
         return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalUser), platform: eval(payload.data.TotalPlatform) }
       } else if (payload.modalType === 'detailsModalVisible') {
-        return { ...state, ...payload, DetailsData: payload.data }
+        let x = payload.data.Menu.map(item => item.toString())
+        // console.log('detailsModalVisible++++++++++++', x)
+        return {
+          ...state, ...payload,
+          DetailsData: payload.data,
+          DetailsPermissionList: payload.data.Menu.map(item => item.toString()),
+        }
       }
     },
     //teble loading处理
@@ -219,7 +234,19 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
-    }
+    },
+    //改变editable的datasource
+    permissionListhandleChanger(state, { payload }) {
+      if (payload.type === 'PermissionListChanger') {
+        console.log('permissionListhandleChanger--', payload.PermissionList)
+
+        let list = payload.PermissionList.length > 0 ? payload.PermissionList.map(item => parseInt(item)) : payload.PermissionList
+        return { ...state, ...payload, PermissionList: list }
+      } else if (payload.type === 'clearPermissionList') {
+        console.log('clearPermissionList--', payload)
+        return { ...state, ...payload, EditPermissionList: [] }
+      }
+    },
   },
 })
 

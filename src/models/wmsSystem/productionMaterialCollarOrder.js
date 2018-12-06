@@ -155,7 +155,7 @@ export default modelExtend(pageModel, {
         return {
           ...state, ...payload,
           ProductionMaterialCollarOrder_DetailsTableList: payload.ProductionMaterialCollarOrder_DetailsTableList,
-
+          ProductionMaterialCollarOrder_Details_InfoTableList: []
         }
       } else if (payload.type === 'ProductionMaterialCollarOrder_Details_InfoTableList') {
         return {

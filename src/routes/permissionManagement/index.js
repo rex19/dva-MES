@@ -159,8 +159,9 @@ export default class PermissionManagement extends React.Component {
         >
           {this.renderTreeNodes(treeData)}
         </Tree>
-        <EditableComponent />
+
       </div>
     )
   }
 }
+// <EditableComponent />

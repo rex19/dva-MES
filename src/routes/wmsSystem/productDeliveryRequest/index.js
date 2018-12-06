@@ -66,6 +66,9 @@ const ProductDeliveryRequestTableComponents = ({
     title: '单据号',
     dataIndex: 'FormNumber',
   }, {
+    title: '客户',
+    dataIndex: 'CustomerName',
+  }, {
     title: '状态',
     dataIndex: 'StateName',
   }, {
@@ -101,9 +104,6 @@ const ProductDeliveryRequestTableComponents = ({
     title: '料号',
     dataIndex: 'MaterialNumber',
   }, {
-    title: '批次号',
-    dataIndex: 'BatchNumber',
-  }, {
     title: '单位',
     dataIndex: 'UnitName',
   }, {
@@ -127,11 +127,8 @@ const ProductDeliveryRequestTableComponents = ({
     title: '料号',
     dataIndex: 'MaterialNumber',
   }, {
-    title: '容量',
+    title: '数量',
     dataIndex: 'TotalQuantity',
-  }, {
-    title: '目前库位',
-    dataIndex: 'CurrentLocationNumber',
   }]
 
   const handleSearch = (e) => {

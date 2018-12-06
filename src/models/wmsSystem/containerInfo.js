@@ -119,7 +119,11 @@ export default modelExtend(pageModel, {
   reducers: {
     querySuccessed(state, { payload }) {
       if (payload.type === 'Init') {
-        return { ...state, ...payload, ContainerInfoTableList: payload.result }
+        return {
+          ...state, ...payload,
+          ContainerInfoTableList: payload.result,
+          ContainerInfo_MoveRecordContainerInfoTableList: []
+        }
       } else if (payload.type === 'getContainerNumberRequestQuery') {
         return { ...state, ...payload, ContainerInfo_MoveRecordContainerInfoTableList: payload.result }
       }

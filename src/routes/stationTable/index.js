@@ -12,7 +12,7 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'stationTable'
 const TableColumns = stationTableColumns
-const AddFormLayout = ['AddStationNumber', 'AddName', 'AddStationType', 'AddState']
+const AddFormLayout = ['AddStationNumber', 'AddName', 'AddStationType', 'AddStationGroupIdArray', 'AddState']
 const EditFormLayout = ['EditId', 'EditStationNumber', 'EditName', 'EditStationType', 'EditState', 'EditStationGroup']
 
 const StationTableComponents = ({
@@ -25,7 +25,9 @@ const StationTableComponents = ({
   const TableModelsData = stationTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalStationGroup, SelectedStationGroup } = TableModelsData
+  const { list, pagination, tableLoading,
+    addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
+    EditData, DetailsData, TotalStationGroup, SelectedStationGroup, StationType } = TableModelsData
 
   console.log('TableComponents-stationTable ', TableModelsData)
 
@@ -36,7 +38,7 @@ const StationTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { StationNumber: payload.AddStationNumber, Name: payload.AddName, State: parseInt(payload.AddState), StationType: parseInt(payload.AddStationType) }
+        const createParam = { StationNumber: payload.AddStationNumber, Name: payload.AddName, State: parseInt(payload.AddState), StationGroupIdArray: payload.AddStationGroupIdArray.map(item => parseInt(item.key)), StationType: parseInt(payload.AddStationType) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -146,7 +148,7 @@ const StationTableComponents = ({
               ],
             })(
               <Select>
-                {TotalStationGroup.map(function (item, index) {
+                {StationType.map(function (item, index) {
                   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                 })}
               </Select>)}
@@ -168,6 +170,27 @@ const StationTableComponents = ({
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
                   <Option key={2} value='-1'>已删除</Option>
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="分配工作组"
+          >
+            <div>
+              {getFieldDecorator('AddStationGroupIdArray', {
+                initialValue: [],
+              })(
+                <Select
+                  mode="multiple"
+                  labelInValue
+                  style={{ width: '100%' }}
+                  placeholder="请选择"
+                >
+                  {TotalStationGroup.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
                 </Select>
                 )}
             </div>
@@ -233,9 +256,9 @@ const StationTableComponents = ({
               initialValue: EditData.StationType.toString(),
             })(
               <Select>
-                <Option key={0} value='0'>制造工站</Option>
-                <Option key={1} value='1'>测试工站</Option>
-                <Option key={2} value='-1'>维修工站</Option>
+                {StationType.map(function (item, index) {
+                  return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                })}
               </Select>)}
           </FormItem>
           <FormItem

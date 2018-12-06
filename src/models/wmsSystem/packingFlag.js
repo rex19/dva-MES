@@ -157,7 +157,7 @@ export default modelExtend(pageModel, {
         return {
           ...state, ...payload,
           PackingFlag_MoveRecordContainerInfoTableList: payload.PackingFlag_MoveRecordContainerInfoTableList,
-
+          PackingInformatioByContainerList: []
         }
       } else if (payload.type === 'GetPackingInformatioByContainer') {
         return {
