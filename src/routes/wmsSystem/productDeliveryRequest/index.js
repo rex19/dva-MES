@@ -128,7 +128,7 @@ const ProductDeliveryRequestTableComponents = ({
     dataIndex: 'MaterialNumber',
   }, {
     title: '数量',
-    dataIndex: 'TotalQuantity',
+    dataIndex: 'Quantity',
   }]
 
   const handleSearch = (e) => {

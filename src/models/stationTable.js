@@ -47,6 +47,7 @@ export default modelExtend(pageModel, {
     TotalStationGroup: [], //所有的
     SelectedStationGroup: [],//已选的
     StationType: [],//所有的stationtype(工站类型)
+    FactoryList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -203,6 +204,7 @@ export default modelExtend(pageModel, {
         return {
           ...state, ...payload,
           StationType: payload.data.StationType,
+          FactoryList: payload.data.Factory,
           TotalStationGroup: eval(payload.data.TotalStationGroup),
           SelectedStationGroup: eval(payload.data.SelectedStationGroup),
           EditData: payload.data.Station == null ? state.EditData : payload.data.Station
@@ -210,6 +212,7 @@ export default modelExtend(pageModel, {
       } else if (payload.modalType === 'addModalVisible') {
         return {
           ...state, ...payload,
+          FactoryList: payload.data.Factory,
           StationType: payload.data.StationType,
           TotalStationGroup: eval(payload.data.TotalStationGroup)
         }

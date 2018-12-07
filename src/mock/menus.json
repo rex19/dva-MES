@@ -17,7 +17,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "工作站",
-    "icon": "windows",
+    "icon": "wallet",
     "route": "/masterdata/stationTable"
   },
   {
@@ -25,7 +25,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "工作站组",
-    "icon": "apple",
+    "icon": "switcher",
     "route": "/masterdata/stationGroupTable"
   },
   {
@@ -33,7 +33,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "线体",
-    "icon": "github",
+    "icon": "api",
     "route": "/masterdata/lineTable"
   },
   {
@@ -41,7 +41,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "人员",
-    "icon": "user",
+    "icon": "user-add",
     "route": "/masterdata/staffTable"
   },
   {
@@ -49,7 +49,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "角色",
-    "icon": "user",
+    "icon": "usergroup-add",
     "route": "/masterdata/roleTable"
   },
   {
@@ -57,7 +57,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "物料",
-    "icon": "user",
+    "icon": "shopping-cart",
     "route": "/masterdata/materielTable"
   },
   {
@@ -65,7 +65,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "工艺",
-    "icon": "user",
+    "icon": "link",
     "route": "/masterdata/processTable"
   },
   {
@@ -73,7 +73,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "区域",
-    "icon": "user",
+    "icon": "bank",
     "route": "/masterdata/regionTable"
   },
   {
@@ -81,7 +81,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "库位",
-    "icon": "user",
+    "icon": "select",
     "route": "/masterdata/locationTable"
   },
   {
@@ -89,7 +89,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "客户信息",
-    "icon": "user",
+    "icon": "contacts",
     "route": "/masterdata/customerTable"
   },
   {
@@ -97,7 +97,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "供应商信息",
-    "icon": "user",
+    "icon": "contacts",
     "route": "/masterdata/supplierTable"
   },
   {
@@ -105,7 +105,7 @@
     "bpid": "8",
     "mpid": "8",
     "name": "BOM",
-    "icon": "user",
+    "icon": "share-alt",
     "route": "/masterdata/bomTable"
   },
   {
@@ -120,14 +120,6 @@
     "name": "原材料收货单",
     "icon": "user",
     "route": "/wmsSystem/rawMaterialReceipts"
-  },
-  {
-    "id": "22",
-    "bpid": "2",
-    "mpid": "2",
-    "name": "工单",
-    "icon": "user",
-    "route": "/wmsSystem/workOrder"
   },
   {
     "id": "23",
@@ -186,53 +178,153 @@
     "route": "/wmsSystem/checkList"
   },
   {
-    "id": "5",
-    "name": "报表",
-    "icon": "code-o"
+    "id": "3",
+    "name": "追溯系统",
+    "icon": "hdd"
   },
   {
-    "id": "51",
-    "bpid": "5",
-    "mpid": "5",
-    "name": "lineChart",
-    "icon": "line-chart",
-    "route": "/chart/lineChart"
+    "id": "31",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "通过工站追溯工件",
+    "route": "/SF_PFS_Trace/TracePartByStation"
   },
   {
-    "id": "52",
-    "bpid": "5",
-    "mpid": "5",
-    "name": "barChart",
-    "icon": "bar-chart",
-    "route": "/chart/barChart"
+    "id": "32",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "通过工件追溯",
+    "icon": "setting"
   },
   {
-    "id": "53",
-    "bpid": "5",
-    "mpid": "5",
-    "name": "areaChart",
-    "icon": "area-chart",
-    "route": "/chart/areaChart"
+    "id": "321",
+    "bpid": "32",
+    "mpid": "32",
+    "name": "工件过站记录",
+    "route": "/SF_PFS_Trace/PartProcessRecord"
   },
   {
-    "id": "54",
-    "bpid": "5",
-    "mpid": "5",
-    "name": "权限管理",
-    "icon": "shopping-cart",
-    "route": "/permissionManagement"
+    "id": "322",
+    "bpid": "32",
+    "mpid": "32",
+    "name": "工件失效记录",
+    "route": "/SF_PFS_Trace/PartFailureRecord"
+  },
+  {
+    "id": "323",
+    "bpid": "32",
+    "mpid": "32",
+    "name": "工件维修记录",
+    "route": "/SF_PFS_Trace/PartRepairRecord"
+  },
+  {
+    "id": "324",
+    "bpid": "32",
+    "mpid": "32",
+    "name": "工件装配记录",
+    "route": "/SF_PFS_Trace/PartMergeRecord"
+  },
+  {
+    "id": "325",
+    "bpid": "32",
+    "mpid": "32",
+    "name": "工件属性记录",
+    "route": "/SF_PFS_Trace/PartAttributeRecord"
+  },
+  {
+    "id": "326",
+    "bpid": "32",
+    "mpid": "32",
+    "name": "工件用料记录",
+    "route": "/SF_PFS_Trace/PartMaterialRecord"
+  },
+  {
+    "id": "33",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "通过物料追溯工件",
+    "icon": "setting",
+    "route": "/SF_PFS_Trace/TracePartByMaterial"
+  },
+  {
+    "id": "34",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "通过箱号追溯",
+    "icon": "setting",
+    "route": "/SF_PFS_Trace/TracePartByFinishGoodBoxNumber"
+  },
+  {
+    "id": "35",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "通过工单追溯",
+    "icon": "setting",
+    "route": "/SF_PFS_Trace/TracePartByWorkOrder"
+  },
+  {
+    "id": "36",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "通过属性追溯",
+    "icon": "setting"
+  },
+  {
+    "id": "361",
+    "bpid": "36",
+    "mpid": "36",
+    "name": "工件属性",
+    "route": "/SF_PFS_Trace/TraceabilityByPartAttribute"
+  },
+  {
+    "id": "362",
+    "bpid": "36",
+    "mpid": "36",
+    "name": "工单属性",
+    "route": "/SF_PFS_Trace/TraceabilityByWorkOrderAttribute"
+  },
+  {
+    "id": "363",
+    "bpid": "36",
+    "mpid": "36",
+    "name": "容器属性",
+    "route": "/SF_PFS_Trace/TraceabilityByContainerAttribute"
+  },
+  {
+    "id": "37",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "通过发货单追溯",
+    "icon": "setting",
+    "route": "/SF_PFS_Trace/TraceBoxByDeliveryNote"
+  },
+  {
+    "id": "38",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "工站异常查询",
+    "icon": "setting",
+    "route": "/SF_PFS_Trace/TraceMachineAbnormalRecord"
+  },
+  {
+    "id": "39",
+    "bpid": "3",
+    "mpid": "3",
+    "name": "上料记录查询",
+    "icon": "setting",
+    "route": "/SF_PFS_Trace/TraceMaterialSetupRecord"
   },
   {
     "id": "4",
     "name": "工单管理",
-    "icon": "camera-o"
+    "icon": "schedule"
   },
   {
     "id": "41",
     "bpid": "4",
     "mpid": "4",
     "name": "工单列表",
-    "icon": "heart-o",
+    "icon": "align-right",
     "route": "/PFS_FIS_System/workOrderTableList"
   },
   {
@@ -240,7 +332,7 @@
     "bpid": "4",
     "mpid": "4",
     "name": "工单激活",
-    "icon": "heart-o",
+    "icon": "check",
     "route": "/PFS_FIS_System/workOrderActivation"
   },
   {
@@ -248,217 +340,117 @@
     "bpid": "4",
     "mpid": "4",
     "name": "工单设置",
-    "icon": "heart-o",
+    "icon": "paper-clip",
     "route": "/PFS_FIS_System/workOrderSetting"
   },
   {
+    "id": "5",
+    "name": "刀具管理",
+    "icon": "setting"
+  },
+  {
+    "id": "51",
+    "bpid": "5",
+    "mpid": "5",
+    "name": "刀具信息",
+    "route": "/SF_ToolingManagement/ToolingInfo"
+  },
+  {
+    "id": "52",
+    "bpid": "5",
+    "mpid": "5",
+    "name": "刀具类型列表",
+    "route": "/SF_ToolingManagement/ToolingType"
+  },
+  {
+    "id": "53",
+    "bpid": "5",
+    "mpid": "5",
+    "name": "刀具寿命规则",
+    "route": "/SF_ToolingManagement/ToolingLifeRule"
+  },
+  {
+    "id": "54",
+    "bpid": "5",
+    "mpid": "5",
+    "name": "程序用刀设定",
+    "route": "/SF_ToolingManagement/ProgramToolSetting"
+  },
+  {
+    "id": "55",
+    "bpid": "5",
+    "mpid": "5",
+    "name": "当前设备刀具情况",
+    "route": "/SF_ToolingManagement/CurrentToolingCondition"
+  },
+  {
     "id": "6",
-    "name": "追溯系统",
+    "name": "Ecall系统",
     "icon": "setting"
   },
   {
     "id": "61",
     "bpid": "6",
     "mpid": "6",
-    "name": "通过工站追溯工件",
-    "route": "/SF_PFS_Trace/TracePartByStation"
+    "name": "电子叫料看板",
+    "route": "/Ecall/ElectronicCallBoard"
   },
   {
     "id": "62",
     "bpid": "6",
     "mpid": "6",
-    "name": "通过工件追溯",
-    "icon": "setting"
-  },
-  {
-    "id": "621",
-    "bpid": "62",
-    "mpid": "62",
-    "name": "工件过站记录",
-    "route": "/SF_PFS_Trace/PartProcessRecord"
-  },
-  {
-    "id": "622",
-    "bpid": "62",
-    "mpid": "62",
-    "name": "工件失效记录",
-    "route": "/SF_PFS_Trace/PartFailureRecord"
-  },
-  {
-    "id": "623",
-    "bpid": "62",
-    "mpid": "62",
-    "name": "工件维修记录",
-    "route": "/SF_PFS_Trace/PartRepairRecord"
-  },
-  {
-    "id": "624",
-    "bpid": "62",
-    "mpid": "62",
-    "name": "工件装配记录",
-    "route": "/SF_PFS_Trace/PartMergeRecord"
-  },
-  {
-    "id": "625",
-    "bpid": "62",
-    "mpid": "62",
-    "name": "工件属性记录",
-    "route": "/SF_PFS_Trace/PartAttributeRecord"
-  },
-  {
-    "id": "626",
-    "bpid": "62",
-    "mpid": "62",
-    "name": "工件用料记录",
-    "route": "/SF_PFS_Trace/PartMaterialRecord"
+    "name": "创建生产初始配货单",
+    "route": "/Ecall/CreatProductionInitialOrderBlank"
   },
   {
     "id": "63",
     "bpid": "6",
     "mpid": "6",
-    "name": "通过物料追溯工件",
-    "icon": "setting",
-    "route": "/SF_PFS_Trace/TracePartByMaterial"
+    "name": "创建配货单",
+    "route": "/Ecall/CreatOrderBlank"
   },
   {
     "id": "64",
     "bpid": "6",
     "mpid": "6",
-    "name": "通过箱号追溯",
-    "icon": "setting",
-    "route": "/SF_PFS_Trace/TracePartByFinishGoodBoxNumber"
-  },
-  {
-    "id": "65",
-    "bpid": "6",
-    "mpid": "6",
-    "name": "通过工单追溯",
-    "icon": "setting",
-    "route": "/SF_PFS_Trace/TracePartByWorkOrder"
-  },
-  {
-    "id": "66",
-    "bpid": "6",
-    "mpid": "6",
-    "name": "通过属性追溯",
-    "icon": "setting"
-  },
-  {
-    "id": "661",
-    "bpid": "66",
-    "mpid": "66",
-    "name": "工件属性",
-    "route": "/SF_PFS_Trace/TraceabilityByPartAttribute"
-  },
-  {
-    "id": "662",
-    "bpid": "66",
-    "mpid": "66",
-    "name": "工单属性",
-    "route": "/SF_PFS_Trace/TraceabilityByWorkOrderAttribute"
-  },
-  {
-    "id": "663",
-    "bpid": "66",
-    "mpid": "66",
-    "name": "容器属性",
-    "route": "/SF_PFS_Trace/TraceabilityByContainerAttribute"
-  },
-  {
-    "id": "67",
-    "bpid": "6",
-    "mpid": "6",
-    "name": "通过发货单追溯",
-    "icon": "setting",
-    "route": "/SF_PFS_Trace/TraceBoxByDeliveryNote"
-  },
-  {
-    "id": "68",
-    "bpid": "6",
-    "mpid": "6",
-    "name": "工站异常查询",
-    "icon": "setting",
-    "route": "/SF_PFS_Trace/TraceMachineAbnormalRecord"
-  },
-  {
-    "id": "69",
-    "bpid": "6",
-    "mpid": "6",
-    "name": "上料记录查询",
-    "icon": "setting",
-    "route": "/SF_PFS_Trace/TraceMaterialSetupRecord"
+    "name": "配货单列表",
+    "route": "/Ecall/InvoiceList"
   },
   {
     "id": "7",
-    "name": "刀具管理",
-    "icon": "setting"
+    "name": "报表",
+    "icon": "code-o"
   },
   {
     "id": "71",
     "bpid": "7",
     "mpid": "7",
-    "name": "刀具信息",
-    "route": "/SF_ToolingManagement/ToolingInfo"
+    "name": "lineChart",
+    "icon": "line-chart",
+    "route": "/chart/lineChart"
   },
   {
     "id": "72",
     "bpid": "7",
     "mpid": "7",
-    "name": "刀具类型列表",
-    "route": "/SF_ToolingManagement/ToolingType"
+    "name": "barChart",
+    "icon": "bar-chart",
+    "route": "/chart/barChart"
   },
   {
     "id": "73",
     "bpid": "7",
     "mpid": "7",
-    "name": "刀具寿命规则",
-    "route": "/SF_ToolingManagement/ToolingLifeRule"
+    "name": "areaChart",
+    "icon": "area-chart",
+    "route": "/chart/areaChart"
   },
   {
     "id": "74",
     "bpid": "7",
     "mpid": "7",
-    "name": "程序用刀设定",
-    "route": "/SF_ToolingManagement/ProgramToolSetting"
-  },
-  {
-    "id": "75",
-    "bpid": "7",
-    "mpid": "7",
-    "name": "当前设备刀具情况",
-    "route": "/SF_ToolingManagement/CurrentToolingCondition"
-  },
-  {
-    "id": "10",
-    "name": "Ecall系统",
-    "icon": "setting"
-  },
-  {
-    "id": "101",
-    "bpid": "10",
-    "mpid": "10",
-    "name": "电子叫料看板",
-    "route": "/Ecall/ElectronicCallBoard"
-  },
-  {
-    "id": "102",
-    "bpid": "10",
-    "mpid": "10",
-    "name": "创建生产初始配货单",
-    "route": "/Ecall/CreatProductionInitialOrderBlank"
-  },
-  {
-    "id": "103",
-    "bpid": "10",
-    "mpid": "10",
-    "name": "创建配货单",
-    "route": "/Ecall/CreatOrderBlank"
-  },
-  {
-    "id": "104",
-    "bpid": "10",
-    "mpid": "10",
-    "name": "配货单列表",
-    "route": "/Ecall/InvoiceList"
+    "name": "权限管理",
+    "icon": "shopping-cart",
+    "route": "/permissionManagement"
   }
 ]

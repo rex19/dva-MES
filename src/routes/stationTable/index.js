@@ -12,8 +12,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'stationTable'
 const TableColumns = stationTableColumns
-const AddFormLayout = ['AddStationNumber', 'AddName', 'AddStationType', 'AddStationGroupIdArray', 'AddState']
-const EditFormLayout = ['EditId', 'EditStationNumber', 'EditName', 'EditStationType', 'EditState', 'EditStationGroup']
+const AddFormLayout = ['AddStationNumber', 'AddName', 'AddStationType', 'AddStationGroupIdArray', 'AddFactoryId', 'AddState']
+const EditFormLayout = ['EditId', 'EditStationNumber', 'EditName', 'EditStationType', 'EditFactoryId', 'EditState', 'EditStationGroup']
 
 const StationTableComponents = ({
   stationTable,
@@ -27,7 +27,7 @@ const StationTableComponents = ({
   const formItemLayout = globalConfig.table.formItemLayout
   const { list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
-    EditData, DetailsData, TotalStationGroup, SelectedStationGroup, StationType } = TableModelsData
+    EditData, DetailsData, TotalStationGroup, SelectedStationGroup, StationType, FactoryList } = TableModelsData
 
   console.log('TableComponents-stationTable ', TableModelsData)
 
@@ -38,7 +38,7 @@ const StationTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { StationNumber: payload.AddStationNumber, Name: payload.AddName, State: parseInt(payload.AddState), StationGroupIdArray: payload.AddStationGroupIdArray.map(item => parseInt(item.key)), StationType: parseInt(payload.AddStationType) }
+        const createParam = { StationNumber: payload.AddStationNumber, Name: payload.AddName, FactoryId: parseInt(payload.AddFactoryId), State: parseInt(payload.AddState), StationGroupIdArray: payload.AddStationGroupIdArray.map(item => parseInt(item.key)), StationType: parseInt(payload.AddStationType) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -49,7 +49,7 @@ const StationTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, StationNumber: payload.EditStationNumber, Name: payload.EditName, StationType: parseInt(payload.EditStationType), State: parseInt(payload.EditState), StationGroupIdArray: payload.EditStationGroup.map(item => parseInt(item.key)) }
+        const editParam = { Id: payload.EditId, StationNumber: payload.EditStationNumber, Name: payload.EditName, StationType: parseInt(payload.EditStationType), FactoryId: parseInt(payload.EditFactoryId), State: parseInt(payload.EditState), StationGroupIdArray: payload.EditStationGroup.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -152,6 +152,22 @@ const StationTableComponents = ({
                   return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                 })}
               </Select>)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('AddFactoryId', {
+                initialValue: ''
+              })(
+                <Select>
+                  {FactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -263,6 +279,22 @@ const StationTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('EditFactoryId', {
+                initialValue: EditData.Factory,
+              })(
+                <Select>
+                  {FactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="状态"
           >
             <div>
@@ -334,6 +366,12 @@ const StationTableComponents = ({
           label="工站类型"
         >
           <Input disabled value={DetailsData.StationType} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="工厂"
+        >
+          <Input disabled value={DetailsData.Factory} />
         </FormItem>
         <FormItem
           {...formItemLayout}

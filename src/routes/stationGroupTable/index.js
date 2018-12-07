@@ -25,7 +25,9 @@ const StationGroupTableComponents = ({
   const TableModelsData = stationGroupTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalStation, SelectedStation } = TableModelsData
+  const { list, pagination, tableLoading,
+    addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
+    EditData, DetailsData, TotalStation, SelectedStation, FactoryList } = TableModelsData
 
   console.log('TableComponents-stationGroupTable ', TableModelsData)
   /**
@@ -35,7 +37,7 @@ const StationGroupTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { GroupNumber: payload.AddGroupNumber, Description: payload.AddDescription, State: parseInt(payload.AddState) }
+        const createParam = { GroupNumber: payload.AddGroupNumber, Description: payload.AddDescription, FactoryId: parseInt(payload.AddFactoryId), State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -46,7 +48,7 @@ const StationGroupTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, GroupNumber: payload.EditGroupNumber, Description: payload.EditDescription, State: parseInt(payload.EditState), StationIdArray: payload.EditStationIdArray.map(item => parseInt(item.key)) }
+        const editParam = { Id: payload.EditId, GroupNumber: payload.EditGroupNumber, Description: payload.EditDescription, FactoryId: parseInt(payload.EditFactoryId), State: parseInt(payload.EditState), StationIdArray: payload.EditStationIdArray.map(item => parseInt(item.key)) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -132,6 +134,22 @@ const StationGroupTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('AddFactoryId', {
+                initialValue: ''
+              })(
+                <Select>
+                  {FactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="状态"
           >
             <div>
@@ -156,7 +174,6 @@ const StationGroupTableComponents = ({
     )
   }
   const editModalValue = () => {
-    console.log('editModalValue--', EditData, EditData.Id, EditData.GroupNumber)
     return (
       <div>
         <Form >
@@ -196,6 +213,22 @@ const StationGroupTableComponents = ({
                 },
               ],
             })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="工厂"
+          >
+            <div>
+              {getFieldDecorator('EditFactoryId', {
+                initialValue: EditData.Factory,
+              })(
+                <Select>
+                  {FactoryList.map(function (item, index) {
+                    return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -263,6 +296,12 @@ const StationGroupTableComponents = ({
           label="名称"
         >
           <Input disabled value={DetailsData.Description} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="工厂"
+        >
+          <Input disabled value={DetailsData.Factory} />
         </FormItem>
         <FormItem
           {...formItemLayout}

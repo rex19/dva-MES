@@ -45,8 +45,8 @@ export default modelExtend(pageModel, {
     DetailsData: {},
     //每个table可能不同的变量字段
     TotalStation: [],
-    SelectedStation: []
-
+    SelectedStation: [],
+    FactoryList: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -198,9 +198,20 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalStation: eval(payload.data.TotalStation), SelectedStation: eval(payload.data.SelectedStation), EditData: payload.data.StationGroup == null ? state.EditData : payload.data.StationGroup }
+        return {
+          ...state, ...payload,
+          FactoryList: payload.data.Factory,
+          TotalStation: payload.data.TotalStation,
+          SelectedStation: payload.data.SelectedStation,
+          EditData: payload.data.StationGroup == null ? state.EditData : payload.data.StationGroup
+        }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, TotalStation: eval(payload.data.TotalStation), SelectedStation: eval(payload.data.SelectedStation) }
+        return {
+          ...state, ...payload,
+          FactoryList: payload.data.Factory,
+          TotalStation: payload.data.TotalStation,
+          SelectedStation: payload.data.SelectedStation
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }
