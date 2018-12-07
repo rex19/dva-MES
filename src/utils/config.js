@@ -13,21 +13,17 @@ const APIV3 = '/api/v3'
 // const SFEcall = `http://192.168.1.180:8088/ecall`
 
 // 瑞阳
-// const Middleware_IP = 'http://192.168.1.239:3009'
-// const ADMAPI = 'http://192.168.1.211:8080/SFMES/api'
+const Middleware_IP = 'http://192.168.1.211:3009'
+const TestServer_IP = 'http://192.168.1.211:8080/SFMES/api'
 // const SFEcall = 'http://192.168.1.239:8089'
 
 //dev
 // const TestServer_IP = 'http://192.168.1.211:8080'
-const Middleware_IP = 'http://192.168.1.158:3009'
+// const Middleware_IP = 'http://192.168.1.158:3009'
 // const SFEcall = `http://192.168.1.252:8088/ecall`
-// const ADMAPI = 'http://192.168.1.252/SFMES/api'
-// const ADMAPI = 'http://192.168.1.141:8080/SFMES/api'
-// const ADMAPI = 'http://dsm.smart-flow.cn:7002/SFMES/api'
-// const SFEcall = `http://dsm.smart-flow.cn:8088/ecall`
 
 //外网
-const TestServer_IP = 'http://smartflow.diskstation.me:8083'
+// const TestServer_IP = 'http://smartflow.diskstation.me:8083'
 // const Middleware_IP = 'http://smartflow.diskstation.me:8091'
 
 // 宁波恒辉

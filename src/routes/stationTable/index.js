@@ -283,7 +283,7 @@ const StationTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditFactoryId', {
-                initialValue: EditData.Factory,
+                initialValue: EditData.FactoryId,
               })(
                 <Select>
                   {FactoryList.map(function (item, index) {
@@ -371,7 +371,7 @@ const StationTableComponents = ({
           {...formItemLayout}
           label="工厂"
         >
-          <Input disabled value={DetailsData.Factory} />
+          <Input disabled value={DetailsData.FactoryId} />
         </FormItem>
         <FormItem
           {...formItemLayout}
