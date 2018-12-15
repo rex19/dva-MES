@@ -58,9 +58,9 @@ export async function getAddModalData(params) {
 export async function getEditModalData(params) {
   return request({
     // url: `${tableName}/${globalConfig.crudApi.getEditModalInitData}/${params}`,
-    url: `${tableName}/${globalConfig.crudApi.getEditModalInitData}`,
+    url: `${tableName}/${globalConfig.crudApi.getEditModalInitData}?Id=${params}`,
     method: 'get',
-    data: params,
+    // data: params,
   })
 }
 //获取详情Modal初始化数据

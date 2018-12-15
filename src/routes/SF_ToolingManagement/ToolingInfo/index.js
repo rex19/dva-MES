@@ -8,11 +8,21 @@ import './index.less'
 
 const { Option } = Select
 const RadioGroup = Radio.Group
+const { TextArea } = Input;
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'toolingInfo'
-const AddFormLayout = ['AddToolingCode', 'AddToolingTypeId']
-const EditFormLayout = ['EditId', 'EditToolingCode', 'EditToolingTypeId']
+const AddFormLayout = [
+  'AddToolingCode',
+  'AddToolingTypeId'
+]
+const EditFormLayout = [
+  'EditId',
+  'EditToolingCode',
+  'EditToolingTypeId',
+  'EditSpecification',
+  'EditLifeRule'
+]
 const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
 
 
@@ -29,8 +39,17 @@ const ToolingInfoComponents = ({
   const TableModelsData = toolingInfo
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
-    TotalMultiselectData, AllocatedMultiselectData,
+  const { list,
+    pagination,
+    tableLoading,
+    addModalVisible,
+    editModalVisible,
+    detailsModalVisible,
+    deleteModalVisible,
+    EditData,
+    DetailsData,
+    TotalMultiselectData,
+    AllocatedMultiselectData,
     InitData,
     ToolTypeSelectData } = TableModelsData
 
@@ -82,7 +101,7 @@ const ToolingInfoComponents = ({
         const createParam = {
           ToolingCode: payload.AddToolingCode,
           ToolingTypeId: payload.AddToolingTypeId,
-          CreatorId: 10,
+          CreatorId: 5,
         }
         if (!err) {
           dispatch({
@@ -98,7 +117,7 @@ const ToolingInfoComponents = ({
           Id: payload.EditId,
           ToolingCode: payload.EditToolingCode,
           ToolingTypeId: payload.EditToolingTypeId,
-          EditorId: 10,
+          EditorId: 5
         }
         if (!err) {
           dispatch({
@@ -109,6 +128,8 @@ const ToolingInfoComponents = ({
       })
     }
   }
+
+
 
   /**
    * modal 开关
@@ -131,7 +152,6 @@ const ToolingInfoComponents = ({
         LifeRuleData = item.LifeRule
       }
     })
-    console.log('ToolTypeSelectDataChange--', key, SpecificationData, LifeRuleData)
   }
   const handleSearch = (e) => {
     e.preventDefault();
@@ -139,23 +159,40 @@ const ToolingInfoComponents = ({
     validateFields(SearchFormLayout, (err, payload) => {
       if (!err) {
         const Params = {
-          PageIndex: 1,
-          PageSize: 10,
-          Tdto: {
-            ToolingCode: payload.FormToolingCode,
-            ToolingTypeId: payload.FormToolingTypeId,
-            // State: payload.FormState
-            State: parseInt(payload.FormState)
-          }
+          ToolingCode: payload.FormToolingCode,
+          ToolingTypeId: parseInt(payload.FormToolingTypeId)
+
         }
         console.log('handleSearch-Params', Params)
-        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
-        dispatch({
-          type: `${TableName}/query`,
-          payload: Params,
-        })
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
       }
     });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    validateFields(SearchFormLayout, (err, payload) => {
+
+      if (!err) {
+        const Params = {
+
+          ToolingCode: payload.FormToolingCode,
+          ToolingTypeId: parseInt(payload.FormToolingTypeId)
+
+        }
+        SearchTableList(Params, PageIndex, PageSize)
+
+      }
+    })
+  }
+
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
   }
   //每个table可能不同的变量字段(4)
   const formComponentsValue = () => {
@@ -247,7 +284,7 @@ const ToolingInfoComponents = ({
                   required: true, message: '请输入类别描述',
                 },
               ],
-            })(<Input />)}
+            })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -261,7 +298,7 @@ const ToolingInfoComponents = ({
                   required: true, message: '请输入类别描述',
                 },
               ],
-            })(<Input />)}
+            })(<TextArea disabled autosize rows={5} />)}
           </FormItem>
         </Form>
       </div>
@@ -300,6 +337,7 @@ const ToolingInfoComponents = ({
               ],
             })(<Input />)}
           </FormItem>
+
           <FormItem
             {...formItemLayout}
             label="类别"
@@ -313,7 +351,7 @@ const ToolingInfoComponents = ({
                   },
                 ],
               })(
-                <Select >
+                <Select onChange={ToolTypeSelectDataChange}>
                   {ToolTypeSelectData.map(function (item, index) {
                     return <Option key={index} value={item.key}>{item.label}</Option>
                   })}
@@ -327,13 +365,13 @@ const ToolingInfoComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditSpecification', {
-              initialValue: EditData.Specification,
+              initialValue: SpecificationData,
               rules: [
                 {
                   required: true, message: '请输入类别描述',
                 },
               ],
-            })(<Input />)}
+            })(<Input disabled />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -341,13 +379,13 @@ const ToolingInfoComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditLifeRule', {
-              initialValue: EditData.LifeRule,
+              initialValue: LifeRuleData,
               rules: [
                 {
                   required: true, message: '请输入类别描述',
                 },
               ],
-            })(<Input />)}
+            })(<TextArea disabled autosize rows={4} />)}
           </FormItem>
 
         </Form>
@@ -436,16 +474,7 @@ const ToolingInfoComponents = ({
                   )}
                 </FormItem>
               </Col>
-              <Col span={8} key={3} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`刀具状态`}>
-                  {getFieldDecorator(`FormState`)(
-                    <Select>
-                      <Option key={0} value='1'>正常</Option>
-                      <Option key={1} value='-1'>失效</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
+
             </Row>
           </Form>
           <Row>
@@ -468,6 +497,8 @@ const ToolingInfoComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

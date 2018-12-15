@@ -54,9 +54,7 @@ class EditableCellSelect extends React.Component {
       return temp.label
       // return '请选择'
     } else if (type === 'StationGroupId' && this.props.StationGroup.length > 0 && value !== '') {
-      console.log('else if (type === StationGroupId && this.props.StationGroup) {', value)
       if (this.props.StationGroup.length > 0 && Number.isInteger(value)) {
-        console.log('else if (type === StationGroupId this.props.StationGroup.length > 0 && Number.isInteger(value)')
         const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(value))
         return temp.label
       }
@@ -64,7 +62,6 @@ class EditableCellSelect extends React.Component {
       // const temp = this.props.StationGroup.find((item, index) => item.key === parseInt(this.props.StationGroupIdValue))
       // return temp.label
     } else if (type === 'StationGroupId' && !this.props.StationGroup) {
-      console.log('else if (type === StationGroupId && !this.props.StationGroup) {', value)
       return '请选择2'
     } else if (type === 'Layer') {
       switch (value) {
@@ -167,7 +164,7 @@ class RowEditableEditTable extends React.Component {
     super(props);
     this.state = {
       data: this.props.EditDataSource,
-      count: 1
+      count: this.props.ItemCount
     };
     this.columns = [{
       title: '项名',
@@ -208,9 +205,12 @@ class RowEditableEditTable extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (window.BOMTempRender) {
+      console.log('window.BOMTempRender')
+      // this.setState({ count: nextProps.ItemCount + 1 })
       return true
     } else if (!window.BOMTempRender) {
-      this.setState({ data: this.props.EditDataSource })
+      console.log('!window.BOMTempRender')
+      this.setState({ data: this.props.EditDataSource, count: nextProps.ItemCount + 1 })
     }
   }
 
@@ -224,17 +224,19 @@ class RowEditableEditTable extends React.Component {
     );
   }
   handleChange(value, key, column) {
-    console.log('handleChange', value, key, column)
     const newData = [...this.state.data];
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
       target[column] = value;
-      this.setState({ data: newData }, console.log('handleChange-this.state.data', target, this.state.data));
+      this.setState({ data: newData });
     }
   }
   onDelete = (key) => {
+    window.BOMTempRender = true
     const data = [...this.state.data];
     this.setState({ data: data.filter(item => item.key !== key) });
+    let y = setTimeout(() => this.props.onEditableCellChange(this.state.data, 'RowEditableEditTable'), 2000)
+    console.log('onDelete xxxx')
   }
   edit(key) {
     const newData = [...this.state.data];
@@ -255,7 +257,7 @@ class RowEditableEditTable extends React.Component {
       this.props.onEditableCellChange(this.state.data, 'RowEditableEditTable')
     }
 
-    let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 5000);
+    let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 2000);
   }
   cancel(key) {
     const newData = [...this.state.data];
@@ -284,8 +286,8 @@ class RowEditableEditTable extends React.Component {
     console.log('RowEditableTable', this.props, 'this.state.data-----', this.state.data)
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
         <Table bordered size={'small'} dataSource={this.state.data} columns={this.columns} />
+        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
       </div>
     )
   }

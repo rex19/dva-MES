@@ -56,7 +56,8 @@ export default modelExtend(pageModel, {
     //刀具
     InitData: [],
     ToolTypeSelectData: [],
-    LifeRuleListData: []
+    UnitList: [],
+    FromParams: {},
 
   },
   subscriptions: {
@@ -84,8 +85,8 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
+      yield put({ type: 'FromParamsChanger', payload: payload })
       const data = yield call(query, payload)
-      console.log('effects-query', payload, data)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
         return errorMessage(data.ErrorMessage || '查询失败')
@@ -110,71 +111,71 @@ export default modelExtend(pageModel, {
     * create({
       payload,
     }, { call, put, select }) {
-      // const data = yield call(create, payload)
-      // const pagination = yield select(state => state[TableName].pagination)
-      // if (data.Status !== 200) {
-      //   return errorMessage(data.ErrorMessage || '创建失败')
-      // } else if (data.Status === 200) {
-      //   yield put({ type: 'hideModal', payload: 'addModalVisible' })
-      //   yield put({
-      //     type: 'query', payload: {
-      //       PageIndex: Number(pagination.PageIndex),
-      //       PageSize: Number(pagination.PageSize),
-      //       [QueryRequestDTO]: null
-      //     }
-      //   })
-      //   return successMessage(data.ErrorMessage || '创建成功')
-      // } else {
-      //   throw data
-      // }
-      yield put({ type: 'hideModal', payload: 'addModalVisible' })
-      return successMessage('创建成功')
+      const data = yield call(create, payload)
+      const pagination = yield select(state => state[TableName].pagination)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage || '创建失败')
+      } else if (data.Status === 200) {
+        const FromParams = yield select(state => state[TableName].FromParams)
+        yield put({ type: 'hideModal', payload: 'addModalVisible' })
+        yield put({
+          type: 'query',
+          payload: {
+            ...FromParams
+          },
+        })
+        return successMessage(data.ErrorMessage || '创建成功')
+      } else {
+        throw data
+      }
+      // yield put({ type: 'hideModal', payload: 'addModalVisible' })
+      // return successMessage('创建成功')
     },
     * delete({
       payload,
     }, { call, put, select }) {
-      // const data = yield call(deleted, payload.Id)
-      // const pagination = yield select(state => state[TableName].pagination)
-      // if (data.Status !== 200) {
-      //   return errorMessage(data.ErrorMessage || '删除失败')
-      // } else if (data.Status === 200) {
-      //   yield put({ type: 'hideModal', payload: 'deleteModalVisible' })
-      //   yield put({
-      //     type: 'query', payload: {
-      //       PageIndex: Number(pagination.PageIndex),
-      //       PageSize: Number(pagination.PageSize),
-      //       [QueryRequestDTO]: null
-      //     }
-      //   })
-      //   return successMessage(data.ErrorMessage || '删除成功')
-      // } else {
-      //   throw data
-      // }
-      yield put({ type: 'hideModal', payload: 'deleteModalVisible' })
-      return successMessage('删除成功')
+      const data = yield call(deleted, payload.Id)
+      const pagination = yield select(state => state[TableName].pagination)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage || '删除失败')
+      } else if (data.Status === 200) {
+        const FromParams = yield select(state => state[TableName].FromParams)
+        yield put({ type: 'hideModal', payload: 'deleteModalVisible' })
+        yield put({
+          type: 'query',
+          payload: {
+            ...FromParams
+          },
+        })
+        return successMessage(data.ErrorMessage || '删除成功')
+      } else {
+        throw data
+      }
+      // yield put({ type: 'hideModal', payload: 'deleteModalVisible' })
+      // return successMessage('删除成功')
     },
     * edit({
       payload,
     }, { call, put, select }) {
-      // const data = yield call(edit, payload)
-      // const pagination = yield select(state => state[TableName].pagination)
-      // if (data.Status !== 200) {
-      //   return errorMessage(data.ErrorMessage || '编辑失败')
-      // } if (data.Status === 200) {
-      //   yield put({ type: 'hideModal', payload: 'editModalVisible' })
-      //   yield put({
-      //     type: 'query', payload: {
-      //       PageIndex: Number(pagination.PageIndex),
-      //       PageSize: Number(pagination.PageSize),
-      //       [QueryRequestDTO]: null
-      //     }
-      //   })
-      //   return successMessage(data.ErrorMessage || '编辑成功')
-      // } else {
-      //   throw data
-      // }
-      yield put({ type: 'hideModal', payload: 'editModalVisible' })
-      return successMessage('编辑成功')
+      const data = yield call(edit, payload)
+      const pagination = yield select(state => state[TableName].pagination)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage || '编辑失败')
+      } if (data.Status === 200) {
+        const FromParams = yield select(state => state[TableName].FromParams)
+        yield put({ type: 'hideModal', payload: 'editModalVisible' })
+        yield put({
+          type: 'query',
+          payload: {
+            ...FromParams
+          },
+        })
+        return successMessage(data.ErrorMessage || '编辑成功')
+      } else {
+        throw data
+      }
+      // yield put({ type: 'hideModal', payload: 'editModalVisible' })
+      // return successMessage('编辑成功')
     },
     * showModalAndAjax({
       payload,
@@ -189,7 +190,6 @@ export default modelExtend(pageModel, {
         }
       } else if (payload.modalType === 'addModalVisible') {
         const data = yield call(getAddModalData)
-        console.log('addModalVisible', data)
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
@@ -218,11 +218,13 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
+        console.log('editModalVisible+_+_', payload)
         return {
           ...state, ...payload,
-          LifeRuleListData: payload.data.LifeRuleList,
+          // LifeRuleListData: payload.data.LifeRuleList,
+          UnitList: payload.data.UnitList,
           // TotalMultiselectData: eval(payload.data.TotalCell), AllocatedMultiselectData: eval(payload.data.SelectedCell),
-          EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto
+          EditData: payload.data.Data == null ? state.EditData : payload.data.Data
         }
       } else if (payload.modalType === 'addModalVisible') {
         console.log('addModalVisible==', payload)
@@ -246,6 +248,10 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
+    },
+    // 改变table 查询条件
+    FromParamsChanger(state, { payload }) {
+      return { ...state, ...payload, FromParams: payload }
     }
   },
 })

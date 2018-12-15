@@ -19,7 +19,8 @@ const TableComponents = ({
   editModalValue,
   detailsModalValue,
   handleAdd,
-  tableLoading
+  tableLoading,
+  PaginationComponentsChanger
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -34,10 +35,7 @@ const TableComponents = ({
         <Popconfirm title="确定删除吗?" onConfirm={() => deleteHandler(record)}>
           <a >删除</a>
         </Popconfirm>
-        <span className="ant-divider" />
-        <a onClick={() => handleModalShow('detailsModalVisible', record)} className="ant-dropdown-link">
-          详情 <Icon type="down" />
-        </a>
+
       </span>
     ),
   }]
@@ -76,15 +74,8 @@ const TableComponents = ({
     })
   }
 
-  const onPaginationChange = (PageIndex, pageSize) => {
-    dispatch({
-      type: `${tableName}/query`,
-      payload: {
-        PageIndex: PageIndex,  //第几页
-        PageSize: pageSize,  //多少行
-        TDto: null,
-      }
-    })
+  const onPaginationChange = (PageIndex, PageSize) => {
+    PaginationComponentsChanger(PageIndex, PageSize)
   }
   const deleteHandler = (id) => {
     dispatch({

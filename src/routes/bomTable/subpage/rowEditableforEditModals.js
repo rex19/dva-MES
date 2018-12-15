@@ -346,7 +346,7 @@ class RowEditableEditTable extends React.Component {
   }
   onDelete = (key) => {
     const data = [...this.state.data];
-    this.setState({ data: data.filter(item => item.key !== key) });
+    this.setState({ data: data.filter(item => item.key !== key) }, this.props.onEditableCellChange(this.state.data, 'RowEditableEditTable'));
   }
   edit(key) {
     const newData = [...this.state.data];
@@ -367,7 +367,7 @@ class RowEditableEditTable extends React.Component {
       this.props.onEditableCellChange(this.state.data, 'RowEditableEditTable')
     }
 
-    let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 5000);
+    let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 2000);
   }
   cancel(key) {
     const newData = [...this.state.data];

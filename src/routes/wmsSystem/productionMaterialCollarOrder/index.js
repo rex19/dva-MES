@@ -101,7 +101,10 @@ const ProductionMaterialCollarOrderTableComponents = ({
     dataIndex: 'ScannedQuantity',
     render: (text, record) => <a onClick={() => getScannedQuantityRequest(record.WMSFormId, record.ItemNumber)}>{text}</a>,
   }, {
-    title: '领用库位',
+    title: '领料仓库',
+    dataIndex: 'PickingAreaNumber',
+  }, {
+    title: '接收库位',
     dataIndex: 'RequestLocationNumber',
   }]
 
@@ -124,7 +127,7 @@ const ProductionMaterialCollarOrderTableComponents = ({
     title: '现量',
     dataIndex: 'Quantity',
   }, {
-    title: '目前库存',
+    title: '接收库位',
     dataIndex: 'CurrentLocationNumber',
   }]
 
@@ -159,7 +162,7 @@ const ProductionMaterialCollarOrderTableComponents = ({
           pagination={pagination}
         />
       </div>
-      <h2 style={{ margin: '20px' }}>原材料已收货信息</h2>
+      <h2 style={{ margin: '20px' }}>生产物料已领用信息</h2>
       <div>
         <WMSTableComponents
           tableName={TableName}

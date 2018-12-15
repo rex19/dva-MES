@@ -277,8 +277,8 @@ class RowEditableAddTable extends React.Component {
     console.log('RowEditableTable', this.props, 'this.state.data-----', this.state.data)
     return (
       <div>
-        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
         <Table bordered size={'small'} dataSource={this.state.data} columns={this.columns} />
+        <Button className="editable-add-btn" onClick={this.handleAdd.bind(this)}>添加一行</Button>
       </div>
     )
   }

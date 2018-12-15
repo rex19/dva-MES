@@ -11,8 +11,25 @@ const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'toolingLifeRule'
-const AddFormLayout = ['AddToolingCode', 'AddToolingTypeId']
-const EditFormLayout = ['EditId', 'EditToolingCode', 'EditToolingTypeId']
+const AddFormLayout = [
+  'AddRuleCode',
+  'AddName',
+  'AddDescription',
+  'AddLifeCalculationTypeUnitId',
+  'AddWarningLifeThreshold',
+  'AddExpirationLifeThreshold',
+  'AddState'
+]
+const EditFormLayout = [
+  'EditId',
+  'EditRuleCode',
+  'EditName',
+  'EditDescription',
+  'EditLifeCalculationTypeUnitId',
+  'EditWarningLifeThreshold',
+  'EditExpirationLifeThreshold',
+  'EditState'
+]
 const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
 
 
@@ -32,7 +49,7 @@ const ToolingLifeRuleComponents = ({
   const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData,
     TotalMultiselectData, AllocatedMultiselectData,
     InitData,
-    ToolTypeSelectData, LifeRuleListData } = TableModelsData
+    ToolTypeSelectData, UnitList } = TableModelsData
 
   console.log('TableComponents-toolingLifeRule ', TableModelsData)
 
@@ -89,9 +106,15 @@ const ToolingLifeRuleComponents = ({
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
         const createParam = {
-          ToolingCode: payload.AddToolingCode,
-          ToolingTypeId: payload.AddToolingTypeId,
-          CreatorId: 10,
+
+          CreatorId: 5,
+          RuleCode: payload.AddRuleCode,
+          Name: payload.AddName,
+          Description: payload.AddDescription,
+          LifeCalculationTypeUnitId: payload.AddLifeCalculationTypeUnitId,
+          WarningLifeThreshold: payload.AddWarningLifeThreshold,
+          ExpirationLifeThreshold: payload.AddExpirationLifeThreshold,
+          State: payload.AddState,
         }
         if (!err) {
           dispatch({
@@ -104,10 +127,20 @@ const ToolingLifeRuleComponents = ({
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
         const editParam = {
+          // Id: payload.EditId,
+          // ToolingCode: payload.EditToolingCode,
+          // ToolingTypeId: payload.EditToolingTypeId,
+          // EditorId: 10,
+
           Id: payload.EditId,
-          ToolingCode: payload.EditToolingCode,
-          ToolingTypeId: payload.EditToolingTypeId,
-          EditorId: 10,
+          RuleCode: payload.EditRuleCode,
+          Name: payload.EditName,
+          Description: payload.EditDescription,
+          LifeCalculationTypeUnitId: payload.EditLifeCalculationTypeUnitId,
+          WarningLifeThreshold: payload.EditWarningLifeThreshold,
+          ExpirationLifeThreshold: payload.EditExpirationLifeThreshold,
+          State: payload.EditState,
+          EditorId: 5,
         }
         if (!err) {
           dispatch({
@@ -137,21 +170,34 @@ const ToolingLifeRuleComponents = ({
     validateFields(SearchFormLayout, (err, payload) => {
       if (!err) {
         const Params = {
-          // ToolingCode: payload.FormToolingCode,
-          // ToolingTypeId: payload.FormToolingTypeId,
-          // State: payload.FormState,
-          PageIndex: 1,
-          PageSize: 10,
-          Tdto: null
+          Tdto: {
+          }
         }
         console.log('handleSearch-Params', Params)
-        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
-        dispatch({
-          type: `${TableName}/query`,
-          payload: Params,
-        })
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
       }
     });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    validateFields(SearchFormLayout, (err, payload) => {
+
+      if (!err) {
+        const Params = {
+          Tdto: {}
+        }
+        SearchTableList(Params, PageIndex, PageSize)
+      }
+    })
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
   }
   const ToolTypeSelectDataChange = (key) => {
 
@@ -252,19 +298,20 @@ const ToolingLifeRuleComponents = ({
 
           <FormItem
             {...formItemLayout}
-            label="状态"
+            label="单位"
             hasFeedback
           >
             {getFieldDecorator('AddLifeCalculationTypeUnitId', {
-              initialValue: '37',
+              initialValue: '',
               rules: [
                 {
                   required: true, message: '请输入状态',
                 },
               ],
             })(<Select>
-              <Option key={0} value='37'>次</Option>
-              <Option key={1} value='17'>米</Option>
+              {ToolTypeSelectData.map(function (item, index) {
+                return <Option key={index} value={item.key}>{item.label}</Option>
+              })}
             </Select>)}
           </FormItem>
 
@@ -329,8 +376,8 @@ const ToolingLifeRuleComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditId', {
-              initialValue: '1',
-              // initialValue: EditData.Id,
+              // initialValue: '1',
+              initialValue: EditData.Id,
               rules: [
                 {
                   required: true, message: '请输入ID',
@@ -345,7 +392,7 @@ const ToolingLifeRuleComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditRuleCode', {
-              initialValue: '',
+              initialValue: EditData.RuleCode,
               rules: [
                 {
                   required: true, message: '请输入规则号',
@@ -360,7 +407,7 @@ const ToolingLifeRuleComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditName', {
-              initialValue: '',
+              initialValue: EditData.Name,
               rules: [
                 {
                   required: true, message: '请输入名称',
@@ -374,7 +421,7 @@ const ToolingLifeRuleComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditDescription', {
-              initialValue: '',
+              initialValue: EditData.Description,
               rules: [
                 {
                   required: true, message: '请输入描述',
@@ -385,19 +432,20 @@ const ToolingLifeRuleComponents = ({
 
           <FormItem
             {...formItemLayout}
-            label="状态"
+            label="单位"
             hasFeedback
           >
             {getFieldDecorator('EditLifeCalculationTypeUnitId', {
-              initialValue: '37',
+              initialValue: EditData.LifeCalculationTypeUnitId,
               rules: [
                 {
                   required: true, message: '请输入状态',
                 },
               ],
             })(<Select>
-              <Option key={0} value='37'>次</Option>
-              <Option key={1} value='17'>米</Option>
+              {UnitList.map(function (item, index) {
+                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+              })}
             </Select>)}
           </FormItem>
 
@@ -407,7 +455,7 @@ const ToolingLifeRuleComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditWarningLifeThreshold', {
-              initialValue: '',
+              initialValue: EditData.WarningLifeThreshold,
               rules: [
                 {
                   required: true, message: '请输入预警值',
@@ -421,7 +469,7 @@ const ToolingLifeRuleComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditExpirationLifeThreshold', {
-              initialValue: '',
+              initialValue: EditData.ExpirationLifeThreshold,
               rules: [
                 {
                   required: true, message: '请输入限定值',
@@ -435,7 +483,7 @@ const ToolingLifeRuleComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditState', {
-              initialValue: '1',
+              initialValue: EditData.State.toString(),
               rules: [
                 {
                   required: true, message: '请输入状态',
@@ -482,6 +530,7 @@ const ToolingLifeRuleComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

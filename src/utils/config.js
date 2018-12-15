@@ -10,17 +10,17 @@ const APIV3 = '/api/v3'
 //英提尔
 // const Middleware_IP = 'http://192.168.1.132:3009'
 // const ADMAPI = 'http://192.168.1.180/SFMES/api'
-// const SFEcall = `http://192.168.1.180:8088/ecall`
 
 // 瑞阳
-const Middleware_IP = 'http://192.168.1.211:3009'
-const TestServer_IP = 'http://192.168.1.211:8080/SFMES/api'
-// const SFEcall = 'http://192.168.1.239:8089'
+// const TestServer_IP = 'http://192.168.1.230:8080'
+// const Middleware_IP = 'http://192.168.1.211:3009'
+
 
 //dev
-// const TestServer_IP = 'http://192.168.1.211:8080'
-// const Middleware_IP = 'http://192.168.1.158:3009'
-// const SFEcall = `http://192.168.1.252:8088/ecall`
+const TestServer_IP = 'http://192.168.1.211:8080'
+// const TestServer_IP = 'http://192.168.1.252:80' //c#
+const Middleware_IP = 'http://192.168.1.158:3009'
+const CSharpBackEnd_IP = 'http://192.168.1.252:80'
 
 //外网
 // const TestServer_IP = 'http://smartflow.diskstation.me:8083'
@@ -35,7 +35,9 @@ const APIV1 = `${Middleware_IP}/api`
 const WMSAPI = `${Middleware_IP}/sfwms`
 const SFPFSFIS = `${Middleware_IP}/sfpfsfis`
 const SFPFSTrace = `${Middleware_IP}/SFPFSTrace`
-const SFToolManager = `${Middleware_IP}/ToolManager`
+// const SFToolManager = `${Middleware_IP}/ToolManager`
+const SFToolManager = `${CSharpBackEnd_IP}/PdaApi/api`
+
 const SFEcall = `${TestServer_IP}/ecall`
 
 module.exports = {

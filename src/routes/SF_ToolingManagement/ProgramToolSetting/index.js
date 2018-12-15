@@ -14,9 +14,24 @@ const RadioGroup = Radio.Group
 const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'programToolSetting'
-const AddFormLayout = ['AddRecipeName', 'AddStationId', 'AddProductTypeId', 'AddVersion', 'AddLayer', 'AddCreatorId']
-const EditFormLayout = ['EditId', 'EditRecipeName', 'EditStationId', 'EditProductTypeId', 'EditVersion', 'EditLayer', 'EditCreatorId']
-const SearchFormLayout = ['FormToolingCode', 'FormToolingTypeId', 'FormState']
+const AddFormLayout = [
+  'AddRecipeName',
+  'AddStationId',
+  'AddProductTypeId',
+  'AddVersion',
+  'AddState',
+  'AddLayer'
+]
+const EditFormLayout = [
+  'EditId',
+  'EditRecipeName',
+  'EditStationId',
+  'EditProductTypeId',
+  'EditVersion',
+  'EditLayer',
+  'EditState'
+]
+const SearchFormLayout = ['FormProgramNumber', 'FormStation', 'FormProductType']
 window.BOMTempRender = false
 
 let SpecificationData = ''
@@ -36,7 +51,10 @@ const ProgramToolSettingComponents = ({
     TotalMultiselectData, AllocatedMultiselectData,
     ProductType, Station,
     DetailsDataToolingItem, ToolTypeSelectData,
-    AddProgramItemListDataSource, EditProgramItemListDataSource, ToolSlotViewModel } = TableModelsData
+    AddProgramItemList,
+    EditProgramItemList,
+    ToolSlotViewModel,
+    ItemCount } = TableModelsData
 
   console.log('TableComponents-programToolSetting ', TableModelsData)
 
@@ -100,9 +118,18 @@ const ProgramToolSettingComponents = ({
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
         const createParam = {
-          ToolingCode: payload.AddToolingCode,
-          ToolingTypeId: payload.AddToolingTypeId,
-          CreatorId: 10,
+          // ToolingCode: payload.AddToolingCode,
+          // ToolingTypeId: payload.AddToolingTypeId,
+          // CreatorId: 10,
+
+          RecipeName: payload.AddRecipeName,
+          StationId: parseInt(payload.AddStationId),
+          ProductTypeId: parseInt(payload.AddProductTypeId),
+          Version: payload.AddVersion,
+          Layer: parseInt(payload.AddLayer),
+          State: parseInt(payload.AddState),
+          CreatorId: 5,
+          ProgramItemList: AddProgramItemList
         }
         if (!err) {
           dispatch({
@@ -115,10 +142,15 @@ const ProgramToolSettingComponents = ({
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
         const editParam = {
-          // Id: payload.EditId,
-          // ToolingCode: payload.EditToolingCode,
-          // ToolingTypeId: payload.EditToolingTypeId,
-          // EditorId: 10,
+          Id: payload.EditId,
+          RecipeName: payload.EditRecipeName,
+          StationId: parseInt(payload.EditStationId),
+          ProductTypeId: parseInt(payload.EditProductTypeId),
+          Version: payload.EditVersion,
+          Layer: parseInt(payload.EditLayer),
+          State: parseInt(payload.EditState),
+          EditorId: 5,
+          ProgramItemList: EditProgramItemList
         }
         if (!err) {
           dispatch({
@@ -148,21 +180,41 @@ const ProgramToolSettingComponents = ({
     validateFields(SearchFormLayout, (err, payload) => {
       if (!err) {
         const Params = {
-          // ToolingCode: payload.FormToolingCode,
-          // ToolingTypeId: payload.FormToolingTypeId,
-          // State: payload.FormState,
-          PageIndex: 1,
-          PageSize: 10,
-          Tdto: null
+          Tdto: {
+            ProgramNumber: payload.FormProgramNumber,
+            Station: parseInt(payload.FormStation),
+            ProductType: parseInt(payload.FormProductType)
+          }
         }
         console.log('handleSearch-Params', Params)
-        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
-        dispatch({
-          type: `${TableName}/query`,
-          payload: Params,
-        })
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
       }
     });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    validateFields(SearchFormLayout, (err, payload) => {
+
+      if (!err) {
+        const Params = {
+          Tdto: {
+            ProgramNumber: payload.FormProgramNumber,
+            Station: parseInt(payload.FormStation),
+            ProductType: parseInt(payload.FormProductType)
+          }
+        }
+        SearchTableList(Params, PageIndex, PageSize)
+      }
+    })
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
   }
   const ToolTypeSelectDataChange = (key) => {
 
@@ -320,15 +372,6 @@ const ProgramToolSettingComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="创建人"
-            hasFeedback
-          >
-            {getFieldDecorator('AddCreatorId', {
-              initialValue: '',
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
             label="状态"
           >
             <div>
@@ -343,6 +386,7 @@ const ProgramToolSettingComponents = ({
                 <Select>
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
+                  <Option key={1} value='-1'>已删除</Option>
                 </Select>
                 )}
             </div>
@@ -387,7 +431,7 @@ const ProgramToolSettingComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditRecipeName', {
-              initialValue: '',
+              initialValue: EditData.RecipeName,
               rules: [
                 {
                   required: true, message: '请输入程序名',
@@ -401,7 +445,7 @@ const ProgramToolSettingComponents = ({
           >
             <div>
               {getFieldDecorator('EditStationId', {
-                initialValue: '',
+                initialValue: EditData.StationId,
                 rules: [
                   {
                     required: true, message: '请选择工站',
@@ -410,7 +454,7 @@ const ProgramToolSettingComponents = ({
               })(
                 <Select>
                   {Station.map(function (item, index) {
-                    return <Option key={index} value={item.key}>{item.label}</Option>
+                    return <Option key={index} value={item.key} >{item.label}</Option>
                   })}
                 </Select>
                 )}
@@ -422,7 +466,7 @@ const ProgramToolSettingComponents = ({
           >
             <div>
               {getFieldDecorator('EditProductTypeId', {
-                initialValue: '',
+                initialValue: EditData.ProductTypeId,
                 rules: [
                   {
                     required: true, message: '请选择产品种类',
@@ -443,7 +487,7 @@ const ProgramToolSettingComponents = ({
             hasFeedback
           >
             {getFieldDecorator('EditVersion', {
-              initialValue: '',
+              initialValue: EditData.Version,
               rules: [
                 {
                   required: true, message: '请输入版本',
@@ -457,7 +501,7 @@ const ProgramToolSettingComponents = ({
           >
             <div>
               {getFieldDecorator('EditLayer', {
-                initialValue: '',
+                initialValue: EditData.Layer,
                 rules: [
                   {
                     required: true, message: '请选择面',
@@ -474,20 +518,11 @@ const ProgramToolSettingComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="创建人"
-            hasFeedback
-          >
-            {getFieldDecorator('EditCreatorId', {
-              initialValue: '',
-            })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
             label="状态"
           >
             <div>
               {getFieldDecorator('EditState', {
-                initialValue: '',
+                initialValue: EditData.State,
                 rules: [
                   {
                     required: true, message: '请选择状态',
@@ -497,6 +532,7 @@ const ProgramToolSettingComponents = ({
                 <Select>
                   <Option key={0} value='0'>未激活</Option>
                   <Option key={1} value='1'>激活</Option>
+                  <Option key={1} value='-1'>已删除</Option>
                 </Select>
                 )}
             </div>
@@ -508,8 +544,9 @@ const ProgramToolSettingComponents = ({
             <RowEditableEditTable
               onEditableCellChange={onEditableCellChange}
               EditDataSource={ToolSlotViewModel}
-            // StationGroup={StationGroup}
-            // MaterialList={MaterialList}
+              // StationGroup={StationGroup}
+              // MaterialList={MaterialList}
+              ItemCount={ItemCount}
 
             />
           </FormItem>
@@ -588,6 +625,9 @@ const ProgramToolSettingComponents = ({
     )
   }
 
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -599,7 +639,7 @@ const ProgramToolSettingComponents = ({
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`程序号`}>
-                  {getFieldDecorator(`FormToolingCode`)(
+                  {getFieldDecorator(`FormProgramNumber`)(
                     <Input placeholder="placeholder" />
                   )}
                 </FormItem>
@@ -609,7 +649,7 @@ const ProgramToolSettingComponents = ({
                   {getFieldDecorator(`FormStation`)(
                     <Select>
                       {Station.map(function (item, index) {
-                        return <Option key={index} value={item.key}>{item.label}</Option>
+                        return <Option key={index} value={item.key} allowClear={true}>{item.label}</Option>
                       })}
                     </Select>
                   )}
@@ -631,6 +671,7 @@ const ProgramToolSettingComponents = ({
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
             </Col>
           </Row>
         </Form>
@@ -649,6 +690,7 @@ const ProgramToolSettingComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

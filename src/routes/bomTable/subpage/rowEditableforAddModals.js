@@ -351,8 +351,10 @@ class RowEditableAddTable extends React.Component {
     }
   }
   onDelete = (key) => {
+    // window.BOMTempRender = true
     const data = [...this.state.data];
     this.setState({ data: data.filter(item => item.key !== key) });
+    // let y = setTimeout(() => this.props.onEditableCellChange(this.state.data, 'RowEditableAddTable'), 2000)
   }
   edit(key) {
     const newData = [...this.state.data];
@@ -373,7 +375,7 @@ class RowEditableAddTable extends React.Component {
       this.props.onEditableCellChange(this.state.data, 'RowEditableAddTable')
     }
 
-    let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 5000);
+    let x = setTimeout(() => console.log('save', newData, target, this.state.data, this.cacheData), 2000);
   }
   cancel(key) {
     const newData = [...this.state.data];

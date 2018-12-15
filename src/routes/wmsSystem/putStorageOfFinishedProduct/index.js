@@ -56,6 +56,9 @@ const PutStorageOfFinishedProductTableComponents = ({
     title: '单据号',
     dataIndex: 'FormNumber',
   }, {
+    title: '状态',
+    dataIndex: 'StateName',
+  }, {
     title: '创建时间',
     dataIndex: 'CreationDateTime',
   }, {
@@ -109,9 +112,9 @@ const PutStorageOfFinishedProductTableComponents = ({
     dataIndex: 'MaterialNumber',
   }, {
     title: '入库数量',
-    dataIndex: 'TotalQuantity',
+    dataIndex: 'Quantity',
   }, {
-    title: '目前库位',
+    title: '入库库位',
     dataIndex: 'CurrentLocationNumber',
   }]
 

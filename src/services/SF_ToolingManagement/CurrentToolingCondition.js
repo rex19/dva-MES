@@ -8,9 +8,9 @@ const tableName = globalConfig.api.CurrentToolInfo
 
 export async function GetCurrentToolInfoByStationId(params) {
   return request({
-    url: `${tableName}/${globalConfig.crudApi.GetCurrentToolInfoByStationId}`,
+    url: `${tableName}/${globalConfig.crudApi.GetCurrentToolInfoByStationId}?Id=${params}`,
     method: 'get',
-    data: params,
+    // data: params,
   })
 }
 

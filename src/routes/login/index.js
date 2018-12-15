@@ -63,10 +63,7 @@ const Login = ({
           <Button type="primary" size="large" onClick={handleOk} loading={loading.effects.login}>
             Sign in
           </Button>
-          <p>
-            <span>Username：123</span>
-            <span>Password：1</span>
-          </p>
+
         </Row>
 
       </form>
@@ -81,3 +78,9 @@ Login.propTypes = {
 }
 
 export default connect(({ loading }) => ({ loading }))(Form.create()(Login))
+
+
+// <p>
+// <span>Username：123</span>
+// <span>Password：1</span>
+// </p>
