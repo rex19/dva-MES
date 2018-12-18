@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactEcharts from 'echarts-for-react'
-import 'echarts-gl'
+import 'echarts-gl/dist/echarts-gl.js'
 
 const hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a',
   '7a', '8a', '9a', '10a', '11a',

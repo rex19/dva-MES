@@ -452,5 +452,59 @@
     "name": "权限管理",
     "icon": "shopping-cart",
     "route": "/permissionManagement"
+  },
+  {
+    "id": "13",
+    "name": "测试",
+    "icon": "code-o"
+  },
+  {
+    "id": "131",
+    "bpid": "13",
+    "mpid": "13",
+    "name": "测试1",
+    "route": "/request"
+  },
+  {
+    "id": "132",
+    "bpid": "13",
+    "mpid": "13",
+    "name": "测试2",
+    "route": "/UIElement/iconfont"
+  },
+  {
+    "id": "133",
+    "bpid": "13",
+    "mpid": "13",
+    "name": "拖拽demo1",
+    "route": "/UIElement/search"
+  },
+  {
+    "id": "134",
+    "bpid": "13",
+    "mpid": "13",
+    "name": "拖拽demo2",
+    "route": "/UIElement/dropOption"
+  },
+  {
+    "id": "135",
+    "bpid": "13",
+    "mpid": "13",
+    "name": "测试5",
+    "route": "/UIElement/layer"
+  },
+  {
+    "id": "136",
+    "bpid": "13",
+    "mpid": "13",
+    "name": "测试6",
+    "route": "/UIElement/dataTable"
+  },
+  {
+    "id": "137",
+    "bpid": "13",
+    "mpid": "13",
+    "name": "测试7",
+    "route": "/UIElement/editor"
   }
 ]

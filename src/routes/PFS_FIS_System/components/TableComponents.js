@@ -42,13 +42,14 @@ const TableComponents = ({
     render: (text, record) => (
       <span>
         <a onClick={() => handleModalShow('editModalVisible', record)}>编辑</a>
+        <span className="ant-divider" />
+        <a onClick={() => handleModalShow('detailsModalVisible', record)} className="ant-dropdown-link">
+          效率详情 <Icon type="down" />
+        </a>
       </span>
     ),
   }]
-  // <span className="ant-divider" />
-  // <a onClick={() => handleModalShow('detailsModalVisible', record)} className="ant-dropdown-link">
-  //   详情 <Icon type="down" />
-  // </a>
+
   const columnFunc = (column, columns, ActionColumn) => {
     //父组件传来的表头
     column = []
@@ -61,7 +62,7 @@ const TableComponents = ({
       type: `${tableName}/showModalAndAjax`,
       payload: {
         modalType: modalVisible,
-        Id: record.Id
+        record: record
       },
     })
   }

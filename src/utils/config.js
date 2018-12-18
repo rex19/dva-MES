@@ -18,7 +18,6 @@ const APIV3 = '/api/v3'
 
 //dev
 const TestServer_IP = 'http://192.168.1.211:8080'
-// const TestServer_IP = 'http://192.168.1.252:80' //c#
 const Middleware_IP = 'http://192.168.1.158:3009'
 const CSharpBackEnd_IP = 'http://192.168.1.252:80'
 
@@ -26,9 +25,10 @@ const CSharpBackEnd_IP = 'http://192.168.1.252:80'
 // const TestServer_IP = 'http://smartflow.diskstation.me:8083'
 // const Middleware_IP = 'http://smartflow.diskstation.me:8091'
 
-// 宁波恒辉
-// const TestServer_IP = 'http://192.168.3.2:80'
-// const Middleware_IP = 'http://192.168.3.2:3009'
+// // 宁波恒辉
+// const TestServer_IP = 'http://192.168.3.2:80' //c#
+// const Middleware_IP = 'http://192.168.3.211:3009' //node
+// const CSharpBackEnd_IP = 'http://192.168.3.2:80'
 
 const ADMAPI = `${TestServer_IP}/SFMES/api`
 const APIV1 = `${Middleware_IP}/api`

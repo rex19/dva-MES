@@ -78,9 +78,9 @@ export async function EditWorkOrder(params) {
 //详情-生产效率页面
 export async function ActiveWorkOrderToGetWorkOrderPerformanceDataLine(params) {
   return request({
-    url: `${tableName}/${globalConfig.crudApi.ActiveWorkOrderToGetWorkOrderPerformanceDataLine}`,
+    url: `${tableName}/${globalConfig.crudApi.ActiveWorkOrderToGetWorkOrderPerformanceDataLine}?WorkOrderNumber=${params}`,
     method: 'get',
-    data: params,
+    // data: params,
   })
 }
 

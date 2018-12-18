@@ -241,7 +241,7 @@ export default modelExtend(pageModel, {
       payload,
     }, { call, put }) {
       if (payload.modalType === 'editModalVisible') {
-        const data = yield call(GetWorkOrderInformationForEdit, payload)
+        const data = yield call(GetWorkOrderInformationForEdit, payload.Id)
         // if (data.Status === 200) {
         console.log('showModalAndAjax-edit', data)
         yield put({ type: 'showModal', payload: payload })
@@ -260,6 +260,7 @@ export default modelExtend(pageModel, {
           }
         })
       } else if (payload.modalType === 'detailsModalVisible') {
+        console.log('detailsModalVisible---===', payload)
         const data = yield call(ActiveWorkOrderToGetWorkOrderPerformanceDataLine, payload.record.WorkOrderNumber)
         console.log('showModalAndAjax-details', data, payload)
         yield put({ type: 'showModal', payload: payload })

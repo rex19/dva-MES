@@ -301,7 +301,7 @@ const StationGroupTableComponents = ({
           {...formItemLayout}
           label="工厂"
         >
-          <Input disabled value={DetailsData.FactoryId} />
+          <Input disabled value={DetailsData.Factory} />
         </FormItem>
         <FormItem
           {...formItemLayout}

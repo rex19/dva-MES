@@ -1,95 +1,562 @@
-import React from 'react'
-import { DropOption } from 'components'
-import { Table, Row, Col, Card, message } from 'antd'
 
-const DropOptionPage = () => (<div className="content-inner">
-  <Row gutter={32}>
-    <Col lg={8} md={12}>
-      <Card title="默认">
-        <DropOption menuOptions={[{ key: '1', name: '编辑' }, { key: '2', name: '删除' }]} />
-      </Card>
-    </Col>
-    <Col lg={8} md={12}>
-      <Card title="样式">
-        <DropOption menuOptions={[{ key: '1', name: '编辑' }, { key: '2', name: '删除' }]} buttonStyle={{ border: 'solid 1px #eee', width: 60 }} />
-      </Card>
-    </Col>
-    <Col lg={8} md={12}>
-      <Card title="事件">
-        <DropOption
-          menuOptions={[{ key: '1', name: '编辑' }, { key: '2', name: '删除' }]}
-          buttonStyle={{ border: 'solid 1px #eee', width: 60 }}
-          onMenuClick={({ key }) => {
-            switch (key) {
-              case '1':
-                message.success('点击了编辑')
-                break
-              case '2':
-                message.success('点击了删除')
-                break
-              default:
-                break
-            }
-          }}
-        />
-      </Card>
-    </Col>
-  </Row>
-  <h2 style={{ margin: '16px 0' }}>Props</h2>
-  <Row>
-    <Col lg={18} md={24}>
-      <Table
-        rowKey={(record, key) => key}
-        pagination={false}
-        bordered
-        scroll={{ x: 800 }}
-        columns={[
-          {
-            title: '参数',
-            dataIndex: 'props',
-          },
-          {
-            title: '说明',
-            dataIndex: 'desciption',
-          },
-          {
-            title: '类型',
-            dataIndex: 'type',
-          },
-          {
-            title: '默认值',
-            dataIndex: 'default',
-          },
-        ]}
-        dataSource={[
-          {
-            props: 'menuOptions',
-            desciption: '下拉操作的选项，格式为[{name:string,key:string}]',
-            type: 'Array',
-            default: '必选',
-          },
-          {
-            props: 'onMenuClick',
-            desciption: '点击 menuitem 调用此函数，参数为 {item, key, keyPath}',
-            type: 'Function',
-            default: '-',
-          },
-          {
-            props: 'buttonStyle',
-            desciption: '按钮的样式',
-            type: 'Object',
-            default: '-',
-          },
-          {
-            props: 'dropdownProps',
-            desciption: '下拉菜单的参数，可参考antd的【Dropdown】组件',
-            type: 'Object',
-            default: '-',
-          },
-        ]}
-      />
-    </Col>
-  </Row>
-</div>)
+// https://github.com/MKitty/Library-reservation/blob/master/src/components/ui/drags2.jsx
+
+
+import React from 'react';
+import { Row, Col, Card, Tabs } from 'antd';
+import Draggable from 'react-draggable';
+import logo from '../../../../assets/logo1.png';
+const TabPane = Tabs.TabPane;
+function callback(key) {
+  console.log(key);
+}
+class DropOptionPage extends React.Component {
+  state = {
+    activeDrags: 0,
+    deltaPosition: {
+      x: 0,
+      y: 0
+    },
+    controlledPosition: {
+      x: -400,
+      y: 200
+    }
+  };
+  onStart = () => {
+    this.setState({
+      activeDrags: ++this.state.activeDrags
+    });
+  };
+  onStop = () => {
+    this.setState({
+      activeDrags: --this.state.activeDrags
+    });
+  };
+  handleDrag = (e, ui) => {
+    const { x, y } = this.state.deltaPosition;
+    this.setState({
+      deltaPosition: {
+        x: x + ui.deltaX,
+        y: y + ui.deltaY
+      }
+    });
+  };
+
+  render() {
+    const dragHandlers = {
+      onStart: this.onStart,
+      onStop: this.onStop
+    };
+    const { deltaPosition } = this.state;
+    return (<div className="gutter-example button-demo" style={{
+      backgroundColor: '#fff',
+      padding: '10px 10px 100px 10px'
+    }}>
+      <Tabs defaultActiveKey="2" onChange={callback}>
+        <TabPane tab="1楼 暂不开放" disabled="disabled" key="1">
+
+          <Row className="gutter-main" gutter={16}>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#6ea4bc', paddingTop: '40%'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle">C302</p>
+                      <p className="room-yellow">（余321）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A305</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A306</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+
+            <Col className="gutter-row" md={15}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    height: '200px',
+                    margin: '0 20% 0 5% '
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <img src={logo} alt='中间' />
+                      <div className="floor-font"><span>2nd</span><br /><span>Floor</span></div>
+                      <div className="clear"></div>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A307</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A308</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE',
+                    height: '350px',
+                    marginTop: '-180px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A309</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+          </Row>
+        </TabPane>
+        <TabPane tab="2楼 178/96" key="2">
+
+          <Row className="gutter-main" gutter={16}>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#6ea4bc', paddingTop: '40%'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle">C302</p>
+                      <p className="room-yellow">（余321）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A305</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A306</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+
+            <Col className="gutter-row" md={15}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    height: '200px',
+                    margin: '0 20% 0 5% '
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <img src={logo} alt='中间' />
+                      <div className="floor-font"><span>2nd</span><br /><span>logo</span></div>
+                      <div className="clear"></div>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A307</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A308</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE',
+                    height: '350px',
+                    marginTop: '-180px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A309</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+          </Row>
+        </TabPane>
+        <TabPane tab="3楼 178/60" key="3">
+
+          <Row className="gutter-main" gutter={16}>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#6ea4bc', paddingTop: '40%'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle">C302</p>
+                      <p className="room-yellow">（余321）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A305</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A306</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+
+            <Col className="gutter-row" md={15}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    height: '200px',
+                    margin: '0 20% 0 5% '
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <img src={logo} alt='中间' />
+                      <div className="floor-font"><span>2nd</span><br /><span>Floor</span></div>
+                      <div className="clear"></div>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A307</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A308</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE',
+                    height: '350px',
+                    marginTop: '-180px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A309</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+          </Row>
+        </TabPane>
+        <TabPane tab="4楼 200/96" key="4">
+
+          <Row className="gutter-main" gutter={16}>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#6ea4bc', paddingTop: '40%'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle">C302</p>
+                      <p className="room-yellow">（余321）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A305</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A306</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+
+            <Col className="gutter-row" md={15}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    height: '200px',
+                    margin: '0 20% 0 5% '
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <img src={logo} alt='中间' />
+                      <div className="floor-font"><span>2nd</span><br /><span>Floor</span></div>
+                      <div className="clear"></div>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A307</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={8}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE', height: '150px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A308</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+            <Col className="gutter-row" md={4}>
+              <div className="gutter-box">
+                <Draggable onDrag={this.handleDrag} {...dragHandlers}>
+                  <Card bordered={false} className={'dragDemo'} style={{
+                    backgroundColor: '#EEEEEE',
+                    height: '350px',
+                    marginTop: '-180px'
+                  }}>
+                    <div>
+                      <span className="disnone">x: {deltaPosition.x.toFixed(0)}, y: {deltaPosition.y.toFixed(0)}</span>
+                      <p className="room-tittle room-b">A309</p>
+                      <p className="room-b font-1">（余0）</p>
+                    </div>
+                  </Card>
+                </Draggable>
+              </div>
+            </Col>
+
+          </Row>
+        </TabPane>
+
+      </Tabs>
+
+      <style>
+        {
+          ` .dragDemo {
+            height: 350px;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+          }
+          .room-tittle {
+            font-size: 2rem;
+          }
+          .room-yellow {
+            color: #D6C58B;
+            font-size: 1rem;
+          }
+          .room-b {
+            color: #000000;
+          }
+          .font-1 {
+            font-size: 1rem;
+          }
+          .gutter-main {
+            padding-left: 20%;
+          }
+          .ant-card {
+            background: none;
+          }
+          .disnone{display: none}
+          .floor-font{position: absolute;top: 50px;left: 44%;color: #000;font-size: 2rem;}
+          .clear{clear:both}
+           `}</style>
+    </div>)
+  }
+}
 
 export default DropOptionPage

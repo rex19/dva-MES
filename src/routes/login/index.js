@@ -35,38 +35,42 @@ const Login = ({
   }
 
   return (
-    <div className={styles.form}>
-      <div className={styles.logo}>
-        <img alt={'logo'} src={config.logo} style={{ width: '25%', marginBottom: '0px' }} />
-        <span style={{ fontSize: '20px' }}>{config.name}</span>
+    <div className={styles.index}>
+      <div className={styles.basic}>
       </div>
-      <form>
-        <FormItem hasFeedback>
-          {getFieldDecorator('username', {
-            rules: [
-              {
-                required: true,
-              },
-            ],
-          })(<Input size="large" onPressEnter={handleOk} placeholder="Username" />)}
-        </FormItem>
-        <FormItem hasFeedback>
-          {getFieldDecorator('password', {
-            rules: [
-              {
-                required: true,
-              },
-            ],
-          })(<Input size="large" type="password" onPressEnter={handleOk} placeholder="Password" />)}
-        </FormItem>
-        <Row>
-          <Button type="primary" size="large" onClick={handleOk} loading={loading.effects.login}>
-            Sign in
+      <div className={styles.form}>
+        <div className={styles.logo}>
+          <img alt={'logo'} src={config.logo} style={{ width: '25%', marginBottom: '0px' }} />
+          <span style={{ fontSize: '20px' }}>{config.name}</span>
+        </div>
+        <form>
+          <FormItem hasFeedback>
+            {getFieldDecorator('username', {
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<Input size="large" onPressEnter={handleOk} placeholder="Username" />)}
+          </FormItem>
+          <FormItem hasFeedback>
+            {getFieldDecorator('password', {
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<Input size="large" type="password" onPressEnter={handleOk} placeholder="Password" />)}
+          </FormItem>
+          <Row>
+            <Button type="primary" size="large" onClick={handleOk} loading={loading.effects.login}>
+              登陆
           </Button>
 
-        </Row>
+          </Row>
 
-      </form>
+        </form>
+      </div>
     </div>
   )
 }

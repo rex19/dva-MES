@@ -20,7 +20,8 @@ const TableComponents = ({
   detailsModalValue,
   handleAdd,
   tableLoading,
-  EditData
+  EditData,
+  PaginationComponentsChanger
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -77,23 +78,16 @@ const TableComponents = ({
     })
   }
 
-  const onPaginationChange = (PageIndex, pageSize) => {
-    dispatch({
-      type: `${tableName}/query`,
-      payload: {
-        PageIndex: PageIndex,  //第几页
-        PageSize: pageSize,  //多少行
-        TDto: null,
-      }
-    })
-  }
+
   const deleteHandler = (id) => {
     dispatch({
       type: `${tableName}/delete`,
       payload: id,
     });
   }
-
+  const onPaginationChange = (PageIndex, PageSize) => {
+    PaginationComponentsChanger(PageIndex, PageSize)
+  }
   return (
     <div>
       <Row>

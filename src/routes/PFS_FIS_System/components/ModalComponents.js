@@ -512,7 +512,7 @@ export class Modals extends React.Component {
                 {...formItemLayout}
                 label="工单状态"
               >
-                <Input disabled value={this.props.DetailsData.WorkOrderState} />
+                <Input disabled value={this.props.DetailsData.WorkOrderStateName} />
               </FormItem>
               <FormItem
                 {...formItemLayout}
