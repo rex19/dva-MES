@@ -165,6 +165,8 @@ module.exports = {
     //  GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     //  GetPackingInformatioByContainer: 'GetPackingInformatioByContainer'
 
+
+
     //原材料收货单
     GetMaterialReceivingFormItemByFormIdForList: 'GetMaterialReceivingFormItemByFormIdForList',
     GetContainerGenerateRecordByFormItemNumberForList: 'GetContainerGenerateRecordByFormItemNumberForList',
