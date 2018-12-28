@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select } from 'antd'
+import { Form, Input, Button, Icon, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
@@ -14,6 +14,7 @@ const TableName = 'stationGroupTable'
 const TableColumns = stationGroupTableColumns
 const AddFormLayout = ['AddGroupNumber', 'AddDescription', 'AddState']
 const EditFormLayout = ['EditId', 'EditGroupNumber', 'EditDescription', 'EditState', 'EditStationIdArray']
+const SearchFormLayout = ['FormGroupNumber', 'FormDescription']
 
 const StationGroupTableComponents = ({
   stationGroupTable,
@@ -25,11 +26,14 @@ const StationGroupTableComponents = ({
   const TableModelsData = stationGroupTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading,
+  const { clearBool, FromParams, list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData, TotalStation, SelectedStation, FactoryList } = TableModelsData
 
   console.log('TableComponents-stationGroupTable ', TableModelsData)
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -70,36 +74,7 @@ const StationGroupTableComponents = ({
       },
     })
   }
-  //每个table可能不同的变量字段(4)
-  const formComponentsValue = () => {
-    return (
-      <Form>
-        <Row gutter={40}>
-          <Col span={8} key={1} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试1`}>
-              {getFieldDecorator(`field1`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试2`}>
-              {getFieldDecorator(`field2`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试3`}>
-              {getFieldDecorator(`field3`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    )
-  }
+
   const addModalValue = () => {
     return (
       <div>
@@ -336,13 +311,70 @@ const StationGroupTableComponents = ({
       </div>
     )
   }
-
+  const handleSearch = (e) => {
+    e.preventDefault()
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          GroupNumber: payload.FormGroupNumber,
+          Description: payload.FormDescription
+        }
+        SearchTableList(Params, 1, pagination.PageSize)
+      }
+    });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    const Params = {
+      GroupNumber: FromParams.GroupNumber,
+      Description: FromParams.Description,
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
+  }
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponents
-          formComponentsValue={formComponentsValue()}
-        />
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`工站组编号`}>
+                  {getFieldDecorator(`FormGroupNumber`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`工站组描述`}>
+                  {getFieldDecorator(`FormDescription`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+            </Col>
+          </Row>
+        </Form>
       </div>
       <div>
         <TableComponents
@@ -358,6 +390,7 @@ const StationGroupTableComponents = ({
           handleAdd={handleAdd}
           tableModels={TableModelsData}
           EditData={EditData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

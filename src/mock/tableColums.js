@@ -1,4 +1,5 @@
 import moment from 'moment'
+// import { Badge } from 'antd';
 /**
  * stationTableColumns 工站表格表头
  * stationGroupTableColumns 工站组表格表头
@@ -30,6 +31,7 @@ const stationTableColumns = [{
 }, {
   title: '状态',
   dataIndex: 'State',
+  // render: val => <span><Badge status={val === '激活' ? "success" : "error"} text={val} /></span>,
 }, {
   title: '工厂',
   dataIndex: 'FactoryId',
@@ -222,7 +224,12 @@ const materielTableColumns = [{
 }, {
   title: '安全库存',
   dataIndex: 'SafetyStock',
-}, {
+},
+//  {
+//   title: '默认回冲库位',
+//   dataIndex: 'DefaultStorageLocation',
+// },
+{
   title: '默认存储库位号',
   dataIndex: 'DefaultStorageLocation',
 }, {

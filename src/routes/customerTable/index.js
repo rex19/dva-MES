@@ -56,12 +56,16 @@ const CustomerTableComponents = ({
   const TableModelsData = customerTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading,
+  const { clearBool, list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData, FromParams
     } = TableModelsData
 
-  console.log('CustomerTableComponents-customerTable ', EditData)
+  console.log('CustomerTableComponents-customerTable ', TableModelsData)
+
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -132,13 +136,13 @@ const CustomerTableComponents = ({
     })
   }
 
-  const handleChange = (key, values) => {
-    console.log('handleChange', key, values)
-    // let fields = getFieldsValue()
-    // fields[key] = values
-    // fields = handleFields(fields)
-    // onFilterChange(fields)
-  }
+  // const handleChange = (key, values) => {
+  //   console.log('handleChange', key, values)
+  //   // let fields = getFieldsValue()
+  //   // fields[key] = values
+  //   // fields = handleFields(fields)
+  //   // onFilterChange(fields)
+  // }
 
   const addModalValue = () => {
 
@@ -180,6 +184,11 @@ const CustomerTableComponents = ({
           >
             {getFieldDecorator('AddDUNS', {
               initialValue: '',
+              rules: [
+                {
+                  max: 9, message: '邓氏码最大不能超过9位',
+                },
+              ],
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -208,7 +217,7 @@ const CustomerTableComponents = ({
                   style={{ width: '100%' }}
                   options={city}
                   placeholder="请选择省市"
-                  onChange={handleChange.bind(null, 'AddProvince')}
+                // onChange={handleChange.bind(null, 'AddProvince')}
                 />)}
             </div>
           </FormItem>
@@ -228,12 +237,11 @@ const CustomerTableComponents = ({
           >
             {getFieldDecorator('AddPostCode', {
               initialValue: '',
-              // rules: [{
-              //   type: 'number',
-              //   // min: '6',
-              //   // max: '10',
-              //   // message: '邮编格式错误'
-              // }],
+              rules: [
+                {
+                  max: 10, message: '邮编最大不能超过10位',
+                },
+              ],
             })(<Input
 
             />)}
@@ -346,6 +354,11 @@ const CustomerTableComponents = ({
           >
             {getFieldDecorator('EditDUNS', {
               initialValue: EditData.DUNS,
+              rules: [
+                {
+                  max: 9, message: '邓氏码最大不能超过9位',
+                },
+              ],
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -369,7 +382,7 @@ const CustomerTableComponents = ({
                   style={{ width: '100%' }}
                   options={city}
                   placeholder="请选择省市"
-                  onChange={handleChange.bind(null, 'EditProvince')}
+                // onChange={handleChange.bind(null, 'EditProvince')}
                 />)}
             </div>
           </FormItem>
@@ -389,6 +402,11 @@ const CustomerTableComponents = ({
           >
             {getFieldDecorator('EditPostCode', {
               initialValue: EditData.PostCode,
+              rules: [
+                {
+                  max: 10, message: '邮编最大不能超过10位',
+                },
+              ],
             })(<Input />)}
           </FormItem>
           <FormItem
@@ -590,15 +608,20 @@ const CustomerTableComponents = ({
     });
   }
   const PaginationComponentsChanger = (PageIndex, PageSize) => {
-    dispatch({
-      type: `${TableName}/query`,
-      payload: {
-        CustomerCode: FromParams.CustomerCode,
-        CustomerName: FromParams.CustomerName,
-        PageIndex: PageIndex,
-        PageSize: PageSize
-      }
-    })
+    const Params = {
+      CustomerCode: FromParams.CustomerCode,
+      CustomerName: FromParams.CustomerName,
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+    // dispatch({
+    //   type: `${TableName}/query`,
+    //   payload: {
+    //     CustomerCode: FromParams.CustomerCode,
+    //     CustomerName: FromParams.CustomerName,
+    //     PageIndex: PageIndex,
+    //     PageSize: PageSize
+    //   }
+    // })
   }
   const SearchTableList = (payload, PageIndex, PageSize) => {
     dispatch({

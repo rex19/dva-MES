@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, Cascader } from 'antd'
+import { Form, Input, Button, Icon, Row, Col, Radio, Select, Cascader } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
@@ -40,6 +40,7 @@ const EditFormLayout = [
   'EditTelphone',
   'EditMobilePhone',
   'EditState']
+const SearchFormLayout = ['FormSupplierCode', 'FormSupplierName']
 
 const SupplierTableComponents = ({
   supplierTable,
@@ -51,9 +52,15 @@ const SupplierTableComponents = ({
   const TableModelsData = supplierTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform } = TableModelsData
+  const { clearBool, FromParams, list, pagination, tableLoading,
+    addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
+    EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform
+    } = TableModelsData
 
   console.log('SupplierTableComponents-supplierTable ', TableModelsData)
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -110,54 +117,7 @@ const SupplierTableComponents = ({
     }
   }
 
-  /**
-   * modal 开关
-   */
-  const handleAddModalOpen = (modalVisible) => {
-    dispatch({
-      type: `${TableName}/showModal`,
-      payload: {
-        modalType: modalVisible,
-      },
-    })
-  }
-  const handleChange = (key, values) => {
-    console.log('handleChange', key, values)
-    // let fields = getFieldsValue()
-    // fields[key] = values
-    // fields = handleFields(fields)
-    // onFilterChange(fields)
-  }
-  //每个table可能不同的变量字段(4)
-  const formComponentsValue = () => {
-    return (
-      <Form>
-        <Row gutter={40}>
-          <Col span={8} key={1} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试1`}>
-              {getFieldDecorator(`field1`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试2`}>
-              {getFieldDecorator(`field2`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试3`}>
-              {getFieldDecorator(`field3`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    )
-  }
+
   const addModalValue = () => {
     return (
       <div>
@@ -199,7 +159,6 @@ const SupplierTableComponents = ({
                   style={{ width: '100%' }}
                   options={city}
                   placeholder="请选择省市"
-                  onChange={handleChange.bind(null, 'AddProvince')}
                 />)}
             </div>
           </FormItem>
@@ -343,7 +302,6 @@ const SupplierTableComponents = ({
                   style={{ width: '100%' }}
                   options={city}
                   placeholder="请选择省市"
-                  onChange={handleChange.bind(null, 'EditProvince')}
                 />)}
             </div>
           </FormItem>
@@ -538,12 +496,70 @@ const SupplierTableComponents = ({
     )
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          SupplierCode: payload.FormSupplierCode,
+          SupplierName: payload.FormSupplierName
+        }
+        SearchTableList(Params, 1, pagination.PageSize)
+      }
+    });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    const Params = {
+      SupplierCode: FromParams.SupplierCode,
+      SupplierName: FromParams.SupplierName,
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
+  }
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponents
-          formComponentsValue={formComponentsValue()}
-        />
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`供应商编号`}>
+                  {getFieldDecorator(`FormSupplierCode`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`供应商名称`}>
+                  {getFieldDecorator(`FormSupplierName`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+            </Col>
+          </Row>
+        </Form>
       </div>
       <div>
         <TableComponents
@@ -558,6 +574,7 @@ const SupplierTableComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

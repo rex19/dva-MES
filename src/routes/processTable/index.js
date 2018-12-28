@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, DatePicker, Button } from 'antd'
+import { Form, Input, Button, Icon, Row, Col, Radio, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents, DetailsTableComponent } from '../../components'
 import moment from 'moment';
@@ -22,6 +22,7 @@ const TableName = 'processTable'
 const TableColumns = processTableColumns
 const AddFormLayout = ['AddProcessNumber', 'AddMaterialNumber', 'AddFactoryId', 'AddState', 'AddValidBegin', 'AddValidEnd']
 const EditFormLayout = ['EditId', 'EditProcessNumber', 'EditMaterialNumber', 'EditFactoryId', 'EditState', 'EditValidBegin', 'EditValidEnd']
+const SearchFormLayout = ['FormMaterialNumber', 'FormFactoryName']
 const GetNameFormLayout = ['AddMaterialNumber']
 
 const ProcessTableComponents = ({
@@ -34,13 +35,16 @@ const ProcessTableComponents = ({
   const TableModelsData = processTable
   const { getFieldDecorator, validateFields, resetFields } = form
   // const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading,
+  const { clearBool, FromParams, list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData,
     AddProcessStepDataSource, EditProcessStepDataSource,
     Name_Version, FactoryList, StationGroup, ProcessStepListCount, ProcessStepList } = TableModelsData
 
   console.log('ProcessTableComponents-processTable ', TableModelsData)
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -91,53 +95,6 @@ const ProcessTableComponents = ({
       },
     })
   }
-  //每个table可能不同的变量字段(4)
-  const formComponentsValue = () => {
-    return (
-      <Form>
-        <Row gutter={40}>
-          <Col span={8} key={1} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试1`}>
-              {getFieldDecorator(`field1`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试2`}>
-              {getFieldDecorator(`field2`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试3`}>
-              {getFieldDecorator(`field3`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    )
-  }
-
-  //   <FormItem
-  //   {...formItemLayout}
-  //   label="成品/半成品料号"
-  // >
-  //   <div>
-  //     {getFieldDecorator('AddMaterialId', {
-  //       initialValue: '',
-  //     })(
-  //       <Select>
-  //         {MaterialNumber.map(function (item, index) {
-  //           return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-  //         })}
-  //       </Select>
-  //       )}
-  //   </div>
-  // </FormItem>
   const getName_Version = (e) => {
     e.preventDefault();
     validateFields(GetNameFormLayout, (err, payload) => {
@@ -517,12 +474,70 @@ const ProcessTableComponents = ({
   }
 
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.FormMaterialNumber,
+          FactoryName: payload.FormFactoryName
+        }
+        SearchTableList(Params, 1, pagination.PageSize)
+      }
+    });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    const Params = {
+      MaterialNumber: FromParams.MaterialNumber,
+      FactoryName: FromParams.FactoryName,
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
+  }
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponents
-          formComponentsValue={formComponentsValue()}
-        />
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`物料编号`}>
+                  {getFieldDecorator(`FormMaterialNumber`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`工厂名称`}>
+                  {getFieldDecorator(`FormFactoryName`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+            </Col>
+          </Row>
+        </Form>
       </div>
       <div>
         <TableComponents
@@ -538,6 +553,7 @@ const ProcessTableComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

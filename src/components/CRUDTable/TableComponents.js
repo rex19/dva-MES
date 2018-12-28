@@ -5,6 +5,7 @@ import { ModalComponents } from './ModalComponents'
 import './index.less'
 
 let column = []
+let DeleteIdArray = []
 
 const TableComponents = ({
   tableName,
@@ -32,10 +33,6 @@ const TableComponents = ({
     render: (text, record) => (
       <span>
         <a onClick={() => handleModalShow('editModalVisible', record)}>编辑</a>
-        <span className="ant-divider" />
-        <Popconfirm title="确定删除吗?" onConfirm={() => deleteHandler(record)}>
-          <a >删除</a>
-        </Popconfirm>
         <span className="ant-divider" />
         <a onClick={() => handleModalShow('detailsModalVisible', record)} className="ant-dropdown-link">
           详情 <Icon type="down" />
@@ -67,37 +64,52 @@ const TableComponents = ({
   const onChange = () => {
 
   }
-  const onShowSizeChange = (PageIndex = 1, pageSize = 20) => {
-    dispatch({
-      type: `${tableName}/query`,
-      payload: {
-        PageIndex: PageIndex,  //第几页
-        PageSize: pageSize,  //多少行
-        TDto: null,
-      }
-    })
+  const onShowSizeChange = (PageIndex, PageSize) => {
+    PaginationComponentsChanger(PageIndex, PageSize)
   }
 
 
-  const deleteHandler = (id) => {
+  const deleteHandler = () => {
+    console.log('deleteHandler', DeleteIdArray)
     dispatch({
       type: `${tableName}/delete`,
-      payload: id,
-    });
+      payload: {
+        List: DeleteIdArray
+      }
+    })
+    DeleteIdArray = []
   }
   const onPaginationChange = (PageIndex, PageSize) => {
     PaginationComponentsChanger(PageIndex, PageSize)
   }
+
+  // rowSelection object indicates the need for row selection
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      DeleteIdArray = selectedRows.map(index => {
+        return index.Id
+      })
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows, DeleteIdArray);
+    }
+  }
   return (
+
     <div>
       <Row>
         <Col span={24} style={{ textAlign: 'left', marginBottom: '5px' }}>
           <Button type="primary" onClick={() => handleModalShow('addModalVisible')}><Icon type="plus-circle-o" /> 新增</Button>
+          <Popconfirm title="确定删除吗?" onConfirm={() => deleteHandler()}>
+            <Button style={{ marginLeft: '5px' }} type="primary" ><Icon type="delete" /> 删除</Button>
+          </Popconfirm>
         </Col>
       </Row>
       <Row>
         <Table
+          bordered
+          rowKey={record => record.Id}
+          rowSelection={rowSelection}
           columns={columnFunc(column, columns, ActionColumn)}
+          expandedRowRender={record => <p style={{ margin: 0 }}>描述:{record.Name}</p>}
           dataSource={data}
           scroll={{ x: TableWidth }}
           pagination={false}
@@ -109,14 +121,16 @@ const TableComponents = ({
         <Col span={24} style={{ textAlign: 'center', marginTop: '10px' }}>
           <Pagination
             showQuickJumper//是否可以快速跳转至某页
-            // current={pagination.current}
+            showTotal
+            current={pagination.PageIndex}
             onChange={onPaginationChange}//页码改变的回调，参数是改变后的页码及每页条数
-            // showSizeChanger={this.props.showSizeChanger}//是否可以改变 pageSize
+            showSizeChanger={true}//是否可以改变 pageSize
             onShowSizeChange={onShowSizeChange}//pageSize 变化的回调
             defaultCurrent={1}//默认的当前页数
+            defaultPageSize={10}//默认的每页条数
+            pageSizeOptions={['10', '20', '30', '40']}
             total={pagination.total}//数据总数
             showTotal={(total, range) => `每页${pagination.PageSize}条,共${total}条`}
-          // current={this.props.currentPage}  //当前页数
           />
         </Col>
       </Row>
@@ -137,3 +151,9 @@ const TableComponents = ({
   )
 }
 export default connect(({ dispatch }) => ({ dispatch }))(TableComponents)
+
+
+// <span className="ant-divider" />
+// <Popconfirm title="确定删除吗?" onConfirm={() => deleteHandler(record)}>
+//   <a >删除</a>
+// </Popconfirm>

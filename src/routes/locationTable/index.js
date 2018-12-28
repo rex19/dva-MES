@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select } from 'antd'
+import { Form, Input, Button, Icon, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
@@ -29,6 +29,7 @@ const EditFormLayout = [
   'EditY',
   'EditZ',
   'EditState']
+const SearchFormLayout = ['FormLocationNumber', 'FormDescription', 'FormAreaId']
 
 const LocationTableComponents = ({
   locationTable,
@@ -40,9 +41,14 @@ const LocationTableComponents = ({
   const TableModelsData = locationTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, AreaList } = TableModelsData
+  const { clearBool, FromParams, list, pagination, tableLoading,
+    addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
+    EditData, DetailsData, AreaList } = TableModelsData
 
   console.log('LocationTableComponents-locationTable ', TableModelsData)
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -371,12 +377,79 @@ const LocationTableComponents = ({
     )
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          LocationNumber: payload.FormLocationNumber,
+          Description: payload.FormDescription,
+          AreaId: payload.FormAreaId
+        }
+        SearchTableList(Params, 1, pagination.PageSize)
+      }
+    });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    const Params = {
+      LocationNumber: FromParams.LocationNumber,
+      Description: FromParams.Description,
+      AreaId: FromParams.AreaId
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
+  }
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponents
-          formComponentsValue={formComponentsValue()}
-        />
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`库位编号`}>
+                  {getFieldDecorator(`FormLocationNumber`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`库位描述`}>
+                  {getFieldDecorator(`FormDescription`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`区域ID`}>
+                  {getFieldDecorator(`FormAreaId`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+            </Col>
+          </Row>
+        </Form>
       </div>
       <div>
         <TableComponents
@@ -391,6 +464,7 @@ const LocationTableComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

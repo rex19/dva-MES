@@ -262,3 +262,21 @@ export default modelExtend(pageModel, {
     }
   },
 })
+
+
+// if (location.pathname !== `/wmsSystem/${TableName}`) {
+//   dispatch({
+//     type: 'ClearDataChanger',
+//     payload: {}
+//   })
+// }
+// ,
+//  // 离开页面清空
+//  ClearDataChanger(state, { payload }) {
+//   return {
+//     ...state, ...payload,
+//     PutStorageOfFinishedProductList: [],
+//     PutStorageOfFinishedProduct_ProjectInfoList: [],
+//     PutStorageOfFinishedProduct_OutputMaterialBoxInfoList: []
+//   }
+// }

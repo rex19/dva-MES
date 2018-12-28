@@ -23,8 +23,8 @@ export async function create(params) {
 //删除数据
 export async function deleted(params) {
   return request({
-    url: `${tableName}/${globalConfig.crudApi.postDeleteData}/${params}`,
-    method: 'delete',
+    url: `${tableName}/${globalConfig.crudApi.postDeleteData}`,
+    method: 'post',
     data: params,
   })
 }

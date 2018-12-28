@@ -173,7 +173,6 @@ const ToolingInfoComponents = ({
 
       if (!err) {
         const Params = {
-
           ToolingCode: payload.FormToolingCode,
           ToolingTypeId: parseInt(payload.FormToolingTypeId)
 

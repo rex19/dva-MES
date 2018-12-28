@@ -1,0 +1,10 @@
+[
+  {
+    "id": "27",
+    "bpid": "2",
+    "mpid": "2",
+    "name": "生产物料退料记录",
+    "icon": "user",
+    "route": "/wmsSystem/retreatingRecordsOfProductionMaterials"
+  }
+]

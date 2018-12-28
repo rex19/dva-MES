@@ -95,11 +95,16 @@ module.exports = {
     retreatingRecordsOfProductionMaterialsTable: `${WMSAPI}/ManufacturingMaterialReturn`,//生产物料退料记录
     putStorageOfFinishedProductTable: `${WMSAPI}/ProductInStocking`,//成品入库单
     checkListTable: `${WMSAPI}/MaterialCheckBill`,  //盘点单
+
+    rawMaterialReturnBillTable: `${WMSAPI}/MaterialReceivingBack`,//原材料退货单
+    finishedProductReturnBillTable: `${WMSAPI}/ProductDeliveryRequestBack`,//成品退货单
+
+    stockReportTable: `${WMSAPI}/StockReport`,//库存查询
     //未做
-    rawMaterialReturnListTable: `${WMSAPI}/ProductInStocking`,//原材料退货单
+
     workOrderBookingTable: `${WMSAPI}/ProductInStocking`,//工单报工
-    retreatingRecordsOfFinishedProductTable: `${WMSAPI}/ProductInStocking`,//成品退货单
-    inventoryListTable: `${WMSAPI}/ProductInStocking`,//盘点单
+
+    // inventoryListTable: `${WMSAPI}/ProductInStocking`,//盘点单
 
     //SF-PFS-FISs
     workOrder: `${SFPFSFIS}/workOrder`,
@@ -165,20 +170,24 @@ module.exports = {
     //  GetMovementRecordByContainer: 'GetMovementRecordByContainer',
     //  GetPackingInformatioByContainer: 'GetPackingInformatioByContainer'
 
-
-
     //原材料收货单
     GetMaterialReceivingFormItemByFormIdForList: 'GetMaterialReceivingFormItemByFormIdForList',
     GetContainerGenerateRecordByFormItemNumberForList: 'GetContainerGenerateRecordByFormItemNumberForList',
 
+    //原材料退货单
+    GetMovementRecordMaterialReceivingBackByWMSFormId: 'GetMovementRecordMaterialReceivingBackByWMSFormId',
+    //成品入库单
+    GetProductInStockingFormItemByFormIdRequest: 'GetProductInStockingFormItemByFormIdForList',
+    GetMovementRecordProductInStockingByWMSFormIdRequest: 'GetMovementRecordProductInStockingByWMSFormId',
+
+    //成品退货单
+    GetProductDeliveryRequestBackFormItemByFormIdForList: 'GetProductDeliveryRequestBackFormItemByFormIdForList',
+    GetMovementRecordProductDeliveryRequestBackByWMSFormId: 'GetMovementRecordProductDeliveryRequestBackByWMSFormId',
     //生产物料领用单
     GetMaterialPickingFormItemByFormId: 'GetMaterialPickingFormItemByFormIdForList',
     GetMovementRecordMaterialPickingByWMSFormId: 'GetMovementRecordMaterialPickingByWMSFormId',
     //生产物料退料记录
 
-    //成品入库单
-    GetProductInStockingFormItemByFormIdRequest: 'GetProductInStockingFormItemByFormIdForList',
-    GetMovementRecordProductInStockingByWMSFormIdRequest: 'GetMovementRecordProductInStockingByWMSFormId',
     //盘点单
     WMS_GetAreaListWeb: 'GetAreaListWeb',//下拉菜单初始化数据
     WMS_GetMaterialCheckBillGroupByFormId: 'GetMaterialCheckBillGroupByFormId',  //查看
@@ -188,6 +197,15 @@ module.exports = {
     WMS_DoMateriallCheckBillContainerAdjust: 'DoMateriallCheckBillContainerAdjust', //调整
     WMS_SaveFileMaterialCheckBillGroupByFormId: 'SaveFileMaterialCheckBillGroupByFormId',//生成文件
 
+    //库位查询
+    GetAreaListWeb: 'GetAreaListWeb',
+
+    // //原材料退货单
+    // GetMaterialReceivingFormItemByFormIdForList: 'GetMaterialReceivingFormItemByFormIdForList',
+    // GetContainerGenerateRecordByFormItemNumberForList: 'GetContainerGenerateRecordByFormItemNumberForList',
+
+    //   //成品退货单
+    //   GetProductDeliveryRequestBackFormItemByFormIdForList: 'GetProductDeliveryRequestBackFormItemByFormIdForList',
 
     // http://192.168.1.180/SFMESWMS/Api/api/MaterialCheckBill/SetMateriallCheckBillFormEnd
 

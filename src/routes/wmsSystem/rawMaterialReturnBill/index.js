@@ -1,64 +1,65 @@
+
 import React from 'react'
-import { Form, Button, Input, Row, Col, Radio, Icon, Select, DatePicker } from 'antd'
+import { Form, Input, Row, Col, Radio, Select, DatePicker, Button, Icon } from 'antd'
 import { connect } from 'dva'
 import { WMSTableComponents } from '../../../components'
 import globalConfig from 'utils/config'
-// import {
-//   wmsPutStorageOfFinishedProductColums,
-//   wmsPutStorageOfFinishedProduct_MoveRecordColums,
-//   wmsPutStorageOfFinishedProduct_ProductInfoColums
-// } from '../../../mock/wmsTableColums'
+import {
+  wmsRawMaterialReceiptsColums,
+  wmsRawMaterialReceipts_DetailsColums,
+  wmsRawMaterialReceipts_Details_InfoColums
+} from '../../../mock/wmsTableColums'
 import moment from 'moment';
+const FormItem = Form.Item
 import './index.less'
 
-const FormItem = Form.Item
 const dateFormat = 'YYYY-MM-DD';
+//每个table可能不同的变量字段(1)
+const TableName = 'rawMaterialReturnBill'
+const TableColumns = wmsRawMaterialReceiptsColums
 const SearchFormLayout = [
   'FormNumberForm',
   'SearchDate_FromForm',
   'SearchDate_ToForm'
 ]
-const data = []
-//每个table可能不同的变量字段(1)
-const TableName = 'putStorageOfFinishedProduct'
-// const TableColumns = wmsPutStorageOfFinishedProductColums
 
-const PutStorageOfFinishedProductTableComponents = ({
-  putStorageOfFinishedProduct,
+
+const RawMaterialReturnBillTableComponents = ({
+  rawMaterialReturnBill,
   dispatch,
   location,
   form
 }) => {
   const {
     pagination,
-    FromParams,
-    PutStorageOfFinishedProductList,
-    PutStorageOfFinishedProduct_ProjectInfoList,
-    PutStorageOfFinishedProduct_OutputMaterialBoxInfoList
-  } = putStorageOfFinishedProduct
-  console.log('PutStorageOfFinishedProductTableComponents', putStorageOfFinishedProduct)
+    rawMaterialReturnBillTableList,
+    rawMaterialReturnBill_DetailsTableList,
+    rawMaterialReturnBill_Details_InfoTableList
+  } = rawMaterialReturnBill
+  console.log('RawMaterialReturnBillTableComponents', rawMaterialReturnBill)
   const formItemLayout = globalConfig.table.formItemLayout
   const { getFieldDecorator, validateFields, resetFields } = form
 
   const handleClickSearch = (Id) => {
+    console.log('handleClickSearch', Id)
     dispatch({
-      type: `${TableName}/GetPutStorageOfFinishedProduct_ProjectInfoList`,
+      type: `${TableName}/GetMaterialReceivingFormItemByFormIdForList`,
       payload: {
         Id: Id,
       },
     })
   }
-  const getScannedQuantityRequest = (WMSFormId, ItemNumber) => {
+  const getReceivingQuantityRequest = (MaterialReceivingFormId, ItemNumber) => {
     dispatch({
-      type: `${TableName}/GetPutStorageOfFinishedProduct_OutputMaterialBoxInfoList`,
+      type: `${TableName}/GetMovementRecordMaterialReceivingBackByWMSFormId`,
       payload: {
-        WMSFormId: WMSFormId,
+        MaterialReceivingFormId: MaterialReceivingFormId,
         ItemNumber: ItemNumber
       },
     })
   }
 
-  const wmsPutStorageOfFinishedProductColums = [{
+  const wmsRawMaterialReceiptsColums = [{
     title: 'Id',
     dataIndex: 'Id',
   }, {
@@ -74,6 +75,9 @@ const PutStorageOfFinishedProductTableComponents = ({
     title: '创建人',
     dataIndex: 'CreatorUserName',
   }, {
+    title: '采购单号',
+    dataIndex: 'PurchaseOrderNumber',
+  }, {
     title: '操作',
     key: (new Date()).valueOf(),
     fixed: 'right',
@@ -86,44 +90,65 @@ const PutStorageOfFinishedProductTableComponents = ({
       </span>
     ),
   }]
-
-  const wmsPutStorageOfFinishedProduct_ProjectInfoColums = [{
+  const wmsRawMaterialReceipts_DetailsColums = [{
     title: '项目号',
     dataIndex: 'ItemNumber',
   }, {
-    title: '工单号',
-    dataIndex: 'WorkOrderCode',
+    title: '状态',
+    dataIndex: 'StateName',
   }, {
     title: '料号',
     dataIndex: 'MaterialNumber',
   }, {
+    title: '供应商',
+    dataIndex: 'SupplierName',
+  }, {
+    title: '批次号',
+    dataIndex: 'BatchNumber',
+  }, {
     title: '单位',
     dataIndex: 'UnitName',
   }, {
-    title: '需入库数量',
-    dataIndex: 'RequestQuantity',
+    title: '需要数量',
+    dataIndex: 'Quantity',
   }, {
-    title: '实际入库数量',
-    dataIndex: 'ScannedQuantity',
-    render: (text, record) => <a onClick={() => getScannedQuantityRequest(record.WMSFormId, record.ItemNumber)}>{text}</a>,
+    title: '实际收货数量',
+    dataIndex: 'ReceivingQuantity',
+    render: (text, record) => <a onClick={() => getReceivingQuantityRequest(record.WMSFormId, record.ItemNumber)}>{text}</a>,
   }, {
-    title: '目标库位',
-    dataIndex: 'TargetLocationNumber',
+    title: '收获库位',
+    dataIndex: 'ReceivingLocationNumber',
+  }, {
+    title: '收货人',
+    dataIndex: 'ReceiverUserName',
+  }, {
+    title: '制造时间',
+    dataIndex: 'ManufacturingDateTime',
+  }, {
+    title: '过期时间',
+    dataIndex: 'ExpireDateTime',
   }]
-  const wmsPutStorageOfFinishedProduct_OutputMaterialBoxInfoColums = [{
+
+  const wmsRawMaterialReceipts_Details_InfoColums = [{
     title: 'Id',
     dataIndex: 'Id',
   }, {
     title: '容器UID',
     dataIndex: 'ContainerNumber',
   }, {
+    title: '状态',
+    dataIndex: 'StateName',
+  }, {
     title: '料号',
     dataIndex: 'MaterialNumber',
   }, {
-    title: '入库数量',
+    title: '容量',
+    dataIndex: 'TotalQuantity',
+  }, {
+    title: '现量',
     dataIndex: 'Quantity',
   }, {
-    title: '入库库位',
+    title: '目前库存',
     dataIndex: 'CurrentLocationNumber',
   }]
 
@@ -133,11 +158,12 @@ const PutStorageOfFinishedProductTableComponents = ({
     validateFields(SearchFormLayout, (err, payload) => {
       if (!err) {
         const Params = {
-          FormNumber: payload.FormNumberForm,
-          SearchDate_From: moment(payload.SearchDate_FromForm).format(dateFormat),
-          SearchDate_To: moment(payload.SearchDate_ToForm).format(dateFormat),
+          FormNumber: payload.FormNumberForm || '',
+          SearchDate_From: moment(payload.SearchDate_FromForm).format(dateFormat) || '',
+          SearchDate_To: moment(payload.SearchDate_ToForm).format(dateFormat) || '',
         }
-        SearchTableList(Params, 1, pagination.PageSize)
+        console.log('handleSearch-Params', payload.SearchDate_ToForm, Params)
+        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
       }
     });
   }
@@ -154,17 +180,18 @@ const PutStorageOfFinishedProductTableComponents = ({
   const PaginationComponentsChanger = (PageIndex, PageSize) => {
     console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
     validateFields(SearchFormLayout, (err, payload) => {
+
       if (!err) {
         const Params = {
-          FormNumber: FromParams.FormNumber,
-          SearchDate_From: FromParams.SearchDate_From,
-          SearchDate_To: FromParams.SearchDate_To
+          FormNumber: payload.FormNumberForm,
+          SearchDate_From: moment(payload.SearchDate_FromForm).format(dateFormat),
+          SearchDate_To: moment(payload.SearchDate_ToForm).format(dateFormat),
         }
+        console.log('PaginationComponentsChanger', payload.SearchDate_ToForm, Params);
         SearchTableList(Params, PageIndex, PageSize)
       }
     })
   }
-
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -175,7 +202,7 @@ const PutStorageOfFinishedProductTableComponents = ({
           <Form>
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`成品入库单号`}>
+                <FormItem {...formItemLayout} label={`原材料收货单号`}>
                   {getFieldDecorator(`FormNumberForm`)(
                     <Input />
                   )}
@@ -213,13 +240,14 @@ const PutStorageOfFinishedProductTableComponents = ({
         </Form>
 
       </div>
-      <h2 style={{ margin: '20px' }}>成品入库单</h2>
+
+      <h2 style={{ margin: '20px' }}>原材料退货单</h2>
       <div>
         <WMSTableComponents
           tableName={TableName}
-          data={PutStorageOfFinishedProductList}
-          columns={wmsPutStorageOfFinishedProductColums}
-          TableWidth={1500}
+          data={rawMaterialReturnBillTableList}
+          columns={wmsRawMaterialReceiptsColums}
+          TableWidth={1000}
           paginationDisplay={'yes'}
           pagination={pagination}
           PaginationComponentsChanger={PaginationComponentsChanger}
@@ -230,20 +258,19 @@ const PutStorageOfFinishedProductTableComponents = ({
       <div>
         <WMSTableComponents
           tableName={TableName}
-          data={PutStorageOfFinishedProduct_ProjectInfoList}
-          columns={wmsPutStorageOfFinishedProduct_ProjectInfoColums}
-          TableWidth={1300}
+          data={rawMaterialReturnBill_DetailsTableList}
+          columns={wmsRawMaterialReceipts_DetailsColums}
+          TableWidth={1000}
           paginationDisplay={'no'}
           pagination={pagination}
         />
       </div>
-      <div style={{ margin: '20px' }}></div>
-      <h2 style={{ margin: '20px' }}>已入库料箱信息</h2>
+      <h2 style={{ margin: '20px' }}>原材料已收货信息</h2>
       <div>
         <WMSTableComponents
           tableName={TableName}
-          data={PutStorageOfFinishedProduct_OutputMaterialBoxInfoList}
-          columns={wmsPutStorageOfFinishedProduct_OutputMaterialBoxInfoColums}
+          data={rawMaterialReturnBill_Details_InfoTableList}
+          columns={wmsRawMaterialReceipts_Details_InfoColums}
           TableWidth={1000}
           paginationDisplay={'no'}
           pagination={pagination}
@@ -254,5 +281,5 @@ const PutStorageOfFinishedProductTableComponents = ({
 }
 
 
-export default connect(({ putStorageOfFinishedProduct }) => ({ putStorageOfFinishedProduct }))(Form.create()(PutStorageOfFinishedProductTableComponents))
 
+export default connect(({ rawMaterialReturnBill }) => ({ rawMaterialReturnBill }))(Form.create()(RawMaterialReturnBillTableComponents))

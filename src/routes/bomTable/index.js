@@ -25,7 +25,8 @@ const TableColumns = bomTableColumns
 const GetNameFormLayout = ['AddMaterialNumber']
 const AddFormLayout = ['AddMaterialNumber', 'AddVersion', 'AddFactoryId', 'AddValidBegin', 'AddValidEnd']
 const EditFormLayout = ['EditId', 'EditMaterialNumber', 'EditFactoryId', 'EditVersion', 'EditValidBegin', 'EditValidEnd']
-const SearchFormLayout = [`MaterialNumber${FieldDecorator}`]
+
+const SearchFormLayout = ['FormMaterialNumber']
 
 window.BOMTempRender = false
 
@@ -39,11 +40,15 @@ const BOMTableComponents = ({
   const TableModelsData = bomTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, Name_Version, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, MaterialListDataSource, MaterialList,
-    FactoryList,
+  const { clearBool, FromParams, list, pagination, tableLoading,
+    addModalVisible, Name_Version, editModalVisible, detailsModalVisible, deleteModalVisible,
+    EditData, DetailsData, MaterialListDataSource, MaterialList, FactoryList,
     UnitList, StationGroup, BomItemList, BomItemListCount, Version, AddBomItemDtoDataSource, EditBomItemDtoDataSource } = TableModelsData
 
   console.log('BOMTableComponents-bomTable ', TableModelsData)
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -481,35 +486,38 @@ const BOMTableComponents = ({
       </div>
     )
   }
+
   const handleSearch = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     validateFields(SearchFormLayout, (err, payload) => {
       if (!err) {
         const Params = {
-          MaterialNumber: payload.MaterialNumberFieldDecorator,
+          MaterialNumber: payload.FormMaterialNumber
         }
-        console.log('handleSearch-Params', Params)
-        // this.props.handleSearchFormComponents(Params, 'formComponentsValueToSettingState')
-        // dispatch({
-        //   type: `${TableName}/query`,
-        //   payload: Params,
-        // })
-        SearchTableList(Params, pagination.PageIndex, pagination.PageSize)
+        SearchTableList(Params, 1, pagination.PageSize)
       }
     });
   }
-
-  const SearchTableList = (Params, PageIndex, PageSize) => {
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    const Params = {
+      MaterialNumber: FromParams.MaterialNumber
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
     dispatch({
       type: `${TableName}/query`,
       payload: {
-        // ...payload,
+        ...payload,
         PageIndex: PageIndex,
-        PageSize: PageSize,
-        TDto: Params
+        PageSize: PageSize
       },
     })
   }
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
+
   return (
     <div className='containerDiv' style={{ background: 'white', padding: '20px', margin: '10px', boxShadow: '0px -3px 7px' }}>
       <div className='formComponentsDiv' style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -520,21 +528,22 @@ const BOMTableComponents = ({
           <Form>
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`料号`}>
-                  {getFieldDecorator(`MaterialNumber${FieldDecorator}`)(
-                    <Input placeholder="placeholder" />
+                <FormItem {...formItemLayout} label={`物料编号`}>
+                  {getFieldDecorator(`FormMaterialNumber`)(
+                    <Input />
                   )}
                 </FormItem>
               </Col>
+
             </Row>
           </Form>
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
             </Col>
           </Row>
         </Form>
-
       </div>
       <div>
         <TableComponents
@@ -550,6 +559,7 @@ const BOMTableComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

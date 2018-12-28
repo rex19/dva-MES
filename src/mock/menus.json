@@ -122,6 +122,14 @@
     "route": "/wmsSystem/rawMaterialReceipts"
   },
   {
+    "id": "22",
+    "bpid": "2",
+    "mpid": "2",
+    "name": "原材料退货单",
+    "icon": "user",
+    "route": "/wmsSystem/rawMaterialReturnBill"
+  },
+  {
     "id": "23",
     "bpid": "2",
     "mpid": "2",
@@ -154,14 +162,6 @@
     "route": "/wmsSystem/productionMaterialCollarOrder"
   },
   {
-    "id": "27",
-    "bpid": "2",
-    "mpid": "2",
-    "name": "生产物料退料记录",
-    "icon": "user",
-    "route": "/wmsSystem/retreatingRecordsOfProductionMaterials"
-  },
-  {
     "id": "28",
     "bpid": "2",
     "mpid": "2",
@@ -173,9 +173,25 @@
     "id": "29",
     "bpid": "2",
     "mpid": "2",
+    "name": "成品退货单",
+    "icon": "user",
+    "route": "/wmsSystem/finishedProductReturnBill"
+  },
+  {
+    "id": "210",
+    "bpid": "2",
+    "mpid": "2",
     "name": "盘点单",
     "icon": "user",
     "route": "/wmsSystem/checkList"
+  },
+  {
+    "id": "211",
+    "bpid": "2",
+    "mpid": "2",
+    "name": "库存查询",
+    "icon": "user",
+    "route": "/wmsSystem/stockReport"
   },
   {
     "id": "3",

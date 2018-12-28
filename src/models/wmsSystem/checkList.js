@@ -65,6 +65,11 @@ export default modelExtend(pageModel, {
             type: 'WMS_GetAreaListWeb',
             payload: {}
           })
+        } else if (location.pathname !== `/wmsSystem/${TableName}`) {
+          dispatch({
+            type: 'ClearDataChanger',
+            payload: {}
+          })
         }
       })
     },
@@ -284,6 +289,15 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
+    },
+    // 离开页面清空
+    ClearDataChanger(state, { payload }) {
+      return {
+        ...state, ...payload,
+        checkListTableList: [],
+        CheckList_ClassificationInfoList: [],
+        CheckList_ScanRecordList: []
+      }
     }
   },
 })

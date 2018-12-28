@@ -17,6 +17,17 @@ const { prefix, openPages } = config
 const { Header, Bread, Footer, Sider, styles } = Layout
 let lastHref
 
+
+function listen() {
+  if (document.readyState == 'complete') { // 资源加载完成
+    console.log('资源加载完成')
+  } else { // 资源加载中
+    console.log('资源加载中')
+  }
+}
+
+document.onreadystatechange = listen
+
 const App = ({ children, dispatch, app, loading, location }) => {
   const { user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions } = app
   let { pathname } = location

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, DatePicker, InputNumber } from 'antd'
+import { Form, Input, Button, Icon, Row, Col, Radio, Select, DatePicker, InputNumber } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
@@ -15,8 +15,65 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'materielTable'
 const TableColumns = materielTableColumns
-const AddFormLayout = ['AddProcessNumber', 'AddMaterialId', 'AddState', 'AddValidBegin', 'AddValidEnd']
-const EditFormLayout = ['EditId', 'EditProcessNumber', 'EditMaterialId', 'EditState', 'EditValidBegin', 'EditValidEnd']
+const AddFormLayout = [
+  "AddMaterialNumber",
+  "AddVersion",
+  "AddDescription",
+  "AddSpecification",
+  "AddCustomerMaterialNumber",
+  "AddSupplierMaterialNumber",
+  "AddMaterialGroupType",
+  "AddIsProduct",
+  "AddIsMultiPanel",
+  "AddRequireBackflush",
+  "AddNumberOfPanels",
+  "AddUnit",
+  "AddSetupFlag",
+  "AddProcurementType",
+  "AddMinimumPackageQuantity",
+  "AddExpirationTime",
+  "AddSafetyStock",
+  "AddDefaultStorageLocationId",
+  "AddContainerSize",
+  "AddMSL",
+  "AddState",
+  "AddDefaultStationGroupId",
+  "AddCompanyId",
+  "AddFactoryId",
+  "AddValidBegin",
+  "AddValidEnd",
+]
+const EditFormLayout = [
+  "EditId",
+  "EditMaterialNumber",
+  "EditVersion",
+  "EditDescription",
+  "EditSpecification",
+  "EditCustomerMaterialNumber",
+  "EditSupplierMaterialNumber",
+  "EditMaterialGroupType",
+  "EditIsProduct",
+  "EditIsMultiPanel",
+  "EditRequireBackflush",
+  "EditNumberOfPanels",
+  "EditUnit",
+  "EditSetupFlag",
+  "EditProcurementType",
+  "EditMinimumPackageQuantity",
+  "EditExpirationTime",
+  "EditSafetyStock",
+  "EditDefaultStorageLocationId",
+  "EditContainerSize",
+  "EditMSL",
+  "EditState",
+  "EditDefaultStationGroupId",
+  "EditCompanyId",
+  "EditFactoryId",
+  "EditValidBegin",
+  "EditValidEnd",
+]
+
+const SearchFormLayout = ['FormMaterialNumber', 'FormDescription']
 
 const MaterielTableComponents = ({
   materielTable,
@@ -28,7 +85,7 @@ const MaterielTableComponents = ({
   const TableModelsData = materielTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
+  const { clearBool, FromParams, list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData,
     MaterialType,
     Unit,
@@ -38,65 +95,11 @@ const MaterielTableComponents = ({
     StationGroup,
     Company,
     Factory } = TableModelsData
-  const AddFormLayout = [
-    "AddMaterialNumber",
-    "AddVersion",
-    "AddDescription",
-    "AddSpecification",
-    "AddCustomerMaterialNumber",
-    "AddSupplierMaterialNumber",
-    "AddMaterialGroupType",
-    "AddIsProduct",
-    "AddIsMultiPanel",
-    "AddRequireBackflush",
-    "AddNumberOfPanels",
-    "AddUnit",
-    "AddSetupFlag",
-    "AddProcurementType",
-    "AddMinimumPackageQuantity",
-    "AddExpirationTime",
-    "AddSafetyStock",
-    "AddDefaultStorageLocationId",
-    "AddContainerSize",
-    "AddMSL",
-    "AddState",
-    "AddDefaultStationGroupId",
-    "AddCompanyId",
-    "AddFactoryId",
-    "AddValidBegin",
-    "AddValidEnd",
-  ]
-  const EditFormLayout = [
-    "EditId",
-    "EditMaterialNumber",
-    "EditVersion",
-    "EditDescription",
-    "EditSpecification",
-    "EditCustomerMaterialNumber",
-    "EditSupplierMaterialNumber",
-    "EditMaterialGroupType",
-    "EditIsProduct",
-    "EditIsMultiPanel",
-    "EditRequireBackflush",
-    "EditNumberOfPanels",
-    "EditUnit",
-    "EditSetupFlag",
-    "EditProcurementType",
-    "EditMinimumPackageQuantity",
-    "EditExpirationTime",
-    "EditSafetyStock",
-    "EditDefaultStorageLocationId",
-    "EditContainerSize",
-    "EditMSL",
-    "EditState",
-    "EditDefaultStationGroupId",
-    "EditCompanyId",
-    "EditFactoryId",
-    "EditValidBegin",
-    "EditValidEnd",
-  ]
-
   console.log('MaterielTableComponents-materielTable ', TableModelsData)
+
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -192,36 +195,7 @@ const MaterielTableComponents = ({
       },
     })
   }
-  //每个table可能不同的变量字段(4)
-  const formComponentsValue = () => {
-    return (
-      <Form>
-        <Row gutter={40}>
-          <Col span={8} key={1} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试1`}>
-              {getFieldDecorator(`field1`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试2`}>
-              {getFieldDecorator(`field2`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试3`}>
-              {getFieldDecorator(`field3`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    )
-  }
+
   const addModalValue = () => {
     return (
       <div>
@@ -1085,12 +1059,70 @@ const MaterielTableComponents = ({
     )
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          MaterialNumber: payload.FormMaterialNumber,
+          Description: payload.FormDescription
+        }
+        SearchTableList(Params, 1, pagination.PageSize)
+      }
+    });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    const Params = {
+      MaterialNumber: FromParams.MaterialNumber,
+      Description: FromParams.Description,
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
+  }
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
-        <FormComponents
-          formComponentsValue={formComponentsValue()}
-        />
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`物料编号`}>
+                  {getFieldDecorator(`FormMaterialNumber`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`物料描述`}>
+                  {getFieldDecorator(`FormDescription`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+            </Col>
+          </Row>
+        </Form>
       </div>
       <div>
         <TableComponents
@@ -1105,6 +1137,7 @@ const MaterielTableComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>

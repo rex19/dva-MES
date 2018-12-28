@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, Tree } from 'antd'
+import { Form, Input, Button, Icon, Row, Col, Radio, Select, Tree } from 'antd'
 import { connect } from 'dva'
 import { FormComponents, TableComponents } from '../../components'
 import globalConfig from 'utils/config'
@@ -14,6 +14,7 @@ const { TextArea } = Input
 //每个table可能不同的变量字段(1)
 const TableName = 'roleTable'
 const TableColumns = roleTableColumns
+const SearchFormLayout = []
 
 
 const TreeNode = Tree.TreeNode;
@@ -138,12 +139,15 @@ const RoleTableComponents = ({
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
 
-  const { list, pagination, tableLoading,
+  const { clearBool, FromParams, list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData, platform,
     PermissionList, EditPermissionList, DetailsPermissionList } = TableModelsData
 
   console.log('RoleTableComponents-roleTable ', TableModelsData)
+  if (clearBool) {
+    () => clearFunc()
+  }
   /**
    * crud modal
    */
@@ -514,7 +518,34 @@ const RoleTableComponents = ({
       </div>
     )
   }
-
+  const handleSearch = (e) => {
+    e.preventDefault()
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+        }
+        SearchTableList(Params, 1, pagination.PageSize)
+      }
+    });
+  }
+  const PaginationComponentsChanger = (PageIndex, PageSize) => {
+    const Params = {
+    }
+    SearchTableList(Params, PageIndex, PageSize)
+  }
+  const SearchTableList = (payload = {}, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        PageIndex: PageIndex,
+        PageSize: PageSize
+      },
+    })
+  }
+  const clearFunc = () => {
+    resetFields(SearchFormLayout, (err, payload) => { })
+  }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -535,6 +566,8 @@ const RoleTableComponents = ({
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
+
+          PaginationComponentsChanger={PaginationComponentsChanger}
         />
       </div>
     </div>
@@ -558,9 +591,6 @@ export class PermissionManagement extends React.Component {
     disableCheckbox: this.props.type === 'Details' ? true : false
   }
   onExpand = (expandedKeys) => {
-    console.log('onExpand', arguments);
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
     this.setState({
       expandedKeys,
       autoExpandParent: false,
@@ -568,13 +598,11 @@ export class PermissionManagement extends React.Component {
   }
 
   onCheck = (checkedKeys) => {
-    console.log('onCheck', checkedKeys);
     if (this.props.type === 'Details') return;
     this.setState({ checkedKeys });
     this.props.PermissionListChanger(checkedKeys, 'PermissionListChanger', this.props.type)
   }
   onSelect = (selectedKeys, info) => {
-    console.log('onSelect', info);
     this.setState({ selectedKeys });
   }
   renderTreeNodes = (data) => {
@@ -590,7 +618,6 @@ export class PermissionManagement extends React.Component {
     })
   }
   render() {
-    console.log('render-per', this.props, this.state)
     return (
       <div>
         <Tree
@@ -606,7 +633,6 @@ export class PermissionManagement extends React.Component {
         >
           {this.renderTreeNodes(treeData)}
         </Tree>
-
       </div>
     )
   }

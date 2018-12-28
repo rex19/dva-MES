@@ -43,16 +43,11 @@ export default modelExtend(pageModel, {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/wmsSystem/${TableName}`) {
-          console.log('rawMaterialReceipts-subscriptions')
-          // dispatch({
-          //   type: 'query',
-          //   payload: {
-          //     PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-          //     PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-          //     [QueryRequestDTO]: null
-          //   }
-          // })
+        if (location.pathname !== `/wmsSystem/${TableName}`) {
+          dispatch({
+            type: 'ClearDataChanger',
+            payload: {}
+          })
         }
       })
     },
@@ -190,6 +185,18 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
+    },
+    // 离开页面清空
+    ClearDataChanger(state, { payload }) {
+      return {
+        ...state, ...payload,
+        rawMaterialReceiptsTableList: [],
+        rawMaterialReceipts_DetailsTableList: [],
+        rawMaterialReceipts_Details_InfoTableList: []
+      }
     }
   },
 })
+
+
+

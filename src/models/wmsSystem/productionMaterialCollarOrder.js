@@ -33,6 +33,7 @@ export default modelExtend(pageModel, {
     DetailsData: {},
     // list: []
     //每个table可能不同的变量字段
+    FromParams: {},
     ProductionMaterialCollarOrderTableList: [],
     ProductionMaterialCollarOrder_DetailsTableList: [],
     ProductionMaterialCollarOrder_Details_InfoTableList: [],
@@ -40,14 +41,10 @@ export default modelExtend(pageModel, {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === `/wmsSystem/${TableName}`) {
+        if (location.pathname !== `/wmsSystem/${TableName}`) {
           dispatch({
-            type: 'query',
-            payload: {
-              PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
-              PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
-              [QueryRequestDTO]: null
-            }
+            type: 'ClearDataChanger',
+            payload: {}
           })
         }
       })
@@ -61,6 +58,7 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
+      yield put({ type: 'FromParamsChanger', payload: payload })
       const data = yield call(query, payload)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
@@ -76,8 +74,8 @@ export default modelExtend(pageModel, {
               PageIndex: Number(pagination.PageIndex) || 1,
               PageSize: Number(pagination.PageSize) || 10,
               total: data.Data.RowCount,
-            },
-          },
+            }
+          }
         })
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else {
@@ -176,6 +174,20 @@ export default modelExtend(pageModel, {
     //改变table pageIndex pageSize
     tablePaginationChanger(state, { payload }) {
       return { ...state, ...payload, pagination: { PageIndex: payload.PageIndex, PageSize: payload.PageSize } }
+    },
+    // 改变table 查询条件
+    FromParamsChanger(state, { payload }) {
+      return { ...state, ...payload, FromParams: payload }
+    },
+    // 离开页面清空
+    ClearDataChanger(state, { payload }) {
+      return {
+        ...state, ...payload,
+        ProductionMaterialCollarOrderTableList: [],
+        ProductionMaterialCollarOrder_DetailsTableList: [],
+        ProductionMaterialCollarOrder_Details_InfoTableList: []
+      }
     }
   },
 })
+

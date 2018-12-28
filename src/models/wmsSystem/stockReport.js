@@ -1,16 +1,21 @@
 import modelExtend from 'dva-model-extend'
-import { query, GetProductDeliveryRequest_ProjectInfoList, GetProductDeliveryRequest_OutputMaterialBoxInfoList, addKey } from 'services/wmsSystem/productDeliveryRequestTable'
+import {
+  query,
+  GetAreaListWeb,
+  addKey
+} from 'services/wmsSystem/stockReportTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../../components/Message/message.js'
 import queryString from 'query-string'
 import globalConfig from 'utils/config'
+
 /**
  * TableName 表名
  * QueryResponseDTO 查询结果DTO
  * QueryRequestDTO  查询条件DTO
  * EditData   编辑Modal初始化数据的初始化值
  */
-const TableName = 'productDeliveryRequest'
+const TableName = 'stockReport'
 const QueryResponseDTO = 'Tdto'
 const QueryRequestDTO = 'TDto'
 
@@ -33,9 +38,9 @@ export default modelExtend(pageModel, {
     DetailsData: {},
     // list: []
     //每个table可能不同的变量字段
-    ProductDeliveryRequestList: [],
-    ProductDeliveryRequest_ProjectInfoList: [],
-    ProductDeliveryRequest_OutputMaterialBoxInfoList: [],
+    AreaList: [],
+    queryParams: {},
+    stockReportTableList: [],//库位查询
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -45,11 +50,17 @@ export default modelExtend(pageModel, {
             type: 'ClearDataChanger',
             payload: {}
           })
+        } else if (location.pathname === `/wmsSystem/${TableName}`) {
+          dispatch({
+            type: 'GetAreaListWeb',
+            payload: {
+              FactoryId: 5
+            }
+          })
         }
       })
     },
   },
-
 
   effects: {
     * query({
@@ -57,7 +68,13 @@ export default modelExtend(pageModel, {
     }, { call, put, select }) {
       yield put({ type: 'loadingChanger', payload: 'showLoading' })
       yield put({ type: 'tablePaginationChanger', payload: payload })
-
+      yield put({
+        type: 'ChangerState',
+        payload: {
+          modalType: 'queryParams',
+          Params: payload
+        }
+      })
       const data = yield call(query, payload)
       const pagination = yield select(state => state[TableName].pagination)
       if (data.Status !== 200) {
@@ -82,28 +99,19 @@ export default modelExtend(pageModel, {
       }
     },
 
-    * GetProductDeliveryRequest_ProjectInfoList({
+    * GetAreaListWeb({
       payload,
     }, { call, put, select }) {
-
-      const data = yield call(GetProductDeliveryRequest_ProjectInfoList, payload)
-      // const pagination = yield select(state => state[TableName].pagination)
+      const data = yield call(GetAreaListWeb, payload)
       if (data.Status !== 200) {
-        return errorMessage(data.ErrorMessage || '查询失败')
+        return errorMessage(data.ErrorMessage)
       } else if (data.Status === 200) {
-        const result = yield call(addKey, data.Data) //+1
-        console.log('result++', result)
         yield put({
           type: 'querySuccessed',
           payload: {
-            type: 'ProductDeliveryRequest_ProjectInfoList',
-            ProductDeliveryRequest_ProjectInfoList: result,
-            // pagination: {
-            //   PageIndex: Number(pagination.PageIndex) || 1,
-            //   PageSize: Number(pagination.PageSize) || 10,
-            //   total: data.Data.RowCount,
-            // },
-          },
+            type: 'GetAreaListWeb',
+            AreaList: data.Data,
+          }
         })
         yield put({ type: 'loadingChanger', payload: 'closeLoading' })
       } else {
@@ -111,60 +119,29 @@ export default modelExtend(pageModel, {
       }
     },
 
-    * GetProductDeliveryRequest_OutputMaterialBoxInfoList({
-      payload,
-    }, { call, put, select }) {
-
-      const data = yield call(GetProductDeliveryRequest_OutputMaterialBoxInfoList, payload)
-      // const pagination = yield select(state => state[TableName].pagination)
-      if (data.Status !== 200) {
-        return errorMessage(data.ErrorMessage || '查询失败')
-      } else if (data.Status === 200) {
-        const result = yield call(addKey, data.Data) //+1
-
-        yield put({
-          type: 'querySuccessed',
-          payload: {
-            type: 'ProductDeliveryRequest_OutputMaterialBoxInfoList',
-            ProductDeliveryRequest_OutputMaterialBoxInfoList: result,
-            // pagination: {
-            //   PageIndex: Number(pagination.PageIndex) || 1,
-            //   PageSize: Number(pagination.PageSize) || 10,
-            //   total: data.Data.RowCount,
-            // },
-          },
-        })
-        yield put({ type: 'loadingChanger', payload: 'closeLoading' })
-      } else {
-        throw data
-      }
-    },
   },
   reducers: {
     querySuccessed(state, { payload }) {
       if (payload.type === 'Init') {
-        console.log('querySuccessed1111', payload)
         return {
           ...state, ...payload,
-          ProductDeliveryRequestList: payload.result,
-          ProductDeliveryRequest_ProjectInfoList: [],
-          ProductDeliveryRequest_OutputMaterialBoxInfoList: []
+          stockReportTableList: payload.result,
         }
-      } else if (payload.type === 'ProductDeliveryRequest_ProjectInfoList') {
+      } else if (payload.type === 'GetAreaListWeb') {
         return {
           ...state, ...payload,
-          ProductDeliveryRequest_OutputMaterialBoxInfoList: [],
-          ProductDeliveryRequest_ProjectInfoList: payload.ProductDeliveryRequest_ProjectInfoList,
+          AreaList: payload.AreaList
+        }
+      }
 
-        }
-      } else if (payload.type === 'ProductDeliveryRequest_OutputMaterialBoxInfoList') {
+    },
+    ChangerState(state, { payload }) {
+      if (payload.modalType === 'queryParams') {
         return {
-          ...state, ...payload,
-          ProductDeliveryRequest_OutputMaterialBoxInfoList: payload.ProductDeliveryRequest_OutputMaterialBoxInfoList,
+          ...state, ...payload, [payload]: false, queryParams: payload.Params
         }
       }
     },
-
     //teble loading处理
     loadingChanger(state, { payload }) {
       if (payload === 'showLoading') {
@@ -181,12 +158,11 @@ export default modelExtend(pageModel, {
     ClearDataChanger(state, { payload }) {
       return {
         ...state, ...payload,
-        ProductDeliveryRequestList: [],
-        ProductDeliveryRequest_ProjectInfoList: [],
-        ProductDeliveryRequest_OutputMaterialBoxInfoList: []
+        stockReportTableList: []
       }
     }
   },
 })
+
 
 

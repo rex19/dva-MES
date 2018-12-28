@@ -1,6 +1,7 @@
 
+//生产物料领用单
 import React from 'react'
-import { Form, Input, Row, Col, Radio, Select, DatePicker } from 'antd'
+import { Form, Button, Input, Row, Col, Radio, Icon, Select, DatePicker } from 'antd'
 import { connect } from 'dva'
 import { WMSTableComponents } from '../../../components'
 import globalConfig from 'utils/config'
@@ -12,7 +13,13 @@ import globalConfig from 'utils/config'
 import moment from 'moment';
 import './index.less'
 
-
+const FormItem = Form.Item
+const dateFormat = 'YYYY-MM-DD';
+const SearchFormLayout = [
+  'FormNumberForm',
+  'SearchDate_FromForm',
+  'SearchDate_ToForm'
+]
 //每个table可能不同的变量字段(1)
 const TableName = 'productionMaterialCollarOrder'
 // const TableColumns = wmsProductionMaterialCollarOrderColums
@@ -25,16 +32,16 @@ const ProductionMaterialCollarOrderTableComponents = ({
 }) => {
   const {
     pagination,
+    FromParams,
     ProductionMaterialCollarOrderTableList,
     ProductionMaterialCollarOrder_DetailsTableList,
     ProductionMaterialCollarOrder_Details_InfoTableList
   } = productionMaterialCollarOrder
   console.log('ProductionMaterialCollarOrderTableComponents', productionMaterialCollarOrder)
+  const formItemLayout = globalConfig.table.formItemLayout
+  const { getFieldDecorator, validateFields, resetFields } = form
 
 
-  const handleChange = () => {
-    console.log('handleChange')
-  }
   const handleClickSearch = (Id) => {
     console.log('handleClickSearch', Id)
     dispatch({
@@ -68,9 +75,6 @@ const ProductionMaterialCollarOrderTableComponents = ({
   }, {
     title: '创建人',
     dataIndex: 'CreatorUserName',
-  }, {
-    title: '工单号',
-    dataIndex: 'WorkOrderNumber',
   }, {
     title: '操作',
     key: (new Date()).valueOf(),
@@ -130,14 +134,93 @@ const ProductionMaterialCollarOrderTableComponents = ({
     title: '接收库位',
     dataIndex: 'CurrentLocationNumber',
   }]
-
+  const handleSearch = (e) => {
+    console.log('handleSearch')
+    e.preventDefault();
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          FormNumber: payload.FormNumberForm,
+          SearchDate_From: moment(payload.SearchDate_FromForm).format(dateFormat),
+          SearchDate_To: moment(payload.SearchDate_ToForm).format(dateFormat),
+        }
+        SearchTableList(Params, 1, pagination.PageSize)
+      }
+    });
+  }
+  const SearchTableList = (payload, PageIndex, PageSize) => {
+    dispatch({
+      type: `${TableName}/query`,
+      payload: {
+        ...payload,
+        pageIndex: PageIndex,
+        pageSize: PageSize
+      },
+    })
+  }
   const PaginationComponentsChanger = (PageIndex, PageSize) => {
     console.log('PaginationComponentsChanger-index', PageIndex, PageSize)
-
+    validateFields(SearchFormLayout, (err, payload) => {
+      if (!err) {
+        const Params = {
+          FormNumber: FromParams.FormNumber,
+          SearchDate_From: FromParams.SearchDate_From,
+          SearchDate_To: FromParams.SearchDate_To
+        }
+        SearchTableList(Params, PageIndex, PageSize)
+      }
+    })
   }
+
 
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
+      <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
+        <Form
+          className="ant-advanced-search-form"
+          onSubmit={handleSearch}
+        >
+          <Form>
+            <Row gutter={40}>
+              <Col span={8} key={1} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`物料领用单号`}>
+                  {getFieldDecorator(`FormNumberForm`)(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={2} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`开始时间`}>
+                  {getFieldDecorator(`SearchDate_FromForm`, {
+                    initialValue: moment(new Date(), dateFormat),
+                  })(
+                    <DatePicker
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss" />
+                    )}
+                </FormItem>
+              </Col>
+              <Col span={8} key={3} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`结束时间`}>
+                  {getFieldDecorator(`SearchDate_ToForm`, {
+                    initialValue: moment(new Date(), dateFormat),
+                  })(
+                    <DatePicker
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss" />
+                    )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+            </Col>
+          </Row>
+        </Form>
+
+      </div>
       <h2 style={{ margin: '20px' }}>生产物料领用单</h2>
       <div>
         <WMSTableComponents
@@ -178,5 +261,5 @@ const ProductionMaterialCollarOrderTableComponents = ({
 }
 
 
-export default connect(({ productionMaterialCollarOrder }) => ({ productionMaterialCollarOrder }))(ProductionMaterialCollarOrderTableComponents)
 
+export default connect(({ productionMaterialCollarOrder }) => ({ productionMaterialCollarOrder }))(Form.create()(ProductionMaterialCollarOrderTableComponents))

@@ -335,7 +335,7 @@ export const ModalComponents = ({
         </div>
       </Modal>
       <Modal
-        title="配货单预览"
+        title="配货单"
         visible={detailsModalVisible}
         width={ModalWidth || 920}
         onOk={() => handleModalClose('detailsModalVisible')}
