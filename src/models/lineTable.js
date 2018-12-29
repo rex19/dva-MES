@@ -39,7 +39,7 @@ export default modelExtend(pageModel, {
     DetailsData: {},
     FromParams: {},
     //每个table可能不同的变量字段
-    TotalMultiselectData: [],
+    TotalStation: [],
     AllocatedMultiselectData: [],
     platform: [],
 
@@ -55,11 +55,6 @@ export default modelExtend(pageModel, {
               PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
               [QueryRequestDTO]: null
             }
-          })
-        } else if (location.pathname !== `/masterdata/${TableName}`) {
-          dispatch({
-            type: 'ClearDataChanger',
-            payload: {}
           })
         }
       })
@@ -203,9 +198,9 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalCell), AllocatedMultiselectData: eval(payload.data.SelectedCell), EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto }
+        return { ...state, ...payload, TotalStation: payload.data.TotalStation, AllocatedMultiselectData: payload.data.SelectedCell, EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, TotalMultiselectData: eval(payload.data.TotalCell) }
+        return { ...state, ...payload, TotalStation: payload.data.TotalStation }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
       }
@@ -232,13 +227,6 @@ export default modelExtend(pageModel, {
     // 改变table 查询条件
     FromParamsChanger(state, { payload }) {
       return { ...state, ...payload, FromParams: payload }
-    },
-    // 离开页面清空
-    ClearDataChanger(state, { payload }) {
-      return {
-        ...state, ...payload,
-        clearBool: true
-      }
     }
   },
 })

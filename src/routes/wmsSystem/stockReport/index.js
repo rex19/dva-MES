@@ -123,7 +123,7 @@ const StockReportTableComponents = ({
               <Col span={8} key={1} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`区域`}>
                   {getFieldDecorator(`AreaIdForm`, {
-                    initialValue: '',
+                    initialValue: '-1',
                   })(
                     <Select
                       style={{ width: 200 }}

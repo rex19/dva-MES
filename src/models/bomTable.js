@@ -77,11 +77,6 @@ export default modelExtend(pageModel, {
               [QueryRequestDTO]: null
             }
           })
-        } else if (location.pathname !== `/masterdata/${TableName}`) {
-          dispatch({
-            type: 'ClearDataChanger',
-            payload: {}
-          })
         }
       })
     },
@@ -285,13 +280,6 @@ export default modelExtend(pageModel, {
     FromParamsChanger(state, { payload }) {
       return { ...state, ...payload, FromParams: payload }
     },
-    // 离开页面清空
-    ClearDataChanger(state, { payload }) {
-      return {
-        ...state, ...payload,
-        clearBool: true
-      }
-    },
     //改变editable的datasource
     editableDataChanger(state, { payload }) {
       if (payload.type === 'RowEditableAddTable') {
@@ -303,11 +291,8 @@ export default modelExtend(pageModel, {
     //改变 Version
     ChangeVersion(state, { payload }) {
       console.log('ChangeVersion', payload)
-
       if (payload.modalType === 'GetMaterialByMaterialNumber') {
         return { ...state, ...payload, Name_Version: `${payload.data.version}/${payload.data.materialName}` }
-      } else if (payload.modalType === '') {
-        // return { ...state, ...payload, Name_Version: `${payload.data.Version}/${payload.data.MaterialName}` }
       }
     },
   },

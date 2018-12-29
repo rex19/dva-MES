@@ -8,6 +8,8 @@ let column = []
 let DeleteIdArray = []
 
 const TableComponents = ({
+  expandedRowRenderKEY,
+  expandedRowRenderNAME,
   tableName,
   tableModels,
   dispatch,
@@ -22,7 +24,8 @@ const TableComponents = ({
   handleAdd,
   tableLoading,
   EditData,
-  PaginationComponentsChanger
+  PaginationComponentsChanger,
+  handleResetFields
 }) => {
   let { addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible } = tableModels
   const ActionColumn = [{
@@ -60,10 +63,10 @@ const TableComponents = ({
       type: `${tableName}/hideModal`,
       payload: modalVisible
     })
+    //从这里要调用父组件来清空Form新增表单域
+    handleResetFields('AddFormLayout')
   }
-  const onChange = () => {
 
-  }
   const onShowSizeChange = (PageIndex, PageSize) => {
     PaginationComponentsChanger(PageIndex, PageSize)
   }
@@ -109,11 +112,10 @@ const TableComponents = ({
           rowKey={record => record.Id}
           rowSelection={rowSelection}
           columns={columnFunc(column, columns, ActionColumn)}
-          expandedRowRender={record => <p style={{ margin: 0 }}>描述:{record.Name}</p>}
+          expandedRowRender={expandedRowRenderKEY && expandedRowRenderNAME !== null ? record => <p style={{ margin: 0 }}>{expandedRowRenderNAME}:{record[expandedRowRenderKEY]}</p> : record => <p style={{ margin: 0 }}>描述:{record.Name}</p>}
           dataSource={data}
           scroll={{ x: TableWidth }}
           pagination={false}
-          onChange={onChange}
           loading={tableLoading}
         />
       </Row>

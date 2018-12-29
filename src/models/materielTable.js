@@ -84,11 +84,6 @@ export default modelExtend(pageModel, {
               [QueryRequestDTO]: null
             }
           })
-        } else if (location.pathname !== `/masterdata/${TableName}`) {
-          dispatch({
-            type: 'ClearDataChanger',
-            payload: {}
-          })
         }
       })
     },
@@ -281,13 +276,6 @@ export default modelExtend(pageModel, {
     // 改变table 查询条件
     FromParamsChanger(state, { payload }) {
       return { ...state, ...payload, FromParams: payload }
-    },
-    // 离开页面清空
-    ClearDataChanger(state, { payload }) {
-      return {
-        ...state, ...payload,
-        clearBool: true
-      }
     }
-  },
+  }
 })

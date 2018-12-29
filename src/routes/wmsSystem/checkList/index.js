@@ -303,6 +303,7 @@ const CheckListTableComponents = ({
           data={CheckList_ScanRecordList}
           columns={wmsCheckList_ScanRecordColums}
           TableWidth={800}
+          TableHight={240}
           paginationDisplay={'no'}
           pagination={pagination}
         />

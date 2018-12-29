@@ -19,6 +19,9 @@ const stationTableColumns = [{
   title: '类型',
   dataIndex: 'StationType',
 }, {
+  title: '已分配工作站组',
+  dataIndex: 'SelectedStationGroup',
+}, {
   title: '状态',
   dataIndex: 'State',
   render: val => <span><Badge status={val === '激活' ? "success" : "error"} text={val} /></span>,
@@ -63,14 +66,13 @@ const StationTableComponents = ({
   const TableModelsData = stationTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { clearBool, FromParams, list, pagination, tableLoading,
+  const { clearType, FromParams, list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData, TotalStationGroup, SelectedStationGroup, StationType, FactoryList } = TableModelsData
 
   console.log('TableComponents-stationTable ', TableModelsData)
-  if (clearBool) {
-    () => clearFunc()
-  }
+
+
   /**
    * crud modal
    */
@@ -154,7 +156,7 @@ const StationTableComponents = ({
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入角色',
+                  required: true, message: '请输入工站编号',
                 },
               ],
             })(<Input />)}
@@ -168,7 +170,7 @@ const StationTableComponents = ({
               initialValue: '',
               rules: [
                 {
-                  required: true, message: '请输入名称',
+                  required: true, message: '请输入工站名称',
                 },
               ],
             })(<Input />)}
@@ -415,6 +417,12 @@ const StationTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
+          label="已分配工作站组"
+        >
+          <Input disabled value={DetailsData.SelectedStationGroup} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
           label="状态"
         >
           <Input disabled value={DetailsData.State} />
@@ -475,9 +483,16 @@ const StationTableComponents = ({
       },
     })
   }
-  const clearFunc = () => {
-    resetFields(SearchFormLayout, (err, payload) => { })
+
+
+  const handleResetFields = (type) => {
+    if (type === 'SearchFormLayout') {
+      resetFields(SearchFormLayout)
+    } else if (type === 'AddFormLayout') {
+      resetFields(AddFormLayout)
+    }
   }
+
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
       <div style={{ marginBottom: '20px', borderColor: 'red', borderWidth: '1px' }}>
@@ -506,7 +521,7 @@ const StationTableComponents = ({
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
-              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={() => handleResetFields('SearchFormLayout')}><Icon type="delete" />清空</Button>
             </Col>
           </Row>
         </Form>
@@ -525,6 +540,7 @@ const StationTableComponents = ({
           handleAdd={handleAdd}
           tableModels={TableModelsData}
           PaginationComponentsChanger={PaginationComponentsChanger}
+          handleResetFields={handleResetFields}
         />
       </div>
     </div>
@@ -534,18 +550,3 @@ const StationTableComponents = ({
 
 export default connect(({ stationTable }) => ({ stationTable }))(Form.create()(StationTableComponents))
 
-
-// <FormItem
-// {...formItemLayout}
-// label="工厂"
-// hasFeedback
-// >
-// {getFieldDecorator('EditFactroy', {
-//   initialValue: '',
-// })(
-//   <Select>
-//     {Factroy.map(function (item, index) {
-//       return <Option key={index} value={item.key.toString()}>{item.label}</Option>
-//     })}
-//   </Select>)}
-// </FormItem>

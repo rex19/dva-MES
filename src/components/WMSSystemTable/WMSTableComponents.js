@@ -191,6 +191,7 @@ class WMSTableComponents extends PureComponent {
             pagination={false}
             onChange={this.onChange}
             loading={this.state.tableLoading}
+
           />
         </Row>
         {paginationDisplay === 'no' ? <Row></Row> :

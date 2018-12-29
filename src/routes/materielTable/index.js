@@ -85,7 +85,7 @@ const MaterielTableComponents = ({
   const TableModelsData = materielTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { clearBool, FromParams, list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
+  const { FromParams, list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData,
     MaterialType,
     Unit,
@@ -97,9 +97,7 @@ const MaterielTableComponents = ({
     Factory } = TableModelsData
   console.log('MaterielTableComponents-materielTable ', TableModelsData)
 
-  if (clearBool) {
-    () => clearFunc()
-  }
+
   /**
    * crud modal
    */
@@ -1088,8 +1086,12 @@ const MaterielTableComponents = ({
       },
     })
   }
-  const clearFunc = () => {
-    resetFields(SearchFormLayout, (err, payload) => { })
+  const handleResetFields = (type) => {
+    if (type === 'SearchFormLayout') {
+      resetFields(SearchFormLayout)
+    } else if (type === 'AddFormLayout') {
+      resetFields(AddFormLayout)
+    }
   }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
@@ -1119,7 +1121,7 @@ const MaterielTableComponents = ({
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
-              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={() => handleResetFields('SearchFormLayout')}><Icon type="delete" />清空</Button>
             </Col>
           </Row>
         </Form>
@@ -1131,13 +1133,14 @@ const MaterielTableComponents = ({
           tableLoading={tableLoading}
           pagination={pagination}
           columns={TableColumns}
-          TableWidth={2550}
+          TableWidth={3500}
           addModalValue={addModalValue()}
           editModalValue={editModalValue()}
           detailsModalValue={detailsModalValue()}
           handleAdd={handleAdd}
           tableModels={TableModelsData}
           PaginationComponentsChanger={PaginationComponentsChanger}
+          handleResetFields={handleResetFields}
         />
       </div>
     </div>

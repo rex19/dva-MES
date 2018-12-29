@@ -76,10 +76,6 @@ import './index.less'
 export class ModalComponents extends React.Component {
 
 
-  // componentWillReceiveProps = (newProps, props) => {
-  //   console.log('Component WILL RECEIVE PROPS!', newProps, props)
-
-  // }
 
   handleOk = (modalType) => {
     this.props.handleAdd(modalType)
@@ -101,10 +97,6 @@ export class ModalComponents extends React.Component {
 
 
     const handleOk = this.handleOk
-    // const handleOk = this.handleOk
-    // console.log(
-    //   'ModalComponents-render', EditData, editModalValue
-    // )
 
 
     return (
@@ -125,14 +117,8 @@ export class ModalComponents extends React.Component {
           onOk={() => handleOk('edit')}
           onCancel={() => handleModalClose('editModalVisible')}
         >
-
-
           {
-            editModalVisible === false
-              ?
-              ''
-              :
-              editModalValue
+            editModalVisible === false ? '' : editModalValue
           }
         </Modal>
         <Modal
@@ -156,4 +142,3 @@ export class ModalComponents extends React.Component {
     )
   }
 }
-// {editModalValue}

@@ -44,6 +44,7 @@ export default modelExtend(pageModel, {
     EditData: EditData,
     DetailsData: {},
     FromParams: {},
+    clearType: 'notClear',
     //每个table可能不同的变量字段
     TotalStationGroup: [], //所有的
     SelectedStationGroup: [],//已选的
@@ -62,14 +63,9 @@ export default modelExtend(pageModel, {
               [QueryRequestDTO]: null
             }
           })
-        } else if (location.pathname !== `/masterdata/${TableName}`) {
-          dispatch({
-            type: 'ClearDataChanger',
-            payload: {}
-          })
         }
       })
-    },
+    }
   },
 
   effects: {
@@ -251,13 +247,6 @@ export default modelExtend(pageModel, {
     // 改变table 查询条件
     FromParamsChanger(state, { payload }) {
       return { ...state, ...payload, FromParams: payload }
-    },
-    // 离开页面清空
-    ClearDataChanger(state, { payload }) {
-      return {
-        ...state, ...payload,
-        clearBool: true
-      }
     }
-  },
+  }
 })

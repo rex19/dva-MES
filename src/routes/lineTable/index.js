@@ -26,12 +26,10 @@ const LineTableComponents = ({
   const TableModelsData = lineTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { clearBool, FromParams, list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalMultiselectData, AllocatedMultiselectData } = TableModelsData
+  const { FromParams, list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalStation, AllocatedMultiselectData } = TableModelsData
 
   console.log('TableComponents-lineTable ', TableModelsData)
-  if (clearBool) {
-    () => clearFunc()
-  }
+
   /**
    * crud modal
    */
@@ -39,7 +37,7 @@ const LineTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { CellNumber: payload.AddCellNumber, Description: payload.AddDescription, State: parseInt(payload.AddState) }
+        const createParam = { CellNumber: payload.AddCellNumber, Description: payload.AddDescription, State: parseInt(payload.AddState), Station: payload.AddStation.map(item => parseInt(item.key)) }
         console.log('lineTable-createParam', createParam)
         if (!err) {
           dispatch({
@@ -157,6 +155,27 @@ const LineTableComponents = ({
                 )}
             </div>
           </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="分配工站"
+          >
+            <div>
+              {getFieldDecorator('AddStation', {
+                initialValue: [],
+              })(
+                <Select
+                  mode="multiple"
+                  labelInValue
+                  style={{ width: '100%' }}
+                  placeholder="请选择"
+                >
+                  {TotalStation.map(function (item, index) {
+                    return <Option key={index} value={item.key}>{item.label}</Option>
+                  })}
+                </Select>
+                )}
+            </div>
+          </FormItem>
         </Form>
       </div>
     )
@@ -242,7 +261,7 @@ const LineTableComponents = ({
                   style={{ width: '100%' }}
                   placeholder="请选择"
                 >
-                  {TotalMultiselectData.map(function (item, index) {
+                  {TotalStation.map(function (item, index) {
                     return <Option key={index} value={item.key}>{item.label}</Option>
                   })}
                 </Select>
@@ -336,8 +355,12 @@ const LineTableComponents = ({
       },
     })
   }
-  const clearFunc = () => {
-    resetFields(SearchFormLayout, (err, payload) => { })
+  const handleResetFields = (type) => {
+    if (type === 'SearchFormLayout') {
+      resetFields(SearchFormLayout)
+    } else if (type === 'AddFormLayout') {
+      resetFields(AddFormLayout)
+    }
   }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
@@ -367,7 +390,7 @@ const LineTableComponents = ({
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
-              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={() => handleResetFields('SearchFormLayout')}><Icon type="delete" />清空</Button>
             </Col>
           </Row>
         </Form>
@@ -386,6 +409,7 @@ const LineTableComponents = ({
           handleAdd={handleAdd}
           tableModels={TableModelsData}
           PaginationComponentsChanger={PaginationComponentsChanger}
+          handleResetFields={handleResetFields}
         />
       </div>
     </div>

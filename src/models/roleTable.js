@@ -49,7 +49,8 @@ export default modelExtend(pageModel, {
     AllocatedMultiselectData: [],
     platform: [],
     PermissionList: [],
-    EditPermissionList: [] //菜单权限的 编辑初始化数据
+    EditPermissionList: [], //菜单权限的 编辑初始化数据,
+    PermissionManagementClearData: false
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -62,11 +63,6 @@ export default modelExtend(pageModel, {
               PageSize: Number(globalConfig.table.paginationConfig.PageSize),// 表格每页显示多少条数据
               [QueryRequestDTO]: null
             }
-          })
-        } else if (location.pathname !== `/masterdata/${TableName}`) {
-          dispatch({
-            type: 'ClearDataChanger',
-            payload: {}
           })
         }
       })
@@ -206,10 +202,10 @@ export default modelExtend(pageModel, {
     //打开关闭Modals
     showModal(state, { payload }) {
       console.log('showModal', payload)
-      return { ...state, ...payload, [payload.modalType]: true }
+      return { ...state, ...payload, [payload.modalType]: true, PermissionManagementClearData: false }
     },
     hideModal(state, { payload }) {
-      return { ...state, ...payload, [payload]: false }
+      return { ...state, ...payload, [payload]: false, PermissionManagementClearData: true }
     },
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
@@ -257,13 +253,6 @@ export default modelExtend(pageModel, {
     FromParamsChanger(state, { payload }) {
       return { ...state, ...payload, FromParams: payload }
     },
-    // 离开页面清空
-    ClearDataChanger(state, { payload }) {
-      return {
-        ...state, ...payload,
-        clearBool: true
-      }
-    },
     //改变editable的datasource
     permissionListhandleChanger(state, { payload }) {
       if (payload.type === 'PermissionListChanger') {
@@ -279,35 +268,3 @@ export default modelExtend(pageModel, {
   },
 })
 
-
-// * query({
-//   payload,
-// }, { call, put, select }) {
-//   yield put({ type: 'loadingChanger', payload: 'showLoading' })
-//   yield put({ type: 'tablePaginationChanger', payload: payload })
-//   const data = yield call(query, payload)
-//   const pagination = yield select(state => state[TableName].pagination)
-//   if (data.Status !== 200) {
-//     return errorMessage(data.ErrorMessage || '查询失败')
-//   } else if (data.Status === 200) {
-//     if (data.Data.ResultStatus !== 200) {
-//       return errorMessage(data.Data.ResultMessage || '查询失败')
-//     } else if (data.Data.ResultStatus === 200) {
-//       const result = yield call(addKey, data.Data.ResultData[QueryResponseDTO]) //+1
-//       yield put({
-//         type: 'querySuccess',
-//         payload: {
-//           list: result,
-//           pagination: {
-//             PageIndex: Number(pagination.PageIndex) || 1,
-//             PageSize: Number(pagination.PageSize) || 10,
-//             total: data.Data.RowCount,
-//           },
-//         },
-//       })
-//       yield put({ type: 'loadingChanger', payload: 'closeLoading' })
-//     }
-//   } else {
-//     throw data
-//   }
-// },

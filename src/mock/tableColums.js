@@ -418,9 +418,6 @@ const bomTableColumns = [{
   title: '版本号',
   dataIndex: 'Version',
 }, {
-  title: '名称',
-  dataIndex: 'Name',
-}, {
   title: '工厂',
   dataIndex: 'Factory',
 }, {

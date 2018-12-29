@@ -112,8 +112,11 @@ const RawMaterialReceiptsTableComponents = ({
     title: '需要数量',
     dataIndex: 'Quantity',
   }, {
-    title: '实际收货数量',
+    title: '注册数量',
     dataIndex: 'ReceivingQuantity',
+  }, {
+    title: '实际收货数量',
+    dataIndex: 'ScannedQuantity',
     render: (text, record) => <a onClick={() => getReceivingQuantityRequest(record.MaterialReceivingFormId, record.ItemNumber)}>{text}</a>,
   }, {
     title: '收获库位',

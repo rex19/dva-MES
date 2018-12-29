@@ -35,16 +35,14 @@ const ProcessTableComponents = ({
   const TableModelsData = processTable
   const { getFieldDecorator, validateFields, resetFields } = form
   // const formItemLayout = globalConfig.table.formItemLayout
-  const { clearBool, FromParams, list, pagination, tableLoading,
+  const { FromParams, list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
     EditData, DetailsData,
     AddProcessStepDataSource, EditProcessStepDataSource,
     Name_Version, FactoryList, StationGroup, ProcessStepListCount, ProcessStepList } = TableModelsData
 
   console.log('ProcessTableComponents-processTable ', TableModelsData)
-  if (clearBool) {
-    () => clearFunc()
-  }
+
   /**
    * crud modal
    */
@@ -503,8 +501,12 @@ const ProcessTableComponents = ({
       },
     })
   }
-  const clearFunc = () => {
-    resetFields(SearchFormLayout, (err, payload) => { })
+  const handleResetFields = (type) => {
+    if (type === 'SearchFormLayout') {
+      resetFields(SearchFormLayout)
+    } else if (type === 'AddFormLayout') {
+      resetFields(AddFormLayout)
+    }
   }
   return (
     <div style={{ background: 'white', padding: '20px', margin: '10px' }}>
@@ -534,7 +536,7 @@ const ProcessTableComponents = ({
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
-              <Button style={{ marginLeft: '7px' }} onClick={clearFunc}><Icon type="delete" />清空</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={() => handleResetFields('SearchFormLayout')}><Icon type="delete" />清空</Button>
             </Col>
           </Row>
         </Form>
@@ -554,6 +556,7 @@ const ProcessTableComponents = ({
           handleAdd={handleAdd}
           tableModels={TableModelsData}
           PaginationComponentsChanger={PaginationComponentsChanger}
+          handleResetFields={handleResetFields}
         />
       </div>
     </div>
