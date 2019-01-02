@@ -12,8 +12,8 @@ const FormItem = Form.Item
 //每个table可能不同的变量字段(1)
 const TableName = 'regionTable'
 const TableColumns = regionTableColumns
-const AddFormLayout = ['AddAreaNumber', 'AddName', 'AddFactoryId', 'AddDescription', 'AddState']
-const EditFormLayout = ['EditId', 'EditFactoryId', 'EditAreaNumber', 'EditName', 'EditDescription', 'EditState']
+const AddFormLayout = ['AddAreaNumber', 'AddAreType', 'AddName', 'AddFactoryId', 'AddDescription', 'AddState']
+const EditFormLayout = ['EditId', 'EditFactoryId', 'EditAreaNumber', 'EditAreType', 'EditName', 'EditDescription', 'EditState']
 const SearchFormLayout = ['FormAreaNumber', 'FormAreaName', 'FormLocationName', 'FormFactoryId']
 
 const RegionTableComponents = ({
@@ -28,7 +28,7 @@ const RegionTableComponents = ({
   const formItemLayout = globalConfig.table.formItemLayout
   const { FromParams, list, pagination, tableLoading,
     addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible,
-    EditData, DetailsData, FactoryList, EditFactoryList } = TableModelsData
+    EditData, DetailsData, FactoryList, AreaTypeList } = TableModelsData
 
   console.log('RegionTableComponents-regionTable ', TableModelsData)
 
@@ -39,7 +39,7 @@ const RegionTableComponents = ({
   const handleAdd = (modalType) => {
     if (modalType === 'create') {
       validateFields(AddFormLayout, (err, payload) => {
-        const createParam = { AreaNumber: payload.AddAreaNumber, Name: payload.AddName, FactoryId: payload.AddFactoryId, Description: payload.AddDescription, State: parseInt(payload.AddState) }
+        const createParam = { AreaNumber: payload.AddAreaNumber, AreaType: parseInt(payload.AddAreType), Name: payload.AddName, FactoryId: parseInt(payload.AddFactoryId), Description: payload.AddDescription, State: parseInt(payload.AddState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -50,7 +50,7 @@ const RegionTableComponents = ({
       })
     } else if (modalType === 'edit') {
       validateFields(EditFormLayout, (err, payload) => {
-        const editParam = { Id: payload.EditId, FactoryId: payload.EditFactoryId, AreaNumber: payload.EditAreaNumber, Name: payload.EditName, Description: payload.EditDescription, State: parseInt(payload.EditState) }
+        const editParam = { Id: payload.EditId, AreaNumber: payload.EditAreaNumber, AreaType: parseInt(payload.EditAreType), Name: payload.EditName, FactoryId: parseInt(payload.EditFactoryId), Description: payload.EditDescription, State: parseInt(payload.EditState) }
         if (!err) {
           dispatch({
             type: `${TableName}/${modalType}`,
@@ -85,6 +85,19 @@ const RegionTableComponents = ({
             {getFieldDecorator('AddAreaNumber', {
               initialValue: '',
             })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="区域类型"
+            hasFeedback
+          >
+            {getFieldDecorator('AddAreType', {
+              initialValue: '',
+            })(<Select>
+              {AreaTypeList.map(function (item, index) {
+                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+              })}
+            </Select>)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -171,6 +184,19 @@ const RegionTableComponents = ({
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="区域类型"
+            hasFeedback
+          >
+            {getFieldDecorator('EditAreType', {
+              initialValue: EditData.AreaType,
+            })(<Select>
+              {AreaTypeList.map(function (item, index) {
+                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+              })}
+            </Select>)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="工厂"
           >
             <div>
@@ -178,7 +204,7 @@ const RegionTableComponents = ({
                 initialValue: EditData.FactoryId.toString(),
               })(
                 <Select>
-                  {EditFactoryList.map(function (item, index) {
+                  {FactoryList.map(function (item, index) {
                     return <Option key={index} value={item.key.toString()}>{item.label}</Option>
                   })}
                 </Select>
@@ -245,6 +271,12 @@ const RegionTableComponents = ({
         </FormItem>
         <FormItem
           {...formItemLayout}
+          label="区域类型"
+        >
+          <Input disabled value={DetailsData.AreaType} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
           label="名称"
         >
           <Input disabled value={DetailsData.Name} />
@@ -297,7 +329,7 @@ const RegionTableComponents = ({
           AreaNumber: payload.FormAreaNumber,
           AreaName: payload.FormAreaName,
           LocationName: payload.FormLocationName,
-          FactoryId: payload.FormFactoryId
+          FactoryId: parseInt(payload.FormFactoryId)
         }
         SearchTableList(Params, 1, pagination.PageSize)
       }
@@ -362,9 +394,13 @@ const RegionTableComponents = ({
             </Row>
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`工厂ID`}>
+                <FormItem {...formItemLayout} label={`工厂名称`}>
                   {getFieldDecorator(`FormFactoryId`)(
-                    <Input />
+                    <Select>
+                      {FactoryList.map(function (item, index) {
+                        return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                      })}
+                    </Select>
                   )}
                 </FormItem>
               </Col>

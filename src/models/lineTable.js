@@ -40,7 +40,7 @@ export default modelExtend(pageModel, {
     FromParams: {},
     //每个table可能不同的变量字段
     TotalStation: [],
-    AllocatedMultiselectData: [],
+    SelectedStation: [],
     platform: [],
 
   },
@@ -198,7 +198,7 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, TotalStation: payload.data.TotalStation, AllocatedMultiselectData: payload.data.SelectedCell, EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto }
+        return { ...state, ...payload, TotalStation: payload.data.TotalStation, SelectedStation: payload.data.SelectedStation, EditData: payload.data.TDto == null ? state.EditData : payload.data.TDto }
       } else if (payload.modalType === 'addModalVisible') {
         return { ...state, ...payload, TotalStation: payload.data.TotalStation }
       } else if (payload.modalType === 'detailsModalVisible') {

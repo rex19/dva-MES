@@ -34,10 +34,8 @@ const App = ({ children, dispatch, app, loading, location }) => {
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
   const { iconFontJS, iconFontCSS, logo } = config
   const current = menu.filter(item => pathToRegexp(item.route || '').exec(pathname))
-  // console.log('App1', menu, current)
   const hasPermission = current.length ? permissions.visit.includes(current[0].id) : false
   const href = window.location.href
-  // console.log('App2', href, hasPermission)
   if (lastHref !== href) {
     NProgress.start()
     if (!loading.global) {

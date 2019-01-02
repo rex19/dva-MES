@@ -18,10 +18,12 @@ const stationTableColumns = [{
 }, {
   title: '类型',
   dataIndex: 'StationType',
-}, {
-  title: '已分配工作站组',
-  dataIndex: 'SelectedStationGroup',
-}, {
+},
+// {
+//   title: '已分配工作站组',
+//   dataIndex: 'SelectedStationGroup',
+// },
+{
   title: '状态',
   dataIndex: 'State',
   render: val => <span><Badge status={val === '激活' ? "success" : "error"} text={val} /></span>,
@@ -528,6 +530,8 @@ const StationTableComponents = ({
       </div>
       <div>
         <TableComponents
+          expandedRowRenderNAME='已分配工站组'
+          expandedRowRenderKEY='SelectedStationGroup'
           tableName={TableName}
           data={list}
           tableLoading={tableLoading}

@@ -149,6 +149,7 @@ module.exports = {
 
   },
   crudApi: {
+    GetInitializeList: 'GetInitializeList', //获取工厂初始化菜单
     postAddData: 'Post',  //新增
     postEditData: 'Put',  //编辑
     postDeleteData: 'Delete',   //删除
@@ -159,6 +160,7 @@ module.exports = {
     getTableInitData: 'GetTByCondition',//表格初始化数据api
     //bom
     GetMaterialByMaterialNumberUrl: 'GetMaterialByMaterialNumber',  //获取
+
 
     //wms 容器
     GetMovementRecordByContainer: 'GetMovementRecordByContainer',

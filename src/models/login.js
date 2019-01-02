@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router'
 import { login } from 'services/login'
 import Cookies from 'js-cookie'
+import { errorMessage, successMessage } from '../components/Message/message.js'
 
 export default {
   namespace: 'login',
@@ -61,7 +62,7 @@ export default {
       const data = yield call(login, payload)
       console.log('login-effects-data2', data)
       const { locationQuery } = yield select(_ => _.app)
-      if (data.Status) {
+      if (data.Status === 200 && data.Data.ReturnCode === 0) {
         //新增添加token到cookie
         const {
           Access_Token,
@@ -69,9 +70,7 @@ export default {
           Expires_In
          } = data.Data.token
         Cookies.set('token', Access_Token);
-
         console.log('cookie', Cookies.get('token'), locationQuery)
-
         const { from } = locationQuery
         yield put({ type: 'app/query' })
         if (from && from !== '/login') {
@@ -79,6 +78,9 @@ export default {
         } else {
           yield put(routerRedux.push('/welcome'))
         }
+        return successMessage(`欢迎登陆,${payload.username}`)
+      } else if (data.Status === 200 && data.Data.ReturnCode !== 0) {
+        return errorMessage(data.Data.Message)
       } else {
         throw data
       }

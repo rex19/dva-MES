@@ -26,7 +26,7 @@ const LineTableComponents = ({
   const TableModelsData = lineTable
   const { getFieldDecorator, validateFields, resetFields } = form
   const formItemLayout = globalConfig.table.formItemLayout
-  const { FromParams, list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalStation, AllocatedMultiselectData } = TableModelsData
+  const { FromParams, list, pagination, tableLoading, addModalVisible, editModalVisible, detailsModalVisible, deleteModalVisible, EditData, DetailsData, TotalStation, SelectedStation } = TableModelsData
 
   console.log('TableComponents-lineTable ', TableModelsData)
 
@@ -253,7 +253,7 @@ const LineTableComponents = ({
           >
             <div>
               {getFieldDecorator('EditStation', {
-                initialValue: AllocatedMultiselectData,
+                initialValue: SelectedStation,
               })(
                 <Select
                   mode="multiple"
@@ -298,6 +298,12 @@ const LineTableComponents = ({
           label="状态"
         >
           <Input disabled value={DetailsData.State} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="已分配工站"
+        >
+          <Input disabled value={DetailsData.SelectedStation} />
         </FormItem>
         <FormItem
           {...formItemLayout}
@@ -372,14 +378,14 @@ const LineTableComponents = ({
           <Form>
             <Row gutter={40}>
               <Col span={8} key={1} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`工站组编号`}>
-                  {getFieldDecorator(`FormGroupNumber`)(
+                <FormItem {...formItemLayout} label={`线体编号`}>
+                  {getFieldDecorator(`FormCellNumber`)(
                     <Input />
                   )}
                 </FormItem>
               </Col>
               <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`工站组描述`}>
+                <FormItem {...formItemLayout} label={`线体描述`}>
                   {getFieldDecorator(`FormDescription`)(
                     <Input />
                   )}
@@ -397,6 +403,8 @@ const LineTableComponents = ({
       </div>
       <div>
         <TableComponents
+          expandedRowRenderNAME='已分配工站'
+          expandedRowRenderKEY='SelectedStation'
           tableName={TableName}
           data={list}
           tableLoading={tableLoading}

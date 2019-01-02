@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/locationTable'
+import { GetInitializeList, query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/locationTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -54,6 +54,10 @@ export default modelExtend(pageModel, {
       history.listen((location) => {
         if (location.pathname === `/masterdata/${TableName}`) {
           dispatch({
+            type: 'GetInitializeList',
+            payload: {}
+          })
+          dispatch({
             type: 'query',
             payload: {
               PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
@@ -67,6 +71,19 @@ export default modelExtend(pageModel, {
   },
 
   effects: {
+    //查询条件 下拉菜单初始化
+    * GetInitializeList({
+          payload,
+        }, { call, put, select }) {
+      const data = yield call(GetInitializeList, payload)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage)
+      } else if (data.Status === 200) {
+        yield put({ type: 'showModalData', payload: { modalType: 'GetInitializeList', data: data.Data } })
+      } else {
+        throw data
+      }
+    },
     * query({
       payload,
     }, { call, put, select }) {
@@ -168,7 +185,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
-          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -204,11 +220,13 @@ export default modelExtend(pageModel, {
     //Modals初始化数据   不同table可能需要修改的reducers函数
     showModalData(state, { payload }) {
       if (payload.modalType === 'editModalVisible') {
-        return { ...state, ...payload, AreaList: eval(payload.data.AreaList), EditData: payload.data.locationDto == null ? state.EditData : payload.data.locationDto }
+        return { ...state, ...payload, AreaList: payload.data.AreaList, EditData: payload.data.locationDto == null ? state.EditData : payload.data.locationDto }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, AreaList: eval(payload.data.AreaList) }
+        return { ...state, ...payload, AreaList: payload.data.AreaList }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
+      } else if (payload.modalType === 'GetInitializeList') {
+        return { ...state, ...payload, AreaList: payload.data.AreaList }
       }
     },
     //teble loading处理

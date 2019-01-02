@@ -87,36 +87,7 @@ const LocationTableComponents = ({
       },
     })
   }
-  //每个table可能不同的变量字段(4)
-  const formComponentsValue = () => {
-    return (
-      <Form>
-        <Row gutter={40}>
-          <Col span={8} key={1} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试1`}>
-              {getFieldDecorator(`field1`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={2} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试2`}>
-              {getFieldDecorator(`field2`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-          <Col span={8} key={3} style={{ display: 'block' }}>
-            <FormItem {...formItemLayout} label={`测试3`}>
-              {getFieldDecorator(`field3`)(
-                <Input placeholder="placeholder" />
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    )
-  }
+
   const addModalValue = () => {
     return (
       <div>
@@ -436,10 +407,14 @@ const LocationTableComponents = ({
                   )}
                 </FormItem>
               </Col>
-              <Col span={8} key={2} style={{ display: 'block' }}>
-                <FormItem {...formItemLayout} label={`区域ID`}>
+              <Col span={8} key={3} style={{ display: 'block' }}>
+                <FormItem {...formItemLayout} label={`区域名称`}>
                   {getFieldDecorator(`FormAreaId`)(
-                    <Input />
+                    <Select>
+                      {AreaList.map(function (item, index) {
+                        return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                      })}
+                    </Select>
                   )}
                 </FormItem>
               </Col>

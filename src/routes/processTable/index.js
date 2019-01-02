@@ -527,7 +527,11 @@ const ProcessTableComponents = ({
               <Col span={8} key={2} style={{ display: 'block' }}>
                 <FormItem {...formItemLayout} label={`工厂名称`}>
                   {getFieldDecorator(`FormFactoryName`)(
-                    <Input />
+                    <Select>
+                      {FactoryList.map(function (item, index) {
+                        return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+                      })}
+                    </Select>
                   )}
                 </FormItem>
               </Col>

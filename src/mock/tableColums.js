@@ -224,14 +224,12 @@ const materielTableColumns = [{
 }, {
   title: '安全库存',
   dataIndex: 'SafetyStock',
-},
-//  {
-//   title: '默认回冲库位',
-//   dataIndex: 'DefaultStorageLocation',
-// },
-{
+}, {
   title: '默认存储库位号',
   dataIndex: 'DefaultStorageLocation',
+}, {
+  title: '默认回冲库位',
+  dataIndex: 'DefaultTargetFeedingLocation',
 }, {
   title: '包装大小(长*宽*高)',
   dataIndex: 'ContainerSize',
@@ -356,6 +354,9 @@ const regionTableColumns = [{
 }, {
   title: '区域编号',
   dataIndex: 'AreaNumber',
+}, {
+  title: '区域类型',
+  dataIndex: 'AreaType',
 }, {
   title: '名称',
   dataIndex: 'Name',

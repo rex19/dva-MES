@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/regionTable'
+import { GetInitializeList, query, create, deleted, edit, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/regionTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -47,12 +47,16 @@ export default modelExtend(pageModel, {
     FromParams: {},
     //每个table可能不同的变量字段
     FactoryList: [],
-    EditFactoryList: []
+    AreaTypeList: [],
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === `/masterdata/${TableName}`) {
+          dispatch({
+            type: 'GetInitializeList',
+            payload: {}
+          })
           dispatch({
             type: 'query',
             payload: {
@@ -67,6 +71,19 @@ export default modelExtend(pageModel, {
   },
 
   effects: {
+    //查询条件 下拉菜单初始化
+    * GetInitializeList({
+      payload,
+    }, { call, put, select }) {
+      const data = yield call(GetInitializeList, payload)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage)
+      } else if (data.Status === 200) {
+        yield put({ type: 'showModalData', payload: { modalType: 'GetInitializeList', data: data.Data } })
+      } else {
+        throw data
+      }
+    },
     * query({
       payload,
     }, { call, put, select }) {
@@ -168,7 +185,6 @@ export default modelExtend(pageModel, {
       if (payload.modalType === 'editModalVisible') {
         const data = yield call(getEditModalData, payload.record.Id)
         if (data.Status === 200) {
-          console.log('showModalAndAjax-edit', data)
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
         } else {
@@ -176,7 +192,6 @@ export default modelExtend(pageModel, {
         }
       } else if (payload.modalType === 'addModalVisible') {
         const data = yield call(getAddModalData)
-
         if (data.Status === 200) {
           yield put({ type: 'showModal', payload: payload })
           yield put({ type: 'showModalData', payload: { modalType: payload.modalType, data: data.Data } })
@@ -197,7 +212,6 @@ export default modelExtend(pageModel, {
   reducers: {
     //打开关闭Modals
     showModal(state, { payload }) {
-      console.log('showModal', payload)
       return { ...state, ...payload, [payload.modalType]: true }
     },
     hideModal(state, { payload }) {
@@ -209,12 +223,19 @@ export default modelExtend(pageModel, {
         return {
           ...state, ...payload,
           EditData: payload.data.areaDto == null ? state.EditData : payload.data.areaDto,
-          EditFactoryList: payload.data.FactoryList
+          FactoryList: payload.data.FactoryList,
+          AreaTypeList: payload.data.AreaTypeList,
         }
       } else if (payload.modalType === 'addModalVisible') {
-        return { ...state, ...payload, FactoryList: payload.data.FactoryList }
+        return {
+          ...state, ...payload,
+          FactoryList: payload.data.FactoryList,
+          AreaTypeList: payload.data.AreaTypeList,
+        }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
+      } else if (payload.modalType === 'GetInitializeList') {
+        return { ...state, ...payload, FactoryList: payload.data.FactoryList }
       }
     },
     //teble loading处理

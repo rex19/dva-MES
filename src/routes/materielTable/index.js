@@ -34,6 +34,7 @@ const AddFormLayout = [
   "AddExpirationTime",
   "AddSafetyStock",
   "AddDefaultStorageLocationId",
+  "AddDefaultTargetFeedingLocation",
   "AddContainerSize",
   "AddMSL",
   "AddState",
@@ -63,6 +64,7 @@ const EditFormLayout = [
   "EditExpirationTime",
   "EditSafetyStock",
   "EditDefaultStorageLocationId",
+  "EditDefaultTargetFeedingLocation",
   "EditContainerSize",
   "EditMSL",
   "EditState",
@@ -124,6 +126,7 @@ const MaterielTableComponents = ({
           ExpirationTime: payload.AddExpirationTime,
           SafetyStock: payload.AddSafetyStock,
           DefaultStorageLocationId: parseInt(payload.AddDefaultStorageLocationId),
+          DefaultTargetFeedingLocation: parseInt(payload.AddDefaultTargetFeedingLocation),
           ContainerSize: parseInt(payload.AddContainerSize),
           MSL: parseInt(payload.AddMSL),
           State: parseInt(payload.AddState),
@@ -163,6 +166,7 @@ const MaterielTableComponents = ({
           ExpirationTime: payload.EditExpirationTime,
           SafetyStock: payload.EditSafetyStock,
           DefaultStorageLocationId: parseInt(payload.EditDefaultStorageLocationId),
+          DefaultTargetFeedingLocation: parseInt(payload.EditDefaultTargetFeedingLocation),
           ContainerSize: parseInt(payload.EditContainerSize),
           MSL: parseInt(payload.EditMSL),
           State: parseInt(payload.EditState),
@@ -411,6 +415,18 @@ const MaterielTableComponents = ({
                 })}
               </Select>
               )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="默认回冲库位"
+          >
+            {getFieldDecorator('AddDefaultTargetFeedingLocation', {
+              initialValue: '',
+            })(<Select>
+              {Location.map(function (item, index) {
+                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+              })}
+            </Select>)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -737,7 +753,6 @@ const MaterielTableComponents = ({
           >
             {getFieldDecorator('EditDefaultStorageLocationId', {
               initialValue: EditData.DefaultStorageLocationId,
-              // initialValue: '7'
             })(
               <Select>
                 {Location.map(function (item, index) {
@@ -745,6 +760,18 @@ const MaterielTableComponents = ({
                 })}
               </Select>
               )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="默认回冲库位"
+          >
+            {getFieldDecorator('EditDefaultTargetFeedingLocation', {
+              initialValue: EditData.DefaultStorageLocationId,
+            })(<Select>
+              {Location.map(function (item, index) {
+                return <Option key={index} value={item.key.toString()}>{item.label}</Option>
+              })}
+            </Select>)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -979,6 +1006,12 @@ const MaterielTableComponents = ({
             label="默认库位编号"
           >
             <Input disabled value={DetailsData.DefaultStorageLocation} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="默认回冲库位"
+          >
+            <Input disabled value={DetailsData.DefaultTargetFeedingLocation} />
           </FormItem>
           <FormItem
             {...formItemLayout}

@@ -4,6 +4,14 @@ import globalConfig from 'utils/config'
 const tableName = globalConfig.api.processTable
 const bomTable = globalConfig.api.bomTable
 
+//初始化工厂可选数据
+export async function GetInitializeList(params) {
+  return request({
+    url: `${tableName}/${globalConfig.crudApi.GetInitializeList}`,
+    method: 'get'
+  })
+}
+
 //查询整表
 export async function query(params) {
   return request({

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Input, Button, Icon, Row, Col, Radio, Select } from 'antd'
 import { connect } from 'dva'
-import { FormComponents, TableComponents } from '../../components'
+import { TableComponents } from '../../components'
 import globalConfig from 'utils/config'
 import { stationGroupTableColumns } from '../../mock/tableColums'
 import './index.less'
@@ -31,7 +31,10 @@ const StationGroupTableComponents = ({
     EditData, DetailsData, TotalStation, SelectedStation, FactoryList } = TableModelsData
 
   console.log('TableComponents-stationGroupTable ', TableModelsData)
-
+  validateFields(SearchFormLayout, (err, payload) => {
+    // const createParam = { GroupNumber: payload.AddGroupNumber, Description: payload.AddDescription, FactoryId: parseInt(payload.AddFactoryId), State: parseInt(payload.AddState), StationIdArray: payload.AddStationIdArray.map(item => parseInt(item.key)) }
+    console.log('validateFields--++_', payload)
+  })
   /**
    * crud modal
    */
@@ -401,7 +404,7 @@ const StationGroupTableComponents = ({
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
-              <Button style={{ marginLeft: '7px' }} onClick={handleResetFields('SearchFormLayout')}><Icon type="delete" />清空</Button>
+              <Button style={{ marginLeft: '7px' }} onClick={() => handleResetFields('SearchFormLayout')}><Icon type="delete" />清空</Button>
             </Col>
           </Row>
         </Form>
@@ -432,3 +435,34 @@ const StationGroupTableComponents = ({
 
 
 export default connect(({ stationGroupTable }) => ({ stationGroupTable }))(Form.create()(StationGroupTableComponents))
+
+
+// <Form
+// className="ant-advanced-search-form"
+// onSubmit={handleSearch}
+// >
+// <Form>
+//   <Row gutter={40}>
+//     <Col span={8} key={1} style={{ display: 'block' }}>
+//       <FormItem {...formItemLayout} label={`工站组编号`}>
+//         {getFieldDecorator(`FormGroupNumber`)(
+//           <Input />
+//         )}
+//       </FormItem>
+//     </Col>
+//     <Col span={8} key={2} style={{ display: 'block' }}>
+//       <FormItem {...formItemLayout} label={`工站组描述`}>
+//         {getFieldDecorator(`FormDescription`)(
+//           <Input />
+//         )}
+//       </FormItem>
+//     </Col>
+//   </Row>
+// </Form>
+// <Row>
+//   <Col span={24} style={{ textAlign: 'right' }}>
+//     <Button type="primary" htmlType="submit"><Icon type="search" />查询</Button>
+//     <Button style={{ marginLeft: '7px' }} onClick={handleResetFields('SearchFormLayout')}><Icon type="delete" />清空</Button>
+//   </Col>
+// </Row>
+// </Form>

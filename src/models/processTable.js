@@ -1,5 +1,5 @@
 import modelExtend from 'dva-model-extend'
-import { query, create, deleted, edit, GetMaterialByMaterialNumber, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/processTable'
+import { GetInitializeList, query, create, deleted, edit, GetMaterialByMaterialNumber, getAddModalData, getEditModalData, getDetailsModalData, addKey } from 'services/processTable'
 import { pageModel } from 'models/common'
 import { errorMessage, successMessage } from '../components/Message/message.js'
 import queryString from 'query-string'
@@ -71,6 +71,10 @@ export default modelExtend(pageModel, {
       history.listen((location) => {
         if (location.pathname === `/masterdata/${TableName}`) {
           dispatch({
+            type: 'GetInitializeList',
+            payload: {}
+          })
+          dispatch({
             type: 'query',
             payload: {
               PageIndex: Number(globalConfig.table.paginationConfig.PageIndex), //当前页数
@@ -80,22 +84,23 @@ export default modelExtend(pageModel, {
           })
         }
       })
-    },
-
-    // setup ({ dispatch }) {
-    //   dispatch({ type: 'query' })
-    //   let tid
-    //   window.onresize = () => {
-    //     clearTimeout(tid)
-    //     tid = setTimeout(() => {
-    //       dispatch({ type: 'changeNavbar' })
-    //     }, 300)
-    //   }
-    // },
-
+    }
   },
 
   effects: {
+    //查询条件 下拉菜单初始化
+    * GetInitializeList({
+          payload,
+        }, { call, put, select }) {
+      const data = yield call(GetInitializeList, payload)
+      if (data.Status !== 200) {
+        return errorMessage(data.ErrorMessage)
+      } else if (data.Status === 200) {
+        yield put({ type: 'showModalData', payload: { modalType: 'GetInitializeList', data: data.Data } })
+      } else {
+        throw data
+      }
+    },
     * query({
       payload,
     }, { call, put, select }) {
@@ -258,6 +263,8 @@ export default modelExtend(pageModel, {
         }
       } else if (payload.modalType === 'detailsModalVisible') {
         return { ...state, ...payload, DetailsData: payload.data }
+      } else if (payload.modalType === 'GetInitializeList') {
+        return { ...state, ...payload, FactoryList: payload.data.FactoryList }
       }
     },
     //teble loading处理
